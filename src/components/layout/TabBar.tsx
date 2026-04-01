@@ -5,7 +5,7 @@ const tabs = [
   { id: 'dashboard', path: '/', label: 'Accueil', icon: Home },
   { id: 'spells', path: '/spells', label: 'Sorts', icon: Sparkles },
   { id: 'combat', path: '/combat', label: 'Combat', icon: Swords },
-  { id: 'inventory', path: '/inventory', label: 'Sac', icon: Backpack },
+  { id: 'inventory', path: '/inventory', label: 'Inventaire', icon: Backpack },
 ];
 
 export function TabBar() {
