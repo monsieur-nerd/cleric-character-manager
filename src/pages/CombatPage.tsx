@@ -5,6 +5,7 @@ import type { Spell, Character } from '@/types';
 import { getFeatById } from '@/types/feats';
 import type { Feat } from '@/types/feats';
 import { SpellCastAnimation } from '@/components/effects/SpellCastAnimation';
+import { SpellDetailModal } from '@/components/spells/SpellDetailModal';
 
 const castingTimeFilters = [
   { id: 'all', label: 'Tous' },
@@ -202,6 +203,7 @@ export function CombatPage() {
   }, []);
   
   const [pressedSpellIds, setPressedSpellIds] = useState<Set<string>>(new Set());
+  const [selectedSpell, setSelectedSpell] = useState<Spell | null>(null);
 
   const handleCastSpell = useCallback((e: React.MouseEvent | React.TouchEvent, spellId: string) => {
     triggerCastAnimation(e);
@@ -629,7 +631,7 @@ export function CombatPage() {
           </div>
           
           {/* Sorts préparés */}
-          <div>
+          <div className="border-t border-royal-purple/20 pt-4">
             <h4 className="text-xs font-bold text-ink-light uppercase tracking-wide mb-3">
               Sorts préparés
             </h4>
@@ -638,17 +640,23 @@ export function CombatPage() {
               {Object.entries(spellsByLevel)
                 .sort(([a], [b]) => Number(a) - Number(b))
                 .map(([level, spells]) => (
-                  <section key={level}>
-                    <h5 className="font-display text-sm text-ink-muted mb-2">
-                      {level === '0' ? 'Mineur' : `Niveau ${level}`} 
-                      <span className="ml-1">({spells.length})</span>
-                    </h5>
+                  <div key={level} className="bg-parchment/50 rounded-lg p-3">
+                    {/* Sous-section Niveau - visuellement subordonnée */}
+                    <div className="flex items-center gap-2 mb-3 pb-2 border-b border-parchment-dark/50">
+                      <span className="text-xs font-ui font-bold text-ink-muted uppercase tracking-wide">
+                        {level === '0' ? 'Mineur' : `Niveau ${level}`}
+                      </span>
+                      <span className="text-xs text-ink-muted bg-parchment-dark/30 px-2 py-0.5 rounded-full">
+                        {spells.length}
+                      </span>
+                    </div>
                     
                     <div className="space-y-2">
                       {spells.map((spell: Spell) => (
                         <div 
                           key={spell.id}
-                          className="bg-parchment-light rounded-lg p-3 flex items-center justify-between gap-2"
+                          onClick={() => setSelectedSpell(spell)}
+                          className="bg-parchment-light rounded-lg p-3 flex items-center justify-between gap-2 cursor-pointer hover:shadow-md hover:border-royal-purple/30 border border-transparent transition-all"
                         >
                           <div className="min-w-0 flex-1">
                             <div className="font-display text-ink break-words leading-tight text-sm sm:text-base">{spell.name}</div>
@@ -656,7 +664,7 @@ export function CombatPage() {
                               {spell.castingTime} • {spell.range}
                             </div>
                             {spell.summary && (
-                              <div className="text-xs text-ink font-bold mt-1">
+                              <div className="text-xs text-ink font-bold mt-1 line-clamp-1">
                                 {spell.summary}
                               </div>
                             )}
@@ -664,9 +672,13 @@ export function CombatPage() {
                           
                           <div className="flex gap-2">
                             <button
-                              onClick={(e) => handleCastSpell(e, spell.id)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleCastSpell(e, spell.id);
+                              }}
                               onTouchStart={(e) => {
                                 e.preventDefault();
+                                e.stopPropagation();
                                 handleCastSpell(e, spell.id);
                               }}
                               className={`text-sm py-2 px-4 relative overflow-visible rounded-lg font-ui font-bold border-2 transition-all duration-150 select-none ${
@@ -682,11 +694,11 @@ export function CombatPage() {
                         </div>
                       ))}
                     </div>
-                  </section>
+                  </div>
                 ))}
               
               {availableSpells.length === 0 && (
-                <div className="text-center py-8 text-ink-muted">
+                <div className="text-center py-8 text-ink-muted bg-parchment/50 rounded-lg">
                   <p>Aucun sort disponible</p>
                   <p className="text-sm">Préparez des sorts dans l'onglet Préparation</p>
                 </div>
@@ -705,6 +717,13 @@ export function CombatPage() {
           onComplete={() => removeCastAnimation(anim.id)}
         />
       ))}
+      
+      {/* Modal détail du sort */}
+      <SpellDetailModal
+        spell={selectedSpell || ({} as Spell)}
+        isOpen={!!selectedSpell}
+        onClose={() => setSelectedSpell(null)}
+      />
     </div>
   );
 }
