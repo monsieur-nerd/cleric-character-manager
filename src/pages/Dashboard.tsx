@@ -759,7 +759,7 @@ function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: { is
       <div className="relative bg-parchment-light w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-xl shadow-2xl">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-parchment-dark">
-          <h2 className="font-display text-xl text-ink">Fic<span className="mx-[2px]">h</span>e de personnage</h2>
+          <h2 className="font-display text-xl text-ink">Fiche de personnage</h2>
           <button onClick={onClose} className="p-2 hover:bg-parchment-dark rounded-lg">
             <X className="w-5 h-5 text-ink" />
           </button>

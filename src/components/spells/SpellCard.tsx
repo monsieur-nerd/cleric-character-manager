@@ -90,7 +90,7 @@ export function SpellCard({
                 )}
                 <span 
                   className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-gradient-to-br from-steel-blue to-blue-900 text-white font-bold text-sm shadow-md"
-                  style={{ fontFamily: "'Cinzel Decorative', serif" }}
+                  style={{ fontFamily: "'Cinzel', serif" }}
                   title={spell.level === 0 ? 'Tour de magie (Mineur)' : `Sort de niveau ${spell.level}`}
                 >
                   {spell.level === 0 ? 'M' : spell.level}
