@@ -78,7 +78,7 @@ function DeitySelector({ currentDeity, onSelect }: { currentDeity: Deity | undef
         className="w-full flex items-center justify-between p-3 bg-parchment-dark rounded-lg border border-parchment-dark hover:border-divine-gold transition-colors"
       >
         <div className="flex items-center gap-3">
-          {currentDeity?.symbol?.startsWith('/') ? (
+          {(currentDeity?.symbol?.startsWith('/') || currentDeity?.symbol?.startsWith('images/')) ? (
             <img 
               src={currentDeity.symbol} 
               alt={currentDeity.name}
@@ -108,7 +108,7 @@ function DeitySelector({ currentDeity, onSelect }: { currentDeity: Deity | undef
                 deity.id === currentDeity?.id ? 'bg-divine-gold/10 border-l-4 border-divine-gold' : ''
               }`}
             >
-              {deity.symbol.startsWith('/') ? (
+              {(deity.symbol.startsWith('/') || deity.symbol.startsWith('images/')) ? (
                 <img 
                   src={deity.symbol} 
                   alt={deity.name}
