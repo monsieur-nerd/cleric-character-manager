@@ -596,94 +596,105 @@ export function CombatPage() {
         ))}
       </div>
       
-      {/* 🪄 Sorts */}
-      <div className="space-y-4">
-        {/* État rapide - Emplacements de sorts restants */}
+      {/* 🪄 Sorts ou Réactions */}
+      {filter === 'reaction' ? (
+        <ReactionsCard character={character} preparedSpells={preparedSpells} />
+      ) : (
+        /* Carte Sorts unifiée */
         <div className="card bg-royal-purple/5 border-royal-purple/20">
-          <h3 className="font-display text-lg text-ink mb-3 flex items-center gap-2">
+          <h3 className="font-display text-lg text-ink mb-4 flex items-center gap-2">
             <Sparkles className="w-5 h-5 text-royal-purple" />
             Sorts
           </h3>
-          <div className="grid grid-cols-3 gap-2 text-center">
-            <div>
-              <div className="text-xs text-ink-muted">N1</div>
-              <div className="font-display text-xl text-ink">{spellSlots[1]}</div>
+          
+          {/* Emplacements de sorts restants */}
+          <div className="mb-4">
+            <h4 className="text-xs font-bold text-ink-light uppercase tracking-wide mb-2">
+              Emplacements de sorts restants
+            </h4>
+            <div className="grid grid-cols-3 gap-2 text-center">
+              <div className="bg-parchment-light rounded-lg p-2">
+                <div className="text-xs text-ink-muted">N1</div>
+                <div className="font-display text-xl text-ink">{spellSlots[1]}</div>
+              </div>
+              <div className="bg-parchment-light rounded-lg p-2">
+                <div className="text-xs text-ink-muted">N2</div>
+                <div className="font-display text-xl text-ink">{spellSlots[2]}</div>
+              </div>
+              <div className="bg-parchment-light rounded-lg p-2">
+                <div className="text-xs text-ink-muted">N3</div>
+                <div className="font-display text-xl text-ink">{spellSlots[3]}</div>
+              </div>
             </div>
-            <div>
-              <div className="text-xs text-ink-muted">N2</div>
-              <div className="font-display text-xl text-ink">{spellSlots[2]}</div>
-            </div>
-            <div>
-              <div className="text-xs text-ink-muted">N3</div>
-              <div className="font-display text-xl text-ink">{spellSlots[3]}</div>
+          </div>
+          
+          {/* Sorts préparés */}
+          <div>
+            <h4 className="text-xs font-bold text-ink-light uppercase tracking-wide mb-3">
+              Sorts préparés
+            </h4>
+            
+            <div className="space-y-4">
+              {Object.entries(spellsByLevel)
+                .sort(([a], [b]) => Number(a) - Number(b))
+                .map(([level, spells]) => (
+                  <section key={level}>
+                    <h5 className="font-display text-sm text-ink-muted mb-2">
+                      {level === '0' ? 'Mineur' : `Niveau ${level}`} 
+                      <span className="ml-1">({spells.length})</span>
+                    </h5>
+                    
+                    <div className="space-y-2">
+                      {spells.map((spell: Spell) => (
+                        <div 
+                          key={spell.id}
+                          className="bg-parchment-light rounded-lg p-3 flex items-center justify-between gap-2"
+                        >
+                          <div className="min-w-0 flex-1">
+                            <div className="font-display text-ink break-words leading-tight text-sm sm:text-base">{spell.name}</div>
+                            <div className="text-xs text-ink-muted break-words">
+                              {spell.castingTime} • {spell.range}
+                            </div>
+                            {spell.summary && (
+                              <div className="text-xs text-ink font-bold mt-1">
+                                {spell.summary}
+                              </div>
+                            )}
+                          </div>
+                          
+                          <div className="flex gap-2">
+                            <button
+                              onClick={(e) => handleCastSpell(e, spell.id)}
+                              onTouchStart={(e) => {
+                                e.preventDefault();
+                                handleCastSpell(e, spell.id);
+                              }}
+                              className={`text-sm py-2 px-4 relative overflow-visible rounded-lg font-ui font-bold border-2 transition-all duration-150 select-none ${
+                                pressedSpellIds.has(spell.id)
+                                  ? 'bg-divine-gold-dark border-divine-gold-dark text-ink scale-95'
+                                  : 'bg-divine-gold border-divine-gold-dark text-ink hover:bg-divine-gold-light shadow-md'
+                              }`}
+                              style={{ WebkitTapHighlightColor: 'transparent' }}
+                            >
+                              {pressedSpellIds.has(spell.id) ? 'Lancé !' : 'Lancer'}
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                ))}
+              
+              {availableSpells.length === 0 && (
+                <div className="text-center py-8 text-ink-muted">
+                  <p>Aucun sort disponible</p>
+                  <p className="text-sm">Préparez des sorts dans l'onglet Préparation</p>
+                </div>
+              )}
             </div>
           </div>
         </div>
-        
-        {filter === 'reaction' ? (
-          <ReactionsCard character={character} preparedSpells={preparedSpells} />
-        ) : (
-          /* Liste des sorts */
-          <div className="space-y-3">
-          {Object.entries(spellsByLevel)
-            .sort(([a], [b]) => Number(a) - Number(b))
-            .map(([level, spells]) => (
-              <section key={level}>
-                <h3 className="font-display text-sm text-ink-muted mb-2">
-                  {level === '0' ? 'Mineur' : `Niveau ${level}`} 
-                  <span className="ml-1">({spells.length})</span>
-                </h3>
-                
-                <div className="space-y-2">
-                  {spells.map((spell: Spell) => (
-                    <div 
-                      key={spell.id}
-                      className="card p-3 flex items-center justify-between gap-2"
-                    >
-                      <div className="min-w-0 flex-1">
-                        <div className="font-display text-ink break-words leading-tight text-sm sm:text-base">{spell.name}</div>
-                        <div className="text-xs text-ink-muted break-words">
-                          {spell.castingTime} • {spell.range}
-                        </div>
-                        {spell.summary && (
-                          <div className="text-xs text-ink font-bold mt-1">
-                            {spell.summary}
-                          </div>
-                        )}
-                      </div>
-                      
-                      <div className="flex gap-2">
-                        <button
-                          onClick={(e) => handleCastSpell(e, spell.id)}
-                          onTouchStart={(e) => {
-                            e.preventDefault();
-                            handleCastSpell(e, spell.id);
-                          }}
-                          className={`text-sm py-2 px-4 relative overflow-visible rounded-lg font-ui font-bold border-2 transition-all duration-150 select-none ${
-                            pressedSpellIds.has(spell.id)
-                              ? 'bg-divine-gold-dark border-divine-gold-dark text-ink scale-95'
-                              : 'bg-divine-gold border-divine-gold-dark text-ink hover:bg-divine-gold-light shadow-md'
-                          }`}
-                          style={{ WebkitTapHighlightColor: 'transparent' }}
-                        >
-                          {pressedSpellIds.has(spell.id) ? 'Lancé !' : 'Lancer'}
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            ))}
-          
-          {availableSpells.length === 0 && (
-            <div className="text-center py-8 text-ink-muted">
-              <p>Aucun sort disponible</p>
-              <p className="text-sm">Préparez des sorts dans l'onglet Préparation</p>
-            </div>
-          )}
-        </div>
       )}
-      </div>
       
       {/* Animations de lancement de sort */}
       {castAnimations.map(anim => (
