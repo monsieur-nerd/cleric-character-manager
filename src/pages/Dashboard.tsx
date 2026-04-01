@@ -646,20 +646,21 @@ function CharacterSheetMobileNav({
   const activeTabInfo = tabs.find(t => t.id === activeTab);
   
   return (
-    <div className="sm:hidden border-b border-parchment-dark">
-      {/* Header du menu */}
+    <div className="sm:hidden border-b border-parchment-dark bg-parchment-dark/5">
+      {/* Header du menu - style amélioré */}
       <div className="flex items-center justify-between p-3">
-        <div className="flex items-center gap-2">
-          {activeTabInfo && (
-            <>
-              <activeTabInfo.icon className="w-5 h-5 text-divine-gold" />
-              <span className="font-medium text-ink">{activeTabInfo.label}</span>
-            </>
-          )}
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-divine-gold/15 flex items-center justify-center">
+            {activeTabInfo && <activeTabInfo.icon className="w-5 h-5 text-divine-gold-dark" />}
+          </div>
+          <div>
+            <p className="text-xs text-ink-muted">Onglet actif</p>
+            <span className="font-medium text-ink">{activeTabInfo?.label}</span>
+          </div>
         </div>
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="p-2 rounded-lg bg-parchment-dark/50 hover:bg-parchment-dark transition-colors"
+          className="p-2.5 rounded-xl bg-parchment-dark/40 hover:bg-parchment-dark/60 transition-colors"
           aria-label={isOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
         >
           {isOpen ? (
@@ -670,9 +671,9 @@ function CharacterSheetMobileNav({
         </button>
       </div>
       
-      {/* Menu déroulant */}
+      {/* Menu déroulant - style amélioré */}
       {isOpen && (
-        <div className="absolute left-4 right-4 bg-parchment-light border border-parchment-dark rounded-lg shadow-xl z-50 animate-slide-up">
+        <div className="absolute left-3 right-3 mt-1 bg-parchment-light border border-parchment-dark/60 rounded-xl shadow-2xl z-50 animate-slide-up">
           <div className="p-2 space-y-1">
             {tabs.map((tab) => {
               const Icon = tab.icon;
@@ -685,16 +686,20 @@ function CharacterSheetMobileNav({
                     onTabChange(tab.id);
                     setIsOpen(false);
                   }}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+                  className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-lg transition-all ${
                     isActive
-                      ? 'bg-divine-gold/20 text-divine-gold-dark border border-divine-gold/30'
-                      : 'hover:bg-parchment-dark/30 text-ink'
+                      ? 'bg-divine-gold/15 text-divine-gold-dark border border-divine-gold/30'
+                      : 'hover:bg-parchment-dark/20 text-ink'
                   }`}
                 >
-                  <Icon className={`w-5 h-5 ${isActive ? 'text-divine-gold' : 'text-ink-muted'}`} />
-                  <span className="font-medium">{tab.label}</span>
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                    isActive ? 'bg-divine-gold/20' : 'bg-parchment-dark/30'
+                  }`}>
+                    <Icon className={`w-5 h-5 ${isActive ? 'text-divine-gold-dark' : 'text-ink-muted'}`} />
+                  </div>
+                  <span className="font-medium flex-1 text-left">{tab.label}</span>
                   {isActive && (
-                    <span className="ml-auto text-xs bg-divine-gold/30 text-divine-gold-dark px-2 py-0.5 rounded-full">
+                    <span className="text-xs bg-divine-gold/30 text-divine-gold-dark px-2.5 py-1 rounded-full font-medium">
                       Actif
                     </span>
                   )}
@@ -751,7 +756,7 @@ function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: { is
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-ink/60 backdrop-blur-sm" onClick={onClose} />
       
-      <div className="relative bg-parchment-light w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-xl shadow-2xl">
+      <div className="relative bg-parchment-light w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-xl shadow-2xl">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-parchment-dark">
           <h2 className="font-display text-xl text-ink tracking-wider">Fiche de personnage</h2>
@@ -760,8 +765,8 @@ function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: { is
           </button>
         </div>
         
-        {/* Tabs - Desktop */}
-        <div className="hidden sm:flex border-b border-parchment-dark">
+        {/* Tabs - Desktop - style amélioré */}
+        <div className="hidden sm:flex border-b border-parchment-dark bg-parchment-dark/5">
           {[
             { id: 'identity', label: 'Identité', icon: User },
             { id: 'stats', label: 'Caractéristiques', icon: Brain },
@@ -771,14 +776,15 @@ function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: { is
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors ${
+              className={`flex-1 flex items-center justify-center gap-2 py-3.5 px-2 text-sm font-medium transition-all ${
                 activeTab === tab.id 
-                  ? 'text-divine-gold-dark border-b-2 border-divine-gold' 
-                  : 'text-ink-muted hover:text-ink'
+                  ? 'text-divine-gold-dark border-b-2 border-divine-gold bg-divine-gold/5' 
+                  : 'text-ink-muted hover:text-ink hover:bg-parchment-dark/20'
               }`}
             >
-              <tab.icon className="w-4 h-4" />
-              {tab.label}
+              <tab.icon className={`w-4 h-4 ${activeTab === tab.id ? 'text-divine-gold' : ''}`} />
+              <span className="hidden lg:inline">{tab.label}</span>
+              <span className="lg:hidden">{tab.label.split(' ')[0]}</span>
             </button>
           ))}
         </div>
