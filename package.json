@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build && npm run copy-data",
-    "copy-data": "cp -r public/data dist/ 2>/dev/null || echo 'Data copy skipped'",
+    "copy-data": "cp -r public/data dist/ 2>/dev/null && cp -r public/images dist/ 2>/dev/null || echo 'Data/images copy done'",
     "lint": "eslint .",
     "preview": "vite preview"
   },
