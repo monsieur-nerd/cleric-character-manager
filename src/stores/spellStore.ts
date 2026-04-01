@@ -18,6 +18,7 @@ interface SpellState {
   unprepareSpell: (spellId: string) => void;
   toggleSpellPrepared: (spellId: string) => void;
   markAsUsed: (spellId: string) => void;
+  clearNonDomainPrepared: () => void;
 
   useSpellSlot: (level: 1 | 2 | 3) => boolean;
   restoreSpellSlot: (level: 1 | 2 | 3, maxSlots: SpellSlots) => void;
@@ -104,8 +105,15 @@ export const useSpellStore = create<SpellState>()(
           };
         });
       },
-      
 
+      clearNonDomainPrepared: () => {
+        set((state) => ({
+          preparedSpellIds: state.preparedSpellIds.filter(id => {
+            const spell = state.allSpells.find(s => s.id === id);
+            return spell?.isDomainSpell;
+          }),
+        }));
+      },
       
       useSpellSlot: (level) => {
         const { spellSlots } = get();

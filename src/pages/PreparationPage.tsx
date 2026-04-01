@@ -75,6 +75,7 @@ export function PreparationPage() {
   const preparedSpellIds = useSpellStore((state) => state.preparedSpellIds);
   const toggleSpellPrepared = useSpellStore((state) => state.toggleSpellPrepared);
   const prepareMultipleSpells = useSpellStore((state) => state.prepareMultipleSpells);
+  const clearNonDomainPrepared = useSpellStore((state) => state.clearNonDomainPrepared);
   const resetDaily = useSpellStore((state) => state.resetDaily);
   
   const [showKimiTips, setShowKimiTips] = useState(false);
@@ -307,16 +308,27 @@ export function PreparationPage() {
       
       {/* Sorts à choisir */}
       <section className="pt-6">
-        <h3 className="font-display text-lg text-ink mb-2">
-          {remainingSlots === 0 ? (
-            <span className="text-forest flex items-center gap-2">
-              <Check className="w-5 h-5" />
-              Tous les sorts sont choisis
-            </span>
-          ) : (
-            <>Choisir {remainingSlots} sort{remainingSlots > 1 ? 's' : ''}</>
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="font-display text-lg text-ink">
+            {remainingSlots === 0 ? (
+              <span className="text-forest flex items-center gap-2">
+                <Check className="w-5 h-5" />
+                Tous les sorts sont choisis
+              </span>
+            ) : (
+              <>Choisir {remainingSlots} sort{remainingSlots > 1 ? 's' : ''}</>
+            )}
+          </h3>
+          {preparedCount > 0 && (
+            <button
+              onClick={() => clearNonDomainPrepared()}
+              className="text-xs text-ink-muted hover:text-blood-red flex items-center gap-1 px-2 py-1 rounded hover:bg-blood-red/10 transition-colors"
+            >
+              <X className="w-3.5 h-3.5" />
+              Tout désélectionner
+            </button>
           )}
-        </h3>
+        </div>
         
         <div className="space-y-2">
           {allSpells
