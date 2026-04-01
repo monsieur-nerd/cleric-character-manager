@@ -29,8 +29,7 @@ export function SpellCard({
   return (
     <>
       <div 
-        onClick={() => setShowDetail(true)}
-        className={`card relative overflow-hidden transition-all duration-150 cursor-pointer 
+        className={`card relative overflow-hidden transition-all duration-150
           hover:shadow-xl hover:scale-[1.02] hover:-translate-y-0.5
           active:scale-[0.98] active:translate-y-0
           ${isPrepared 
@@ -64,8 +63,11 @@ export function SpellCard({
             </button>
           )}
           
-          {/* Contenu */}
-          <div className="flex-1 min-w-0">
+          {/* Contenu cliquable pour ouvrir la modale */}
+          <div 
+            onClick={() => setShowDetail(true)}
+            className="flex-1 min-w-0 cursor-pointer"
+          >
             <div className="flex items-start justify-between gap-2">
               <div className="min-w-0 flex-1">
                 <h4 className={`font-display text-ink font-bold break-words leading-tight text-sm sm:text-base ${isUsed ? 'line-through' : ''}`}>
