@@ -1193,14 +1193,19 @@ export function Dashboard() {
         </div>
         
         <h2 className="font-display text-xl text-ink mt-4">{character.name}</h2>
-        <div className="flex flex-col gap-1 mt-2">
+        <div className="flex flex-col gap-1 mt-2 items-center">
           {/* Ligne Clerc de Torm */}
-          <div className="flex items-center gap-2 text-ink-muted font-ui text-sm">
+          <div className="flex items-center justify-center gap-2 text-ink-muted font-ui text-sm">
             {character.deity?.symbol && character.deity.symbol.startsWith('/') ? (
               <img 
                 src={character.deity.symbol} 
                 alt={character.deity.name}
                 className="w-5 h-5 object-contain flex-shrink-0"
+                onError={(e) => {
+                  // Fallback si l'image ne charge pas
+                  e.currentTarget.style.display = 'none';
+                  e.currentTarget.nextElementSibling!.textContent = '⚔️ ' + e.currentTarget.nextElementSibling!.textContent;
+                }}
               />
             ) : (
               <span className="text-lg flex-shrink-0">{character.deity?.symbol}</span>
@@ -1208,7 +1213,7 @@ export function Dashboard() {
             <span>Clerc de {character.deity?.name} ({character.deity?.alignment})</span>
           </div>
           {/* Ligne Domaine */}
-          <div className="flex items-center gap-2 text-divine-gold-dark font-medium text-sm">
+          <div className="flex items-center justify-center gap-2 text-divine-gold-dark font-medium text-sm">
             <span className="text-lg flex-shrink-0">{character.domain?.icon}</span>
             <span>{character.domain?.name} • Niveau {character.level}</span>
           </div>
