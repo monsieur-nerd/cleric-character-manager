@@ -381,3 +381,390 @@ export const generateOptimalPreset = (
   // Prend les N premiers selon maxPrepared
   return sorted.slice(0, maxPrepared).map(s => s.id);
 };
+
+// ============================================
+// PRÉRÉGLAGES SPÉCIFIQUES AU DOMAINE
+// ============================================
+
+export const domainPresets: Record<string, SpellPreset[]> = {
+  // Domaine de la Guerre - Focus sur les buffs offensifs et le combat
+  war: [
+    {
+      id: 'war-tactician',
+      name: '⚔️ Tacticien de Guerre',
+      icon: 'sword',
+      description: 'Buffs d\'armes et avantage pour dominer le champ de bataille',
+      spellIds: [
+        'faveur-divine',                  // +2d4 dégâts arme
+        'bouclier-de-la-foi',             // +2 CA bonus
+        'arme-magique',                   // Arme +1
+        'arme-spirituelle',               // Dégâts bonus zone
+        'aura-du-croisé',                 // Alliés +1d4 radiants
+        'bénédiction',                    // Avantage attaques
+        'aide',                           // +5 PV et avantage JS
+        'éclair-guidé',                   // Dégâts + avantage
+        'dissipation-de-la-magie',        // Annuler buffs ennemis
+        'injonction',                     // Contrôle cible
+        'cécité-surdité',                 // Handicap ennemi
+        'sanctuaire',                     // Protection urgence
+      ],
+    },
+    {
+      id: 'war-divine-striker',
+      name: '🔨 Frappe Divines',
+      icon: 'hammer',
+      description: 'Maximiser les dégâts en mêlée avec armes spirituelles',
+      spellIds: [
+        'arme-spirituelle',               // Dégâts bonus action bonus
+        'faveur-divine',                  // Dégâts radiants bonus
+        'aura-du-croisé',                 // Zone de dégâts alliés
+        'arme-magique',                   // Bonus arme
+        'éclair-guidé',                   // Dégâts + setup
+        'blessure',                       // Dégâts nécrotiques contact
+        'bénédiction',                    // Avantage = plus de touches
+        'aide',                           // Sustain combat
+        'lien-de-protection',             // Protéger alliés proches
+        'dissipation-de-la-magie',        // Contre protections magiques
+      ],
+    },
+  ],
+
+  // Domaine de la Vie - Focus sur les soins maximisés
+  life: [
+    {
+      id: 'life-divine-healer',
+      name: '✨ Guérisseur Divin',
+      icon: 'heart',
+      description: 'Soins maximisés pour maintenir l\'équipe debout',
+      spellIds: [
+        'lueur-despoir',             // Avantage JS CON + soins max
+        'retour-a-la-vie',                    // Ressusciter
+        'mot-de-guérison-de-groupe',      // Heal 6 cibles
+        'prière-de-guérison',             // Heal zone efficace
+        'aide',                           // +5 PV max
+        'soins',                          // Heal fiable
+        'mot-de-guérison',                // Heal action bonus
+        'restauration-partielle',         // Guérir états
+        'protection-contre-le-poison',    // Immun poison
+        'délivrance-des-malédictions',    // Nettoyer malédictions
+        'lien-de-protection',             // Répartir dégâts
+        'sanctuaire',                     // Protection urgence
+      ],
+    },
+    {
+      id: 'life-restoration',
+      name: '🏥 Restauration Totale',
+      icon: 'sparkles',
+      description: 'Guérison complète des maladies, poisons et états',
+      spellIds: [
+        'restauration-partielle',         // Guérir aveuglé/assourdi/paralysé/empoisonné
+        'protection-contre-le-poison',    // Immun poison
+        'délivrance-des-malédictions',    // Supprimer malédictions
+        'retour-a-la-vie',                    // Ressusciter
+        'prière-de-guérison',             // Heal groupe
+        'lueur-despoir',             // Buff soins
+        'soins',                          // Heal rapide
+        'mot-de-guérison-de-groupe',      // Heal multi
+        'préservation-des-morts',         // Préparer résurrection
+        'détection-du-poison-et-des-maladies', // Anticiper
+        'purification-de-nourriture-et-d-eau', // Prévention
+      ],
+    },
+  ],
+
+  // Domaine de la Lumière - Focus sur les dégâts radiants et lumière
+  light: [
+    {
+      id: 'light-radiant-damage',
+      name: '☀️ Porteur de Lumière',
+      icon: 'sun',
+      description: 'Dégâts radiants massifs et lumière contre les ténèbres',
+      spellIds: [
+        'flamme-sacrée',                  // Tour de magie radiants
+        'lumière-du-jour',                // Lumière vive 18m
+        'aura-du-croisé',                 // Zone +1d4 radiants
+        'éclair-guidé',                   // 4d6 radiants + avantage
+        'lueur-despoir',             // Buff + soins
+        'faveur-divine',                  // Dégâts radiants bonus
+        'détection-du-mal-et-du-bien',    // Détecter menaces
+        'protection-contre-le-mal-et-le-bien', // Protection
+        'dissipation-de-la-magie',        // Dissiper ténèbres magiques
+        'lumière',                        // Tour de magie lumière
+        'flamme-éternelle',               // Lumière permanente
+      ],
+    },
+    {
+      id: 'light-destroy-undead',
+      name: '💀 Chasseur de Morts-Vivants',
+      icon: 'skull',
+      description: 'Spécialisé contre les morts-vivants avec lumière radiante',
+      spellIds: [
+        'lumière-du-jour',                // Désavantage morts-vivants
+        'esprits-gardiens',               // Zone dégâts radiants
+        'aura-du-croisé',                 // Dégâts radiants alliés
+        'éclair-guidé',                   // Dégâts radiants
+        'retour-a-la-vie',                    // Contre la mort
+        'détection-du-mal-et-du-bien',    // Détecter morts-vivants
+        'protection-contre-le-mal-et-le-bien', // Protection
+        'dissipation-de-la-magie',        // Annuler nécromancie
+        'préservation-des-morts',         // Empêcher animation
+        'animation-des-morts',            // Si on veut contrôler
+      ],
+    },
+  ],
+
+  // Domaine de la Nature - Focus sur éléments et utilitaires
+  nature: [
+    {
+      id: 'nature-elemental-control',
+      name: '🌿 Gardien Élémentaire',
+      icon: 'leaf',
+      description: 'Contrôle des éléments et protection naturelle',
+      spellIds: [
+        'protection-contre-une-énergie',  // Résistance élémentaire
+        'marche-sur-l-eau',               // Traverser eau
+        'création-ou-destruction-d-eau',  // Contrôle eau
+        'création-de-nourriture-et-d-eau', // Subsistance
+        'purification-de-nourriture-et-d-eau', // Purifier
+        'protection-contre-le-poison',    // Immun poison nature
+        'aide',                           // Buff survie
+        'prière-de-guérison',             // Heal naturel
+        'détection-du-poison-et-des-maladies', // Sens naturel
+        'détection-de-la-magie',          // Sens magique
+      ],
+    },
+    {
+      id: 'nature-explorer',
+      name: '🧭 Explorateur Sauvage',
+      icon: 'compass',
+      description: 'Sorts utilitaires pour survivre en nature',
+      spellIds: [
+        'marche-sur-l-eau',               // Traverser rivières
+        'communication-à-distance',       // Communication groupe
+        'augure',                         // Prédire dangers
+        'localisation-d-objet',           // Trouver ressources
+        'création-de-nourriture-et-d-eau', // Ravitaillement
+        'purification-de-nourriture-et-d-eau', // Eau potable
+        'détection-du-poison-et-des-maladies', // Baies/plantes
+        'sens-des-pièges',                // Pièges naturels
+        'détection-de-la-magie',          // Plantes magiques
+        'aide',                           // Escalade/sauts
+        'réparation',                     // Équipement
+      ],
+    },
+  ],
+
+  // Domaine de la Tempête - Focus foudre et tonnerre
+  tempest: [
+    {
+      id: 'tempest-storm-master',
+      name: '⛈️ Maître des Tempêtes',
+      icon: 'cloud-lightning',
+      description: 'Foudre, tonnerre et vents dévastateurs',
+      spellIds: [
+        'protection-contre-une-énergie',  // Résistance foudre
+        'protection-contre-une-énergie',  // Résistance tonnerre (deuxième choix)
+        'silence',                        // Contre sorts sonores
+        'cécité-surdité',                 // Surdité contre tonnerre
+        'dissipation-de-la-magie',        // Annuler sorts tempête
+        'esprits-gardiens',               // Zone de dégâts
+        'retour-a-la-vie',                    // Foudre = one-shot
+        'lueur-despoir',             // Heal zone
+        'prière-de-guérison',             // Heal
+        'lien-de-protection',             // Protéger alliés
+        'mot-de-guérison-de-groupe',      // Heal foudre de zone
+      ],
+    },
+    {
+      id: 'tempest-fury',
+      name: '⚡ Furie Orageuse',
+      icon: 'zap',
+      description: 'Résistance et riposte aux dégâts électriques',
+      spellIds: [
+        'protection-contre-une-énergie',  // Foudre résistance
+        'protection-contre-le-poison',    // Bonus défensif
+        'dissipation-de-la-magie',        // Contrer magie
+        'retour-a-la-vie',                    // Sécurité
+        'lueur-despoir',             // Sustain
+        'esprits-gardiens',               // Zone contrôle
+        'cécité-surdité',                 // Handicap ennemis
+        'silence',                        // Désactiver sorts
+        'arme-spirituelle',               // Dégâts bonus
+        'aide',                           // Buff combat
+      ],
+    },
+  ],
+
+  // Domaine de la Tromperie - Focus illusions et discrétion
+  trickery: [
+    {
+      id: 'trickery-shadow',
+      name: '🎭 Maître des Ombres',
+      icon: 'mask',
+      description: 'Illusions, discrétion et manipulation',
+      spellIds: [
+        'silence',                        // Pas de bruit
+        'injonction',                     // Contrôle comportement
+        'immobilisation-de-personne',     // Paralysie = fuite
+        'cécité-surdité',                 // Handicap poursuivants
+        'détection-du-mal-et-du-bien',    // Détecter pièges vivants
+        'apaisement-des-émotions',        // Détourner attention
+        'zone-de-vérité',                 // Interrogatoire
+        'détection-de-la-magie',          // Détecter pièges magiques
+        'localisation-d-objet',           // Trouver cibles
+        'clairvoyance',                   // Espionnage
+        'fusion-dans-la-pierre',          // Cachette ultime
+      ],
+    },
+    {
+      id: 'trickery-deceiver',
+      name: '👤 Illusionniste',
+      icon: 'ghost',
+      description: 'Tromperie, charme et contrôle social',
+      spellIds: [
+        'injonction',                     // Commandement
+        'apaisement-des-émotions',        // Calmer tensions
+        'zone-de-vérité',                 // Forcer vérité
+        'immobilisation-de-personne',     // Retenir
+        'silence',                        // Secret
+        'détection-du-mal-et-du-bien',    // Lire intentions
+        'détection-de-la-magie',          // Détecter illusions
+        'augure',                         // Prédire tromperie
+        'langues',                        // Déception multilingue
+      ],
+    },
+  ],
+
+  // Domaine de la Connaissance - Focus divination et information
+  knowledge: [
+    {
+      id: 'knowledge-seeker',
+      name: '📚 Chercheur de Vérité',
+      icon: 'book',
+      description: 'Divination maximale pour révéler tous les secrets',
+      spellIds: [
+        'clairvoyance',                   // Vision à distance
+        'augure',                         // Présage
+        'localisation-d-objet',           // Trouver objets
+        'détection-de-la-magie',          // Magie détectée
+        'détection-du-mal-et-du-bien',    // Alignements
+        'détection-du-poison-et-des-maladies', // Dangers cachés
+        'sens-des-pièges',                // Pièges
+        'communication-avec-les-morts',   // Information morts
+        'communication-à-distance',       // Coordination
+        'langues',                        // Compréhension
+        'zone-de-vérité',                 // Interrogatoire
+        'dissipation-de-la-magie',        // Dissiper illusions
+      ],
+    },
+    {
+      id: 'knowledge-strategist',
+      name: '🧠 Stratège Érudit',
+      icon: 'brain',
+      description: 'Information et buffs tactiques pour l\'équipe',
+      spellIds: [
+        'augure',                         // Prédire combat
+        'clairvoyance',                   // Reconnaissance
+        'détection-de-la-magie',          // Identifier menaces
+        'bénédiction',                    // Avantage tactique
+        'aide',                           // Buff équipe
+        'assistance',                     // Aider jets clés
+        'communication-à-distance',       // Coordination
+        'localisation-d-objet',           // Trouver avantage
+        'amélioration-de-caractéristique', // Buff spécifique
+        'dissipation-de-la-magie',        // Contre tactiques magiques
+      ],
+    },
+  ],
+
+  // Domaine de la Forge - Focus feu et artisanat
+  forge: [
+    {
+      id: 'forge-master',
+      name: '🔨 Maître Forgeron',
+      icon: 'hammer',
+      description: 'Feu, métal et amélioration d\'équipement',
+      spellIds: [
+        'arme-magique',                   // Améliorer arme
+        'protection-contre-une-énergie',  // Résistance feu
+        'chaleur-du-métal',               // Si disponible
+        'flamme-éternelle',               // Feu permanent
+        'création-ou-destruction-d-eau',  // Tremper/refroidir
+        'réparation',                     // Réparer équipement
+        'aide',                           // Buff artisanat
+        'protection-contre-le-poison',    // Fumées
+        'dissipation-de-la-magie',        // Contre magie
+      ],
+    },
+    {
+      id: 'forge-fire-warrior',
+      name: '🔥 Guerrier de Feu',
+      icon: 'flame',
+      description: 'Combat embrasé avec résistance et dégâts de feu',
+      spellIds: [
+        'protection-contre-une-énergie',  // Immun feu
+        'arme-magique',                   // Arme enflammée
+        'faveur-divine',                  // Dégâts bonus
+        'aura-du-croisé',                 // Zone de feu divin
+        'arme-spirituelle',               // Arme spectrale de feu
+        'éclair-guidé',                   // Frappe radiante
+        'bénédiction',                    // Avantage
+        'aide',                           // Sustain
+        'dissipation-de-la-magie',        // Contre eau
+      ],
+    },
+  ],
+
+  // Domaine du Tombeau - Focus entre-deux mondes
+  grave: [
+    {
+      id: 'grave-keeper',
+      name: '⚰️ Gardien du Seuil',
+      icon: 'coffin',
+      description: 'Protection contre la mort et contrôle des frontières',
+      spellIds: [
+        'sentinelle-du-cercueil',         // Si sort spécifique
+        'retour-a-la-vie',                    // Empêcher mort
+        'préservation-des-morts',         // Préserver corps
+        'lumière-du-jour',                // Contre morts-vivants
+        'dissipation-de-la-magie',        // Annuler nécromancie
+        'protection-contre-le-mal-et-le-bien', // Protection
+        'délivrance-des-malédictions',    // Malédictions mort
+        'détection-du-mal-et-du-bien',    // Détecter présences
+        'communication-avec-les-morts',   // Parler défunts
+        'lueur-despoir',             // Heal critique
+        'prière-de-guérison',             // Heal groupe
+        'soins',                          // Heal urgence
+      ],
+    },
+    {
+      id: 'grave-death-watcher',
+      name: '💀 Veilleur des Âmes',
+      icon: 'skull',
+      description: 'Anticiper et contrer la magie de mort',
+      spellIds: [
+        'préservation-des-morts',         // Bloquer animation
+        'retour-a-la-vie',                    // Ramener à la vie
+        'lumière-du-jour',                // Repousser morts-vivants
+        'dissipation-de-la-magie',        // Dissiper nécromancie
+        'protection-contre-le-mal-et-le-bien', // Barrière
+        'détection-du-mal-et-du-bien',    // Identifier
+        'esprits-gardiens',               // Esprits protecteurs
+        'délivrance-des-malédictions',    // Malédictions nécromantiques
+        'restauration-partielle',         // Guérir états
+        'animation-des-morts',            // Si besoin contrôle
+      ],
+    },
+  ],
+};
+
+// Helper pour obtenir les préréglages d'un domaine spécifique
+export const getDomainPresets = (domainId: string): SpellPreset[] => {
+  return domainPresets[domainId] || [];
+};
+
+// Helper pour obtenir tous les préréglages (défauts + domaine)
+export const getAllPresetsForCharacter = (domainId?: string): SpellPreset[] => {
+  const domainSpecific = domainId ? getDomainPresets(domainId) : [];
+  return [...defaultPresets, ...domainSpecific];
+};

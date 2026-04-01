@@ -30,8 +30,7 @@ export function SpellCard({
     <>
       <div 
         className={`card relative overflow-hidden transition-all duration-150
-          hover:shadow-xl hover:scale-[1.02] hover:-translate-y-0.5
-          active:scale-[0.98] active:translate-y-0
+          hover:shadow-xl
           ${isPrepared 
             ? 'border-divine-gold bg-divine-gold/10 shadow-md hover:bg-divine-gold/15' 
             : 'hover:border-parchment-dark hover:bg-parchment-light'
@@ -41,26 +40,32 @@ export function SpellCard({
         `}
       >
         <div className="flex items-start gap-3">
-          {/* Checkbox de préparation */}
+          {/* Checkbox de préparation - zone de clic élargie */}
           {showActions && (
-            <button
+            <div 
+              className="flex-shrink-0 p-2 -m-2 cursor-pointer"
               onClick={(e) => {
                 e.stopPropagation();
-                onTogglePrepare();
+                e.preventDefault();
+                if (!isDomain) {
+                  onTogglePrepare();
+                }
               }}
-              disabled={isDomain}
-              className={`mt-1 w-6 h-6 rounded border-2 flex items-center justify-center transition-colors flex-shrink-0 ${
-                isDomain 
-                  ? 'border-divine-gold bg-divine-gold cursor-not-allowed' 
-                  : isPrepared
-                    ? 'border-divine-gold bg-divine-gold'
-                    : 'border-parchment-dark hover:border-divine-gold'
-              }`}
             >
-              {(isPrepared || isDomain) && (
-                <Check className="w-4 h-4 text-ink" />
-              )}
-            </button>
+              <div
+                className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-colors ${
+                  isDomain 
+                    ? 'border-divine-gold bg-divine-gold cursor-not-allowed' 
+                    : isPrepared
+                      ? 'border-divine-gold bg-divine-gold'
+                      : 'border-parchment-dark hover:border-divine-gold'
+                }`}
+              >
+                {(isPrepared || isDomain) && (
+                  <Check className="w-4 h-4 text-ink" />
+                )}
+              </div>
+            </div>
           )}
           
           {/* Contenu cliquable pour ouvrir la modale */}
