@@ -533,18 +533,6 @@ export function CombatPage() {
               ))}
             </div>
           </button>
-          {/* Bouton repos court - toujours visible */}
-          <button
-            onClick={() => {
-              if (confirm('Effectuer un repos court ?\n\nLe Conduit divin sera réinitialisé.')) {
-                shortRest();
-              }
-            }}
-            className="w-full mt-2 py-1.5 text-xs bg-forest/20 text-forest border border-forest/30 rounded-lg hover:bg-forest/30 transition-colors flex items-center justify-center gap-1"
-          >
-            <span>💤</span> Repos court
-          </button>
-          
           <button
             onClick={() => setShowChannelDivinityInfo(!showChannelDivinityInfo)}
             className="w-full mt-2 text-xs text-ink-muted flex items-center justify-center gap-1"
@@ -586,6 +574,18 @@ export function CombatPage() {
               </p>
             </div>
           )}
+          
+          {/* Bouton repos court - après les options */}
+          <button
+            onClick={() => {
+              if (confirm('Effectuer un repos court ?\n\nLe Conduit divin sera réinitialisé.')) {
+                shortRest();
+              }
+            }}
+            className="w-full mt-3 py-1.5 text-xs bg-forest/20 text-forest border border-forest/30 rounded-lg hover:bg-forest/30 transition-colors flex items-center justify-center gap-1"
+          >
+            <span>💤</span> Repos court
+          </button>
         </div>
       </div>
       
