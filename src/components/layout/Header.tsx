@@ -4,7 +4,13 @@ import { SaveLoadButton } from './SaveLoadButton';
 import { useCharacterStore } from '@/stores';
 
 export function Header() {
-  const domain = useCharacterStore((state) => state.character.domain);
+  const character = useCharacterStore((state) => state.character);
+  const { name, deity } = character;
+  
+  // Format : "Nom, Clerc de Torm"
+  const characterInfo = deity 
+    ? `${name}, Clerc de ${deity.name}`
+    : `${name}, Clerc`;
   
   return (
     <header className="fixed top-0 left-0 right-0 bg-parchment-dark border-b border-divine-gold/30 z-50">
@@ -19,9 +25,12 @@ export function Header() {
           </h1>
         </Link>
         
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-ink-muted font-ui hidden sm:block">
-            {domain ? domain.name : 'Choisir un domaine...'}
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-ink font-ui hidden md:block truncate max-w-[300px]">
+            {characterInfo}
+          </span>
+          <span className="text-xs text-ink-muted font-ui hidden sm:block md:hidden">
+            {name}
           </span>
           <SaveLoadButton />
         </div>
