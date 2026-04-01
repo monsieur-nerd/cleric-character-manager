@@ -158,6 +158,7 @@ export function CombatPage() {
   const { warCleric, channelDivinity } = character.abilities;
   const useWarCleric = useCharacterStore((state) => state.useWarCleric);
   const useChannelDivinity = useCharacterStore((state) => state.useChannelDivinity);
+  const shortRest = useCharacterStore((state) => state.shortRest);
   const activeConcentration = character.currentState.activeConcentration;
   
   const preparedSpells = useSpellStore((state) => state.getPreparedSpells());
@@ -532,6 +533,20 @@ export function CombatPage() {
               ))}
             </div>
           </button>
+          {/* Bouton repos court - visible si Conduit divin utilisé */}
+          {channelDivinity.currentUses < channelDivinity.maxUses && (
+            <button
+              onClick={() => {
+                if (confirm('Effectuer un repos court ?\n\nLe Conduit divin sera réinitialisé.')) {
+                  shortRest();
+                }
+              }}
+              className="w-full mt-2 py-1.5 text-xs bg-forest/20 text-forest border border-forest/30 rounded-lg hover:bg-forest/30 transition-colors flex items-center justify-center gap-1"
+            >
+              <span>💤</span> Repos court
+            </button>
+          )}
+          
           <button
             onClick={() => setShowChannelDivinityInfo(!showChannelDivinityInfo)}
             className="w-full mt-2 text-xs text-ink-muted flex items-center justify-center gap-1"

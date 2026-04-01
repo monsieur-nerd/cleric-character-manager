@@ -522,12 +522,17 @@ export const useCharacterStore = create<CharacterState>()(
             ...state.character,
             abilities: {
               ...state.character.abilities,
+              // Conduit divin se recharge complètement au repos court
               channelDivinity: {
                 ...state.character.abilities.channelDivinity,
-                currentUses: Math.min(
-                  state.character.abilities.channelDivinity.maxUses,
-                  state.character.abilities.channelDivinity.currentUses + 1
-                ),
+                currentUses: state.character.abilities.channelDivinity.maxUses,
+              },
+            },
+            currentState: {
+              ...state.character.currentState,
+              usedAbilities: {
+                ...state.character.currentState.usedAbilities,
+                channelDivinity: 0,
               },
             },
           },
