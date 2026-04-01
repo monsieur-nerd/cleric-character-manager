@@ -14,6 +14,7 @@ interface CharacterState {
   setAvatar: (avatar: string | null) => void;
   setDeity: (deityId: string) => void;
   setDomain: (domainId: string) => void;
+  syncDeity: () => void; // Synchronise la divinité avec les données à jour
   
   // Actions - Niveau et Caractéristiques
   setLevel: (level: number) => void;
@@ -180,6 +181,23 @@ export const useCharacterStore = create<CharacterState>()(
             name: state.character.name === state.character.deity?.name ? deity.name : state.character.name,
           },
         }));
+      },
+      
+      syncDeity: () => {
+        set((state) => {
+          const currentDeityId = state.character.deity?.id;
+          if (!currentDeityId) return state;
+          
+          const updatedDeity = DEITIES.find(d => d.id === currentDeityId);
+          if (!updatedDeity) return state;
+          
+          return {
+            character: {
+              ...state.character,
+              deity: updatedDeity,
+            },
+          };
+        });
       },
       
       setDomain: (domainId) => {

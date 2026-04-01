@@ -1,7 +1,7 @@
 // @ts-nocheck
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Sparkles, Zap, Brain, AlertCircle, Shield, Edit3, Sword, Stars, User, Camera, Cross, Heart, X, ChevronDown, ChevronUp, GraduationCap, Menu } from 'lucide-react';
+import { Sparkles, Zap, Brain, AlertCircle, Shield, Edit3, Sword, Stars, User, Camera, Cross, Heart, X, ChevronDown, ChevronUp, GraduationCap, Menu, Check } from 'lucide-react';
 import { useSpellStore, useCharacterStore } from '@/stores';
 import { SpellSlotBar } from '@/components/spells/SpellSlotBar';
 import { DomainRadarChart, DomainRadarCompare } from '@/components/character/DomainRadarChart';
@@ -10,7 +10,7 @@ import { formatModifier } from '@/utils/formatters';
 import type { SpellSlots, Deity, ClericDomain, DomainSpellProfile } from '@/types';
 import { MAX_SPELL_SLOTS } from '@/types';
 import { DEITIES, CLERIC_DOMAINS } from '@/types';
-import { getSkillById } from '@/types/skills';
+import { getSkillById, SKILLS, type AbilityScore, type Skill } from '@/types/skills';
 import { getFeatById } from '@/types/feats';
 
 // Composant pour l'éditeur d'avatar
@@ -297,6 +297,107 @@ function SkillDetail({ skill, isMastered, bonus, abilityMod, profBonus, onToggle
 }
 
 // Composant pour l'onglet Compétences
+// Composant carte de compétence
+function SkillCard({ 
+  skill, 
+  isMastered, 
+  bonus, 
+  onClick 
+}: { 
+  skill: Skill; 
+  isMastered: boolean; 
+  bonus: number;
+  onClick: () => void;
+}) {
+  const abilityColors: Record<AbilityScore, { text: string; bg: string; border: string }> = {
+    STR: { text: 'text-crimson', bg: 'bg-crimson', border: 'border-crimson/20' },
+    DEX: { text: 'text-forest', bg: 'bg-forest', border: 'border-forest/20' },
+    CON: { text: 'text-amber-600', bg: 'bg-amber-600', border: 'border-amber-600/20' },
+    INT: { text: 'text-royal-purple', bg: 'bg-royal-purple', border: 'border-royal-purple/20' },
+    WIS: { text: 'text-divine-gold-dark', bg: 'bg-divine-gold', border: 'border-divine-gold/30' },
+    CHA: { text: 'text-bronze', bg: 'bg-bronze', border: 'border-bronze/20' },
+  };
+  
+  const colors = abilityColors[skill.abilityScore];
+  
+  return (
+    <button
+      onClick={onClick}
+      className={`w-full text-left p-3 rounded-lg border transition-all ${
+        isMastered 
+          ? `${colors.border} ${colors.bg.replace('bg-', 'bg-')}/10` 
+          : 'border-parchment-dark/50 hover:border-parchment-dark hover:bg-parchment-dark/20'
+      }`}
+    >
+      <div className="flex items-start justify-between gap-2">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2">
+            <div className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 ${
+              isMastered ? `${colors.bg} border-transparent` : 'border-ink-muted'
+            }`}>
+              {isMastered && <Check className="w-3 h-3 text-white" />}
+            </div>
+            <span className={`font-display text-sm ${isMastered ? 'text-ink' : 'text-ink-light'}`}>
+              {skill.name}
+            </span>
+          </div>
+          <p className="text-xs text-ink-muted mt-1 ml-6 line-clamp-2">
+            {skill.summary}
+          </p>
+        </div>
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <span className={`text-xs font-medium ${colors.text}`}>
+            {skill.abilityScore}
+          </span>
+          <span className={`font-display text-lg ${isMastered ? colors.text : 'text-ink-muted'}`}>
+            {bonus >= 0 ? `+${bonus}` : bonus}
+          </span>
+        </div>
+      </div>
+    </button>
+  );
+}
+
+// Filtre des compétences par caractéristique
+function SkillFilter({ 
+  activeFilter, 
+  onFilterChange,
+  skillCounts
+}: { 
+  activeFilter: AbilityScore | 'all';
+  onFilterChange: (filter: AbilityScore | 'all') => void;
+  skillCounts: Record<AbilityScore | 'all', number>;
+}) {
+  const filters: { id: AbilityScore | 'all'; label: string; color: string }[] = [
+    { id: 'all', label: 'Toutes', color: 'bg-ink-muted' },
+    { id: 'STR', label: 'FOR', color: 'bg-crimson' },
+    { id: 'DEX', label: 'DEX', color: 'bg-forest' },
+    { id: 'CON', label: 'CON', color: 'bg-amber-600' },
+    { id: 'INT', label: 'INT', color: 'bg-royal-purple' },
+    { id: 'WIS', label: 'SAG', color: 'bg-divine-gold-dark' },
+    { id: 'CHA', label: 'CHA', color: 'bg-bronze' },
+  ];
+  
+  return (
+    <div className="flex flex-wrap gap-1.5">
+      {filters.map((filter) => (
+        <button
+          key={filter.id}
+          onClick={() => onFilterChange(filter.id)}
+          className={`px-2.5 py-1 rounded-full text-xs font-medium transition-all ${
+            activeFilter === filter.id
+              ? `${filter.color} text-white shadow-sm`
+              : 'bg-parchment-dark/50 text-ink-muted hover:bg-parchment-dark hover:text-ink'
+          }`}
+        >
+          {filter.label}
+          <span className="ml-1 opacity-70">({skillCounts[filter.id]})</span>
+        </button>
+      ))}
+    </div>
+  );
+}
+
 function SkillsTab() {
   const character = useCharacterStore((state) => state.character);
   const toggleSkill = useCharacterStore((state) => state.toggleSkill);
@@ -305,9 +406,10 @@ function SkillsTab() {
   const getProficiencyBonus = useCharacterStore((state) => state.getProficiencyBonus);
   const getModifier = useCharacterStore((state) => state.getModifier);
   
-  const [activeSection, setActiveSection] = useState<'skills' | 'feats'>('skills');
+  const [activeSection, setActiveSection] = useState<'skills' | 'feats'>('feats');
   const [showFeatSelector, setShowFeatSelector] = useState(false);
   const [selectedSkill, setSelectedSkill] = useState<string | null>(null);
+  const [skillFilter, setSkillFilter] = useState<AbilityScore | 'all'>('all');
   
   const profBonus = getProficiencyBonus();
   const masteredSkills = character.masteredSkills || [];
@@ -334,18 +436,8 @@ function SkillsTab() {
 
   return (
     <div className="space-y-4">
-      {/* Toggle Skills/Feats */}
+      {/* Toggle Feats/Skills - Talents d'abord */}
       <div className="flex bg-parchment-dark rounded-lg p-1">
-        <button
-          onClick={() => setActiveSection('skills')}
-          className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors ${
-            activeSection === 'skills' 
-              ? 'bg-parchment-light text-ink shadow-sm' 
-              : 'text-ink-muted hover:text-ink'
-          }`}
-        >
-          Compétences
-        </button>
         <button
           onClick={() => setActiveSection('feats')}
           className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors ${
@@ -356,175 +448,58 @@ function SkillsTab() {
         >
           Talents
         </button>
+        <button
+          onClick={() => setActiveSection('skills')}
+          className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors ${
+            activeSection === 'skills' 
+              ? 'bg-parchment-light text-ink shadow-sm' 
+              : 'text-ink-muted hover:text-ink'
+          }`}
+        >
+          Compétences
+        </button>
       </div>
       
       {activeSection === 'skills' && (
         <>
+          {/* Info bonus de maîtrise */}
           <div className="flex items-center justify-between p-3 bg-divine-gold/10 rounded-lg">
             <span className="text-sm text-ink-light">Bonus de maîtrise</span>
             <span className="font-display text-lg text-divine-gold-dark">+{profBonus}</span>
           </div>
           
+          {/* Filtres par caractéristique */}
+          <SkillFilter 
+            activeFilter={skillFilter} 
+            onFilterChange={setSkillFilter}
+            skillCounts={{
+              all: SKILLS.length,
+              STR: SKILLS.filter(s => s.abilityScore === 'STR').length,
+              DEX: SKILLS.filter(s => s.abilityScore === 'DEX').length,
+              CON: SKILLS.filter(s => s.abilityScore === 'CON').length,
+              INT: SKILLS.filter(s => s.abilityScore === 'INT').length,
+              WIS: SKILLS.filter(s => s.abilityScore === 'WIS').length,
+              CHA: SKILLS.filter(s => s.abilityScore === 'CHA').length,
+            }}
+          />
+          
+          {/* Liste des compétences filtrées */}
           <div className="space-y-2">
-            {/* Force skills */}
-            <div className="p-3 bg-crimson/5 rounded-lg border border-crimson/20">
-              <h4 className="font-display text-sm text-crimson mb-2">Force</h4>
-              {['athletics'].map((skillId) => {
-                const skill = getSkillById(skillId);
-                if (!skill) return null;
-                const isMastered = masteredSkills.includes(skillId);
-                const bonus = getSkillTotalBonus(skillId, 'STR');
+            {SKILLS
+              .filter(skill => skillFilter === 'all' || skill.abilityScore === skillFilter)
+              .map((skill) => {
+                const isMastered = masteredSkills.includes(skill.id);
+                const bonus = getSkillTotalBonus(skill.id, skill.abilityScore);
                 return (
-                  <button
-                    key={skillId}
-                    onClick={() => setSelectedSkill(skillId)}
-                    className={`w-full flex items-center justify-between p-2 rounded-lg transition-colors ${
-                      isMastered ? 'bg-crimson/10' : 'hover:bg-parchment-dark/50'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2">
-                      <div className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
-                        isMastered ? 'bg-crimson border-crimson' : 'border-ink-muted'
-                      }`}>
-                        {isMastered && <span className="text-white text-xs">✓</span>}
-                      </div>
-                      <span className="text-sm text-ink">{skill.name}</span>
-                    </div>
-                    <span className={`font-bold ${isMastered ? 'text-crimson' : 'text-ink-muted'}`}>
-                      {formatBonus(bonus)}
-                    </span>
-                  </button>
+                  <SkillCard
+                    key={skill.id}
+                    skill={skill}
+                    isMastered={isMastered}
+                    bonus={bonus}
+                    onClick={() => setSelectedSkill(skill.id)}
+                  />
                 );
               })}
-            </div>
-            
-            {/* Dextérité skills */}
-            <div className="p-3 bg-forest/5 rounded-lg border border-forest/20">
-              <h4 className="font-display text-sm text-forest mb-2">Dextérité</h4>
-              {['acrobatics', 'sleightOfHand', 'stealth'].map((skillId) => {
-                const skill = getSkillById(skillId);
-                if (!skill) return null;
-                const isMastered = masteredSkills.includes(skillId);
-                const bonus = getSkillTotalBonus(skillId, 'DEX');
-                return (
-                  <button
-                    key={skillId}
-                    onClick={() => setSelectedSkill(skillId)}
-                    className={`w-full flex items-center justify-between p-2 rounded-lg transition-colors ${
-                      isMastered ? 'bg-forest/10' : 'hover:bg-parchment-dark/50'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2">
-                      <div className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
-                        isMastered ? 'bg-forest border-forest' : 'border-ink-muted'
-                      }`}>
-                        {isMastered && <span className="text-white text-xs">✓</span>}
-                      </div>
-                      <span className="text-sm text-ink">{skill.name}</span>
-                    </div>
-                    <span className={`font-bold ${isMastered ? 'text-forest' : 'text-ink-muted'}`}>
-                      {formatBonus(bonus)}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-            
-            {/* Intelligence skills */}
-            <div className="p-3 bg-royal-purple/5 rounded-lg border border-royal-purple/20">
-              <h4 className="font-display text-sm text-royal-purple mb-2">Intelligence</h4>
-              {['arcana', 'history', 'investigation', 'nature', 'religion'].map((skillId) => {
-                const skill = getSkillById(skillId);
-                if (!skill) return null;
-                const isMastered = masteredSkills.includes(skillId);
-                const bonus = getSkillTotalBonus(skillId, 'INT');
-                return (
-                  <button
-                    key={skillId}
-                    onClick={() => setSelectedSkill(skillId)}
-                    className={`w-full flex items-center justify-between p-2 rounded-lg transition-colors ${
-                      isMastered ? 'bg-royal-purple/10' : 'hover:bg-parchment-dark/50'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2">
-                      <div className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
-                        isMastered ? 'bg-royal-purple border-royal-purple' : 'border-ink-muted'
-                      }`}>
-                        {isMastered && <span className="text-white text-xs">✓</span>}
-                      </div>
-                      <span className="text-sm text-ink">{skill.name}</span>
-                    </div>
-                    <span className={`font-bold ${isMastered ? 'text-royal-purple' : 'text-ink-muted'}`}>
-                      {formatBonus(bonus)}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-            
-            {/* Sagesse skills */}
-            <div className="p-3 bg-divine-gold/10 rounded-lg border border-divine-gold/30">
-              <h4 className="font-display text-sm text-divine-gold-dark mb-2">Sagesse</h4>
-              {['animalHandling', 'insight', 'medicine', 'perception', 'survival'].map((skillId) => {
-                const skill = getSkillById(skillId);
-                if (!skill) return null;
-                const isMastered = masteredSkills.includes(skillId);
-                const bonus = getSkillTotalBonus(skillId, 'WIS');
-                return (
-                  <button
-                    key={skillId}
-                    onClick={() => setSelectedSkill(skillId)}
-                    className={`w-full flex items-center justify-between p-2 rounded-lg transition-colors ${
-                      isMastered ? 'bg-divine-gold/20' : 'hover:bg-parchment-dark/50'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2">
-                      <div className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
-                        isMastered ? 'bg-divine-gold border-divine-gold' : 'border-ink-muted'
-                      }`}>
-                        {isMastered && <span className="text-white text-xs">✓</span>}
-                      </div>
-                      <span className="text-sm text-ink">{skill.name}</span>
-                    </div>
-                    <span className={`font-bold ${isMastered ? 'text-divine-gold-dark' : 'text-ink-muted'}`}>
-                      {formatBonus(bonus)}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-            
-            {/* Charisme skills */}
-            <div className="p-3 bg-bronze/5 rounded-lg border border-bronze/20">
-              <h4 className="font-display text-sm text-bronze mb-2">Charisme</h4>
-              {['deception', 'intimidation', 'performance', 'persuasion'].map((skillId) => {
-                const skill = getSkillById(skillId);
-                if (!skill) return null;
-                const isMastered = masteredSkills.includes(skillId);
-                const bonus = getSkillTotalBonus(skillId, 'CHA');
-                return (
-                  <button
-                    key={skillId}
-                    onClick={() => setSelectedSkill(skillId)}
-                    className={`w-full flex items-center justify-between p-2 rounded-lg transition-colors ${
-                      isMastered ? 'bg-bronze/10' : 'hover:bg-parchment-dark/50'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2">
-                      <div className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
-                        isMastered ? 'bg-bronze border-bronze' : 'border-ink-muted'
-                      }`}>
-                        {isMastered && <span className="text-white text-xs">✓</span>}
-                      </div>
-                      <span className="text-sm text-ink">{skill.name}</span>
-                    </div>
-                    <span className={`font-bold ${isMastered ? 'text-bronze' : 'text-ink-muted'}`}>
-                      {formatBonus(bonus)}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
           </div>
           
           {/* Modal de détail de compétence */}
@@ -1167,6 +1142,12 @@ function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: { is
 export function Dashboard() {
   const [showEditor, setShowEditor] = useState(false);
   const [editorInitialTab, setEditorInitialTab] = useState<'identity' | 'stats' | 'abilities' | 'skills'>('identity');
+  
+  // Synchronise la divinité au chargement pour mettre à jour le symbole
+  const syncDeity = useCharacterStore((state) => state.syncDeity);
+  useEffect(() => {
+    syncDeity();
+  }, [syncDeity]);
 
   const openEditor = (tab: 'identity' | 'stats' | 'abilities' | 'skills' = 'identity') => {
     setEditorInitialTab(tab);
@@ -1212,22 +1193,26 @@ export function Dashboard() {
         </div>
         
         <h2 className="font-display text-xl text-ink mt-4">{character.name}</h2>
-        <p className="text-ink-muted font-ui text-sm flex items-center gap-2">
-          {character.deity?.symbol && character.deity.symbol.startsWith('/') ? (
-            <img 
-              src={character.deity.symbol} 
-              alt={character.deity.name}
-              className="w-5 h-5 object-contain"
-            />
-          ) : (
-            <span className="text-lg">{character.deity?.symbol}</span>
-          )}
-          <span>Clerc de {character.deity?.name} ({character.deity?.alignment})</span>
-        </p>
-        <p className="text-divine-gold-dark font-medium text-sm mt-1">
-          <span className="text-lg mr-1">{character.domain?.icon}</span>
-          {character.domain?.name} • Niveau {character.level}
-        </p>
+        <div className="flex flex-col gap-1 mt-2">
+          {/* Ligne Clerc de Torm */}
+          <div className="flex items-center gap-2 text-ink-muted font-ui text-sm">
+            {character.deity?.symbol && character.deity.symbol.startsWith('/') ? (
+              <img 
+                src={character.deity.symbol} 
+                alt={character.deity.name}
+                className="w-5 h-5 object-contain flex-shrink-0"
+              />
+            ) : (
+              <span className="text-lg flex-shrink-0">{character.deity?.symbol}</span>
+            )}
+            <span>Clerc de {character.deity?.name} ({character.deity?.alignment})</span>
+          </div>
+          {/* Ligne Domaine */}
+          <div className="flex items-center gap-2 text-divine-gold-dark font-medium text-sm">
+            <span className="text-lg flex-shrink-0">{character.domain?.icon}</span>
+            <span>{character.domain?.name} • Niveau {character.level}</span>
+          </div>
+        </div>
         
         <div className="mt-3 pb-2 flex justify-center gap-4 text-sm font-ui">
           <button 
