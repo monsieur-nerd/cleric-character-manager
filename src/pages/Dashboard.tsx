@@ -1246,7 +1246,7 @@ export function Dashboard() {
         <div className="flex flex-col gap-1 mt-2 items-center">
           {/* Ligne Clerc de Torm */}
           <div className="flex items-center justify-center gap-2 text-ink-muted font-ui text-sm">
-            {deitySymbol.startsWith('/') ? (
+            {deitySymbol.startsWith('images/') || deitySymbol.startsWith('/') ? (
               <img 
                 src={deitySymbol} 
                 alt={character.deity?.name || 'Torm'}
