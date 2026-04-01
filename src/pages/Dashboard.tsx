@@ -368,14 +368,49 @@ function SkillFilter({
   onFilterChange: (filter: AbilityScore | 'all') => void;
   skillCounts: Record<AbilityScore | 'all', number>;
 }) {
-  const filters: { id: AbilityScore | 'all'; label: string; color: string }[] = [
-    { id: 'all', label: 'Toutes', color: 'bg-ink-muted' },
-    { id: 'STR', label: 'FOR', color: 'bg-crimson' },
-    { id: 'DEX', label: 'DEX', color: 'bg-forest' },
-    { id: 'CON', label: 'CON', color: 'bg-amber-600' },
-    { id: 'INT', label: 'INT', color: 'bg-royal-purple' },
-    { id: 'WIS', label: 'SAG', color: 'bg-divine-gold-dark' },
-    { id: 'CHA', label: 'CHA', color: 'bg-bronze' },
+  const filters: { id: AbilityScore | 'all'; label: string; activeClass: string; inactiveClass: string }[] = [
+    { 
+      id: 'all', 
+      label: 'Toutes', 
+      activeClass: 'bg-gray-600 text-white',
+      inactiveClass: 'bg-parchment-dark/50 text-ink-muted hover:bg-parchment-dark hover:text-ink'
+    },
+    { 
+      id: 'STR', 
+      label: 'FOR', 
+      activeClass: 'bg-red-700 text-white',
+      inactiveClass: 'bg-red-100 text-red-800 hover:bg-red-200'
+    },
+    { 
+      id: 'DEX', 
+      label: 'DEX', 
+      activeClass: 'bg-green-700 text-white',
+      inactiveClass: 'bg-green-100 text-green-800 hover:bg-green-200'
+    },
+    { 
+      id: 'CON', 
+      label: 'CON', 
+      activeClass: 'bg-amber-700 text-white',
+      inactiveClass: 'bg-amber-100 text-amber-800 hover:bg-amber-200'
+    },
+    { 
+      id: 'INT', 
+      label: 'INT', 
+      activeClass: 'bg-purple-700 text-white',
+      inactiveClass: 'bg-purple-100 text-purple-800 hover:bg-purple-200'
+    },
+    { 
+      id: 'WIS', 
+      label: 'SAG', 
+      activeClass: 'bg-yellow-700 text-white',
+      inactiveClass: 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200'
+    },
+    { 
+      id: 'CHA', 
+      label: 'CHA', 
+      activeClass: 'bg-orange-700 text-white',
+      inactiveClass: 'bg-orange-100 text-orange-800 hover:bg-orange-200'
+    },
   ];
   
   return (
@@ -384,14 +419,14 @@ function SkillFilter({
         <button
           key={filter.id}
           onClick={() => onFilterChange(filter.id)}
-          className={`px-2.5 py-1 rounded-full text-xs font-medium transition-all ${
+          className={`px-2.5 py-1 rounded-full text-xs font-medium transition-all shadow-sm ${
             activeFilter === filter.id
-              ? `${filter.color} text-white shadow-sm`
-              : 'bg-parchment-dark/50 text-ink-muted hover:bg-parchment-dark hover:text-ink'
+              ? filter.activeClass
+              : filter.inactiveClass
           }`}
         >
           {filter.label}
-          <span className="ml-1 opacity-70">({skillCounts[filter.id]})</span>
+          <span className="ml-1 opacity-80">({skillCounts[filter.id]})</span>
         </button>
       ))}
     </div>
