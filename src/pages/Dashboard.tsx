@@ -10,7 +10,7 @@ import { formatModifier } from '@/utils/formatters';
 import type { SpellSlots, Deity, ClericDomain, DomainSpellProfile } from '@/types';
 import { MAX_SPELL_SLOTS } from '@/types';
 import { DEITIES, CLERIC_DOMAINS } from '@/types';
-import { getSkillById, SKILLS, type AbilityScore, type Skill } from '@/types/skills';
+import { getSkillById, SKILLS, ABILITY_SCORES, type AbilityScore, type Skill } from '@/types/skills';
 import { getFeatById } from '@/types/feats';
 
 // Composant pour l'éditeur d'avatar
@@ -355,7 +355,7 @@ function SkillCard({
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
           <span className={`text-xs font-medium ${colors.text}`}>
-            {skill.abilityScore}
+            {ABILITY_SCORES[skill.abilityScore].name}
           </span>
           <span className={`font-display text-lg ${isMastered ? colors.text : 'text-ink-muted'}`}>
             {bonus >= 0 ? `+${bonus}` : bonus}
