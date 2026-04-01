@@ -78,7 +78,15 @@ function DeitySelector({ currentDeity, onSelect }: { currentDeity: Deity | undef
         className="w-full flex items-center justify-between p-3 bg-parchment-dark rounded-lg border border-parchment-dark hover:border-divine-gold transition-colors"
       >
         <div className="flex items-center gap-3">
-          <span className="text-2xl">{currentDeity?.symbol || '⛤'}</span>
+          {currentDeity?.symbol?.startsWith('/') ? (
+            <img 
+              src={currentDeity.symbol} 
+              alt={currentDeity.name}
+              className="w-8 h-8 object-contain"
+            />
+          ) : (
+            <span className="text-2xl">{currentDeity?.symbol || '⛤'}</span>
+          )}
           <div className="text-left">
             <p className="font-display text-ink">{currentDeity?.name || 'Choisir...'}</p>
             <p className="text-xs text-ink-muted">{currentDeity?.title}</p>
@@ -756,6 +764,9 @@ function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: { is
   const [localInt, setLocalInt] = useState(character.intelligence || 10);
   const [localCha, setLocalCha] = useState(character.charisma || 10);
   
+  // Récupère la divinité à jour depuis DEITIES
+  const currentDeity = character.deity?.id ? DEITIES.find(d => d.id === character.deity?.id) || character.deity : character.deity;
+  
   if (!isOpen) return null;
   
   const handleSave = () => {
@@ -836,10 +847,10 @@ function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: { is
               <div>
                 <label className="block text-sm font-medium text-ink mb-2">Divinité vénérée</label>
                 <DeitySelector 
-                  currentDeity={character.deity} 
+                  currentDeity={currentDeity} 
                   onSelect={(deityId) => setDeity(deityId)}
                 />
-                <p className="mt-2 text-sm text-ink-muted">{character.deity?.description}</p>
+                <p className="mt-2 text-sm text-ink-muted">{currentDeity?.description}</p>
               </div>
               
               {/* Domaine */}
@@ -1201,6 +1212,10 @@ export function Dashboard() {
   const maxPrepared = character.maxPreparedSpells;
   const preparedCount = nonDomainPrepared.length;
   
+  // Récupère le symbole à jour depuis DEITIES (pour avoir le nouveau gantelet)
+  const currentDeity = character.deity?.id ? DEITIES.find(d => d.id === character.deity?.id) : null;
+  const deitySymbol = currentDeity?.symbol || character.deity?.symbol || '⚔️';
+  
   return (
     <div className="p-4 space-y-6 animate-fade-in">
       {/* En-tête du personnage avec avatar */}
@@ -1231,19 +1246,14 @@ export function Dashboard() {
         <div className="flex flex-col gap-1 mt-2 items-center">
           {/* Ligne Clerc de Torm */}
           <div className="flex items-center justify-center gap-2 text-ink-muted font-ui text-sm">
-            {character.deity?.symbol && character.deity.symbol.startsWith('/') ? (
+            {deitySymbol.startsWith('/') ? (
               <img 
-                src={character.deity.symbol} 
-                alt={character.deity.name}
+                src={deitySymbol} 
+                alt={character.deity?.name || 'Torm'}
                 className="w-5 h-5 object-contain flex-shrink-0"
-                onError={(e) => {
-                  // Fallback si l'image ne charge pas
-                  e.currentTarget.style.display = 'none';
-                  e.currentTarget.nextElementSibling!.textContent = '⚔️ ' + e.currentTarget.nextElementSibling!.textContent;
-                }}
               />
             ) : (
-              <span className="text-lg flex-shrink-0">{character.deity?.symbol}</span>
+              <span className="text-lg flex-shrink-0">{deitySymbol}</span>
             )}
             <span>Clerc de {character.deity?.name} ({character.deity?.alignment})</span>
           </div>
