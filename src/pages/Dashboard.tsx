@@ -753,6 +753,9 @@ function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: { is
   const setDexterity = useCharacterStore((state) => state.setDexterity);
   const setIntelligence = useCharacterStore((state) => state.setIntelligence);
   const setCharisma = useCharacterStore((state) => state.setCharisma);
+  const setDescription = useCharacterStore((state) => state.setDescription);
+  const setAge = useCharacterStore((state) => state.setAge);
+  const setHeight = useCharacterStore((state) => state.setHeight);
   
   const [activeTab, setActiveTab] = useState<'identity' | 'stats' | 'abilities' | 'skills'>(initialTab);
   const [localName, setLocalName] = useState(character.name);
@@ -763,6 +766,9 @@ function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: { is
   const [localDex, setLocalDex] = useState(character.dexterity || 10);
   const [localInt, setLocalInt] = useState(character.intelligence || 10);
   const [localCha, setLocalCha] = useState(character.charisma || 10);
+  const [localDescription, setLocalDescription] = useState(character.description || '');
+  const [localAge, setLocalAge] = useState(character.age || 25);
+  const [localHeight, setLocalHeight] = useState(character.height || '');
   
   // Récupère la divinité à jour depuis DEITIES
   const currentDeity = character.deity?.id ? DEITIES.find(d => d.id === character.deity?.id) || character.deity : character.deity;
@@ -778,6 +784,9 @@ function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: { is
     setDexterity(localDex);
     setIntelligence(localInt);
     setCharisma(localCha);
+    setDescription(localDescription);
+    setAge(localAge);
+    setHeight(localHeight);
     onClose();
   };
   
@@ -861,6 +870,43 @@ function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: { is
                   onSelect={(domainId) => setDomain(domainId)}
                 />
                 <p className="mt-2 text-sm text-ink-muted">{character.domain?.description}</p>
+              </div>
+              
+              {/* Description */}
+              <div>
+                <label className="block text-sm font-medium text-ink mb-2">Description</label>
+                <textarea
+                  value={localDescription}
+                  onChange={(e) => setLocalDescription(e.target.value)}
+                  className="w-full input-field text-sm min-h-[80px] resize-none"
+                  placeholder="Décrivez votre personnage..."
+                  rows={3}
+                />
+              </div>
+              
+              {/* Âge et Taille */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-ink mb-2">Âge</label>
+                  <input
+                    type="number"
+                    value={localAge}
+                    onChange={(e) => setLocalAge(Math.max(1, parseInt(e.target.value) || 1))}
+                    className="w-full input-field text-center"
+                    min="1"
+                    max="1000"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-ink mb-2">Taille</label>
+                  <input
+                    type="text"
+                    value={localHeight}
+                    onChange={(e) => setLocalHeight(e.target.value)}
+                    className="w-full input-field text-center"
+                    placeholder="1m75"
+                  />
+                </div>
               </div>
             </div>
           )}

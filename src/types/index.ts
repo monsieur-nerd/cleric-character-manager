@@ -229,6 +229,11 @@ export interface Character {
   feats: string[]; // IDs des talents possédés
   customOwnedFeats: string[]; // IDs des talents perso possédés
   
+  // Description et détails physiques
+  description?: string;
+  age?: number;
+  height?: string;
+  
   // État courant
   currentState: DailyState;
 }

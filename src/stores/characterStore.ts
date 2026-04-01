@@ -67,6 +67,11 @@ interface CharacterState {
   // Concentration
   setActiveConcentration: (spellId: string | null) => void;
   
+  // Description et détails physiques
+  setDescription: (description: string) => void;
+  setAge: (age: number) => void;
+  setHeight: (height: string) => void;
+  
   // Utils
   getModifier: (score: number | undefined) => number;
   getMaxPreparedSpells: () => number;
@@ -210,6 +215,24 @@ export const useCharacterStore = create<CharacterState>()(
             domain,
             domainSpellCount: domain.spellIds.length,
           },
+        }));
+      },
+      
+      setDescription: (description) => {
+        set((state) => ({
+          character: { ...state.character, description },
+        }));
+      },
+      
+      setAge: (age) => {
+        set((state) => ({
+          character: { ...state.character, age },
+        }));
+      },
+      
+      setHeight: (height) => {
+        set((state) => ({
+          character: { ...state.character, height },
         }));
       },
       
