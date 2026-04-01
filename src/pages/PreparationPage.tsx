@@ -155,7 +155,7 @@ export function PreparationPage() {
       </button>
 
       {/* Section Préréglages */}
-      <section>
+      <section className="pt-6">
         <h3 className="font-display text-lg text-ink mb-3 flex flex-wrap items-center gap-2">
           <Sparkles className="w-5 h-5 text-divine-gold" />
           <span>Préréglages intelligents</span>
@@ -287,7 +287,7 @@ export function PreparationPage() {
       </div>
       
       {/* Sorts de domaine */}
-      <section>
+      <section className="pt-6">
         <h3 className="font-display text-lg text-ink mb-2 flex items-center gap-2">
           <span className="text-divine-gold">⚔️</span>
           Sorts de domaine (toujours préparés)
@@ -306,9 +306,16 @@ export function PreparationPage() {
       </section>
       
       {/* Sorts à choisir */}
-      <section>
+      <section className="pt-6">
         <h3 className="font-display text-lg text-ink mb-2">
-          Choisir {remainingSlots} sort{remainingSlots > 1 ? 's' : ''}
+          {remainingSlots === 0 ? (
+            <span className="text-forest flex items-center gap-2">
+              <Check className="w-5 h-5" />
+              Tous les sorts sont choisis
+            </span>
+          ) : (
+            <>Choisir {remainingSlots} sort{remainingSlots > 1 ? 's' : ''}</>
+          )}
         </h3>
         
         <div className="space-y-2">
