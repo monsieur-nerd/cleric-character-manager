@@ -642,12 +642,12 @@ export function CombatPage() {
                 .map(([level, spells]) => (
                   <div key={level} className="bg-parchment/50 rounded-lg p-3">
                     {/* Sous-section Niveau - visuellement subordonnée */}
-                    <div className="flex items-center gap-2 mb-3 pb-2 border-b border-parchment-dark/50">
+                    <div className="flex items-baseline gap-2 mb-3 pb-2 border-b border-parchment-dark/50">
                       <span className="text-xs font-ui font-bold text-ink-muted uppercase tracking-wide">
                         {level === '0' ? 'Mineur' : `Niveau ${level}`}
                       </span>
-                      <span className="text-xs text-ink-muted bg-parchment-dark/30 px-2 py-0.5 rounded-full">
-                        {spells.length}
+                      <span className="text-xs text-ink-muted">
+                        ({spells.length} sort{spells.length > 1 ? 's' : ''} préparé{spells.length > 1 ? 's' : ''})
                       </span>
                     </div>
                     
