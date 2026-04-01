@@ -1248,7 +1248,7 @@ export function Dashboard() {
             <span>Clerc de {character.deity?.name} ({character.deity?.alignment})</span>
           </div>
           {/* Ligne Domaine */}
-          <div className="flex items-center justify-center gap-2 text-divine-gold-dark font-medium text-sm">
+          <div className="flex items-center justify-center gap-2 text-amber-900 font-medium text-sm">
             <span className="text-lg flex-shrink-0">{character.domain?.icon}</span>
             <span>{character.domain?.name} • Niveau {character.level}</span>
           </div>
