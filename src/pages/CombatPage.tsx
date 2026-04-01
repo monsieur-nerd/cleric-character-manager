@@ -533,19 +533,17 @@ export function CombatPage() {
               ))}
             </div>
           </button>
-          {/* Bouton repos court - visible si Conduit divin utilisé */}
-          {channelDivinity.currentUses < channelDivinity.maxUses && (
-            <button
-              onClick={() => {
-                if (confirm('Effectuer un repos court ?\n\nLe Conduit divin sera réinitialisé.')) {
-                  shortRest();
-                }
-              }}
-              className="w-full mt-2 py-1.5 text-xs bg-forest/20 text-forest border border-forest/30 rounded-lg hover:bg-forest/30 transition-colors flex items-center justify-center gap-1"
-            >
-              <span>💤</span> Repos court
-            </button>
-          )}
+          {/* Bouton repos court - toujours visible */}
+          <button
+            onClick={() => {
+              if (confirm('Effectuer un repos court ?\n\nLe Conduit divin sera réinitialisé.')) {
+                shortRest();
+              }
+            }}
+            className="w-full mt-2 py-1.5 text-xs bg-forest/20 text-forest border border-forest/30 rounded-lg hover:bg-forest/30 transition-colors flex items-center justify-center gap-1"
+          >
+            <span>💤</span> Repos court
+          </button>
           
           <button
             onClick={() => setShowChannelDivinityInfo(!showChannelDivinityInfo)}
