@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 150" width="100" height="150">
+  <!-- Définitions pour les dégradés -->
+  <defs>
+    <linearGradient id="armorGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4a6fa5;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#2e4a6f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a3050;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="highlightGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#6b8fc5;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4a6fa5;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#d4af37;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#b8860b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8b6914;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  
+  <!-- Gantelet de main droite, paume ouverte vers l'avant -->
+  <g transform="translate(50, 75)" filter="url(#shadow)">
+    <!-- Paume (centre) -->
+    <ellipse cx="0" cy="10" rx="22" ry="28" fill="url(#armorGradient)" stroke="#1a3050" stroke-width="2"/>
+    
+    <!-- Doigts (paume ouverte vers l'avant) -->
+    <!-- Pouce (à gauche, replié légèrement) -->
+    <rect x="-28" y="-5" width="12" height="25" rx="6" fill="url(#armorGradient)" stroke="#1a3050" stroke-width="1.5" transform="rotate(-20)"/>
+    
+    <!-- Index -->
+    <rect x="-8" y="-35" width="10" height="35" rx="5" fill="url(#armorGradient)" stroke="#1a3050" stroke-width="1.5"/>
+    <ellipse cx="-3" cy="-38" rx="5" ry="6" fill="url(#highlightGradient)" stroke="#1a3050" stroke-width="1"/>
+    
+    <!-- Majeur -->
+    <rect x="2" y="-38" width="10" height="38" rx="5" fill="url(#armorGradient)" stroke="#1a3050" stroke-width="1.5"/>
+    <ellipse cx="7" cy="-41" rx="5" ry="6" fill="url(#highlightGradient)" stroke="#1a3050" stroke-width="1"/>
+    
+    <!-- Annulaire -->
+    <rect x="12" y="-35" width="10" height="35" rx="5" fill="url(#armorGradient)" stroke="#1a3050" stroke-width="1.5"/>
+    <ellipse cx="17" cy="-38" rx="5" ry="6" fill="url(#highlightGradient)" stroke="#1a3050" stroke-width="1"/>
+    
+    <!-- Auriculaire -->
+    <rect x="22" y="-30" width="9" height="30" rx="4" fill="url(#armorGradient)" stroke="#1a3050" stroke-width="1.5"/>
+    <ellipse cx="26.5" cy="-33" rx="4.5" ry="5" fill="url(#highlightGradient)" stroke="#1a3050" stroke-width="1"/>
+    
+    <!-- Décoration dorée sur le dos de la main -->
+    <circle cx="0" cy="0" r="8" fill="none" stroke="url(#goldGradient)" stroke-width="2"/>
+    <path d="M -5 0 L 5 0 M 0 -5 L 0 5" stroke="url(#goldGradient)" stroke-width="2" stroke-linecap="round"/>
+    
+    <!-- Poignet/Brassard -->
+    <rect x="-18" y="30" width="36" height="40" rx="5" fill="url(#armorGradient)" stroke="#1a3050" stroke-width="2"/>
+    
+    <!-- Bordures dorées sur le brassard -->
+    <rect x="-18" y="32" width="36" height="4" fill="url(#goldGradient)"/>
+    <rect x="-18" y="64" width="36" height="4" fill="url(#goldGradient)"/>
+    
+    <!-- Motif décoratif vertical sur le brassard -->
+    <line x1="0" y1="36" x2="0" y2="64" stroke="url(#goldGradient)" stroke-width="2"/>
+    <circle cx="0" cy="50" r="6" fill="url(#goldGradient)"/>
+    
+    <!-- Lignes de jointure des plaques -->
+    <line x1="-10" y1="40" x2="-10" y2="60" stroke="#1a3050" stroke-width="1" opacity="0.5"/>
+    <line x1="10" y1="40" x2="10" y2="60" stroke="#1a3050" stroke-width="1" opacity="0.5"/>
+  </g>
+</svg>
