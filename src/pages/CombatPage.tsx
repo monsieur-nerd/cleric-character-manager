@@ -248,24 +248,6 @@ export function CombatPage() {
         </h2>
       </div>
       
-      {/* État rapide */}
-      <div className="card bg-blood-red/5 border-blood-red/20">
-        <div className="grid grid-cols-3 gap-2 text-center">
-          <div>
-            <div className="text-xs text-ink-muted">N1</div>
-            <div className="font-display text-xl text-ink">{spellSlots[1]}</div>
-          </div>
-          <div>
-            <div className="text-xs text-ink-muted">N2</div>
-            <div className="font-display text-xl text-ink">{spellSlots[2]}</div>
-          </div>
-          <div>
-            <div className="text-xs text-ink-muted">N3</div>
-            <div className="font-display text-xl text-ink">{spellSlots[3]}</div>
-          </div>
-        </div>
-      </div>
-
       {/* Points de vie */}
       <div className="card bg-blood-red/10 border-blood-red/30">
         <div className="flex items-center justify-between mb-3">
@@ -614,11 +596,35 @@ export function CombatPage() {
         ))}
       </div>
       
-      {filter === 'reaction' ? (
-        <ReactionsCard character={character} preparedSpells={preparedSpells} />
-      ) : (
-        /* Liste des sorts */
-        <div className="space-y-3">
+      {/* 🪄 Sorts */}
+      <div className="space-y-4">
+        {/* État rapide - Emplacements de sorts restants */}
+        <div className="card bg-royal-purple/5 border-royal-purple/20">
+          <h3 className="font-display text-lg text-ink mb-3 flex items-center gap-2">
+            <Sparkles className="w-5 h-5 text-royal-purple" />
+            Sorts
+          </h3>
+          <div className="grid grid-cols-3 gap-2 text-center">
+            <div>
+              <div className="text-xs text-ink-muted">N1</div>
+              <div className="font-display text-xl text-ink">{spellSlots[1]}</div>
+            </div>
+            <div>
+              <div className="text-xs text-ink-muted">N2</div>
+              <div className="font-display text-xl text-ink">{spellSlots[2]}</div>
+            </div>
+            <div>
+              <div className="text-xs text-ink-muted">N3</div>
+              <div className="font-display text-xl text-ink">{spellSlots[3]}</div>
+            </div>
+          </div>
+        </div>
+        
+        {filter === 'reaction' ? (
+          <ReactionsCard character={character} preparedSpells={preparedSpells} />
+        ) : (
+          /* Liste des sorts */
+          <div className="space-y-3">
           {Object.entries(spellsByLevel)
             .sort(([a], [b]) => Number(a) - Number(b))
             .map(([level, spells]) => (
@@ -677,6 +683,7 @@ export function CombatPage() {
           )}
         </div>
       )}
+      </div>
       
       {/* Animations de lancement de sort */}
       {castAnimations.map(anim => (
