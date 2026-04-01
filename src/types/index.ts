@@ -252,7 +252,7 @@ export const DEITIES: Deity[] = [
     name: 'Torm',
     nameEn: 'Torm',
     title: 'Le Loyal',
-    symbol: '⚔️',
+    symbol: '/images/Gantelet médiéval en acier bleu low.png',
     alignment: 'Loyal Bon',
     description: 'Dieu du devoir, de la loyauté et de la justice. Protecteur des vertueux.'
   },

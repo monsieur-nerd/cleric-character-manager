@@ -100,7 +100,15 @@ function DeitySelector({ currentDeity, onSelect }: { currentDeity: Deity | undef
                 deity.id === currentDeity?.id ? 'bg-divine-gold/10 border-l-4 border-divine-gold' : ''
               }`}
             >
-              <span className="text-2xl">{deity.symbol}</span>
+              {deity.symbol.startsWith('/') ? (
+                <img 
+                  src={deity.symbol} 
+                  alt={deity.name}
+                  className="w-8 h-8 object-contain"
+                />
+              ) : (
+                <span className="text-2xl">{deity.symbol}</span>
+              )}
               <div>
                 <p className="font-display text-ink">{deity.name}</p>
                 <p className="text-xs text-ink-muted">{deity.title} • {deity.alignment}</p>
@@ -1204,9 +1212,17 @@ export function Dashboard() {
         </div>
         
         <h2 className="font-display text-xl text-ink mt-4">{character.name}</h2>
-        <p className="text-ink-muted font-ui text-sm">
-          <span className="text-lg mr-1">{character.deity?.symbol}</span>
-          Clerc de {character.deity?.name} ({character.deity?.alignment})
+        <p className="text-ink-muted font-ui text-sm flex items-center gap-2">
+          {character.deity?.symbol && character.deity.symbol.startsWith('/') ? (
+            <img 
+              src={character.deity.symbol} 
+              alt={character.deity.name}
+              className="w-5 h-5 object-contain"
+            />
+          ) : (
+            <span className="text-lg">{character.deity?.symbol}</span>
+          )}
+          <span>Clerc de {character.deity?.name} ({character.deity?.alignment})</span>
         </p>
         <p className="text-divine-gold-dark font-medium text-sm mt-1">
           <span className="text-lg mr-1">{character.domain?.icon}</span>
