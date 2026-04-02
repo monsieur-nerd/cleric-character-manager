@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Sparkles, Zap, Brain, AlertCircle, Shield, Edit3, Sword, Stars, User, Camera, Cross, Heart, X, ChevronDown, ChevronUp, GraduationCap, Menu, Check } from 'lucide-react';
@@ -470,11 +469,6 @@ function SkillsTab() {
     return getModifier(abilityValue);
   };
   
-  const formatBonus = (bonus: number): string => {
-    if (isNaN(bonus)) return '+0';
-    return bonus >= 0 ? `+${bonus}` : `${bonus}`;
-  };
-
   const selectedSkillData = selectedSkill ? getSkillById(selectedSkill) : null;
 
   return (
@@ -813,7 +807,7 @@ function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: { is
           ].map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as any)}
+              onClick={() => setActiveTab(tab.id as 'identity' | 'stats' | 'abilities' | 'skills')}
               className={`flex-1 flex items-center justify-center gap-2 py-3.5 px-2 text-sm font-medium transition-all ${
                 activeTab === tab.id 
                   ? 'text-divine-gold-dark border-b-2 border-divine-gold bg-divine-gold/5' 

@@ -60,7 +60,7 @@ export const spellsData: Spell[] = [
     "incantation": "Gaiunga, que l’être que j’ai devant moi se consumme dans tes flammes Ô Seigneur Tarn. ",
     "recommendation": null,
     "source": "core",
-    "summary": "2d8 radiants"
+    "summary": "1d8 radiants"
   },
   {
     "id": "lumière",
@@ -459,7 +459,7 @@ export const spellsData: Spell[] = [
     "incantation": "Dei Favoris, que ta puissance céleste me vienne en aide.",
     "recommendation": null,
     "source": "core",
-    "summary": "+2d4 dégâts"
+    "summary": "+1d4 radiants"
   },
   {
     "id": "fléau",
@@ -551,7 +551,7 @@ export const spellsData: Spell[] = [
     "incantation": "Guerio Fortitus, sens le fluide vital qui s’écoule à nouveau dans tes veines par la grâce de Tarn.  ",
     "recommendation": null,
     "source": "core",
-    "summary": "3d4+3 PV"
+    "summary": "1d4+SAG PV"
   },
   {
     "id": "protection-contre-le-mal-et-le-bien",
@@ -673,7 +673,7 @@ export const spellsData: Spell[] = [
     "incantation": "Regenaris Ultimae, aime-le comme il t’aime. Il est le tout, il est l’Unique.",
     "recommendation": null,
     "source": "core",
-    "summary": "3d8+3 PV"
+    "summary": "1d8+SAG PV"
   },
   {
     "id": "éclair-guidé",
@@ -859,7 +859,7 @@ export const spellsData: Spell[] = [
     "incantation": null,
     "recommendation": null,
     "source": "core",
-    "summary": "2d8+3 force"
+    "summary": "1d8+SAG force"
   },
   {
     "id": "augure",
@@ -1074,7 +1074,7 @@ export const spellsData: Spell[] = [
     "incantation": "Sanitatem orationis, laissez Torm vous gratifier de son énergie vitale.",
     "recommendation": null,
     "source": "core",
-    "summary": "2d8+3 PV (6 cibles)"
+    "summary": "2d8+SAG PV (6)"
   },
   {
     "id": "protection-contre-le-poison",
@@ -1780,7 +1780,7 @@ export const spellsData: Spell[] = [
     "incantation": "Sanatio multitudinis, que la grâce de Torm guérisse vos blessures !",
     "recommendation": "RECOMMANDÉ - Soin à distance de groupe",
     "source": "extended",
-    "summary": "3d4+3 PV (6)"
+    "summary": "1d4+SAG PV (6)"
   },
   {
     "id": "protection-contre-une-énergie",
