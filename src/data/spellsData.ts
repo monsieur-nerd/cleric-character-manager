@@ -1872,6 +1872,6 @@ export const spellsData: Spell[] = [
     "incantation": "Spes illuminata, que l'espoir de Torm brille sur nous !",
     "recommendation": "RECOMMANDÉ - Excellent pour les soins de groupe",
     "source": "extended",
-    "summary": "Avantage JS SAG"
+    "summary": "Avantage JS SAG/CON, Soins max"
   }
 ];
