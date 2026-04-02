@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Check, RotateCcw, Sword, Flame, Skull, Compass, Shield, Star, Heart, Scroll, Sparkles, CloudLightning, Droplets, Snowflake, Zap, X, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, Check, RotateCcw, Sword, Flame, Skull, Compass, Shield, Star, Heart, Scroll, Sparkles, CloudLightning, Droplets, Snowflake, Zap, X, AlertTriangle, Sun, Leaf, BookOpen, Ghost, Hammer, Coffee } from 'lucide-react';
 import { useSpellStore, useCharacterStore } from '@/stores';
 import { SpellCard } from '@/components/spells/SpellCard';
-import { defaultPresets, getKimiRecommendedSpells } from '@/data/presets';
-import type { Spell } from '@/types';
+import { defaultPresets, getKimiRecommendedSpells, getDomainPresets } from '@/data/presets';
+import type { Spell, SpellPreset } from '@/types';
 
 const presetIcons: Record<string, React.ReactNode> = {
   'kimi-optimal': <Star className="w-5 h-5 text-divine-gold fill-divine-gold" />,
@@ -16,11 +16,30 @@ const presetIcons: Record<string, React.ReactNode> = {
   'vs-acid': <Droplets className="w-5 h-5 text-green-500" />,
   'vs-thunder': <CloudLightning className="w-5 h-5 text-purple-400" />,
   'vs-poison': <Skull className="w-5 h-5 text-lime-600" />,
-  'vs-elements': <Shield className="w-5 h-5 text-rainbow" />,
+  'vs-elements': <Shield className="w-5 h-5 text-teal-500" />,
   'vs-undead': <Skull className="w-5 h-5 text-gray-600" />,
   'support': <Shield className="w-5 h-5 text-forest" />,
   'exploration': <Compass className="w-5 h-5 text-royal-purple" />,
   'anti-mage': <Scroll className="w-5 h-5 text-steel-blue" />,
+  // Domain-specific preset icons
+  'war-tactician': <Sword className="w-5 h-5 text-red-500" />,
+  'war-divine-striker': <Hammer className="w-5 h-5 text-orange-600" />,
+  'life-divine-healer': <Heart className="w-5 h-5 text-pink-500 fill-pink-500" />,
+  'life-restoration': <Sparkles className="w-5 h-5 text-cyan-400" />,
+  'light-radiant-damage': <Sun className="w-5 h-5 text-yellow-500 fill-yellow-500" />,
+  'light-destroy-undead': <Skull className="w-5 h-5 text-yellow-700" />,
+  'nature-elemental-control': <Leaf className="w-5 h-5 text-green-600" />,
+  'nature-explorer': <Compass className="w-5 h-5 text-emerald-600" />,
+  'tempest-storm-master': <CloudLightning className="w-5 h-5 text-purple-600" />,
+  'tempest-fury': <Zap className="w-5 h-5 text-indigo-500 fill-indigo-500" />,
+  'trickery-shadow': <Ghost className="w-5 h-5 text-slate-500" />,
+  'trickery-deceiver': <Ghost className="w-5 h-5 text-purple-800" />,
+  'knowledge-seeker': <BookOpen className="w-5 h-5 text-amber-600" />,
+  'knowledge-strategist': <BookOpen className="w-5 h-5 text-blue-600" />,
+  'forge-master': <Hammer className="w-5 h-5 text-red-700" />,
+  'forge-fire-warrior': <Flame className="w-5 h-5 text-red-600 fill-red-600" />,
+  'grave-keeper': <Coffee className="w-5 h-5 text-stone-600" />,
+  'grave-death-watcher': <Skull className="w-5 h-5 text-stone-800" />,
 };
 
 const presetColors: Record<string, string> = {
@@ -38,6 +57,25 @@ const presetColors: Record<string, string> = {
   'support': 'border-forest bg-forest/5',
   'exploration': 'border-royal-purple bg-royal-purple/5',
   'anti-mage': 'border-steel-blue bg-steel-blue/5',
+  // Domain-specific preset colors
+  'war-tactician': 'border-red-500 bg-red-500/10',
+  'war-divine-striker': 'border-orange-600 bg-orange-600/10',
+  'life-divine-healer': 'border-pink-500 bg-pink-500/10',
+  'life-restoration': 'border-cyan-400 bg-cyan-400/10',
+  'light-radiant-damage': 'border-yellow-500 bg-yellow-500/10',
+  'light-destroy-undead': 'border-yellow-700 bg-yellow-700/10',
+  'nature-elemental-control': 'border-green-600 bg-green-600/10',
+  'nature-explorer': 'border-emerald-600 bg-emerald-600/10',
+  'tempest-storm-master': 'border-purple-600 bg-purple-600/10',
+  'tempest-fury': 'border-indigo-500 bg-indigo-500/10',
+  'trickery-shadow': 'border-slate-500 bg-slate-500/10',
+  'trickery-deceiver': 'border-purple-800 bg-purple-800/10',
+  'knowledge-seeker': 'border-amber-600 bg-amber-600/10',
+  'knowledge-strategist': 'border-blue-600 bg-blue-600/10',
+  'forge-master': 'border-red-700 bg-red-700/10',
+  'forge-fire-warrior': 'border-red-600 bg-red-600/10',
+  'grave-keeper': 'border-stone-600 bg-stone-600/10',
+  'grave-death-watcher': 'border-stone-800 bg-stone-800/10',
 };
 
 /**
@@ -70,6 +108,10 @@ function getSelectedSpellNames(presetSpellIds: string[], maxPrepared: number, al
 export function PreparationPage() {
   const character = useCharacterStore((state) => state.character);
   const maxPrepared = character.maxPreparedSpells;
+  
+  // Get domain-specific presets if character has a domain
+  const domainPresets = character.domain ? getDomainPresets(character.domain.id) : [];
+  const allPresets: SpellPreset[] = [...defaultPresets, ...domainPresets];
   
   const allSpells = useSpellStore((state) => state.allSpells);
   const preparedSpellIds = useSpellStore((state) => state.preparedSpellIds);
@@ -160,13 +202,18 @@ export function PreparationPage() {
         <h3 className="font-display text-lg text-ink mb-3 flex flex-wrap items-center gap-2">
           <Sparkles className="w-5 h-5 text-divine-gold" />
           <span>Préréglages intelligents</span>
+          {character.domain && (
+            <span className="text-xs font-normal text-divine-gold bg-divine-gold/10 px-2 py-0.5 rounded-full">
+              + {character.domain.name}
+            </span>
+          )}
           <span className="text-xs font-normal text-ink-muted ml-auto sm:ml-0">
-            Sélectionne automatiquement {maxPrepared} sorts
+            Sélectionne {maxPrepared} sorts
           </span>
         </h3>
         
         <div className="grid grid-cols-1 gap-2">
-          {defaultPresets.map((preset) => {
+          {allPresets.map((preset) => {
             const selectionCount = getPresetSelectionCount(preset.spellIds, maxPrepared, allSpells);
             const isExpanded = showPresetDetails === preset.id;
             const isActive = activePresetId === preset.id;
