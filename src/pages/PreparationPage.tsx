@@ -83,26 +83,27 @@ const presetColors: Record<string, string> = {
  * en fonction du maxPrepared du personnage
  */
 function getPresetSelectionCount(presetSpellIds: string[], maxPrepared: number, allSpells: Spell[]): number {
-  // Filtre les sorts de domaine (toujours préparés, pas comptés dans la limite)
-  const nonDomainSpells = presetSpellIds.filter(id => {
+  // Filtre les sorts de domaine ET les sorts mineurs (niveau 0)
+  // Ces sorts ne comptent pas dans la limite de préparation
+  const nonDomainNonCantripSpells = presetSpellIds.filter(id => {
     const spell = allSpells.find(s => s.id === id);
-    return spell && !spell.isDomainSpell;
+    return spell && !spell.isDomainSpell && spell.level > 0;
   });
   
   // Retourne le minimum entre les sorts disponibles et la limite
-  return Math.min(nonDomainSpells.length, maxPrepared);
+  return Math.min(nonDomainNonCantripSpells.length, maxPrepared);
 }
 
 /**
  * Obtient la liste des sorts qui seront réellement sélectionnés
  */
 function getSelectedSpellNames(presetSpellIds: string[], maxPrepared: number, allSpells: Spell[]): string[] {
-  const nonDomainSpells = presetSpellIds
+  const nonDomainNonCantripSpells = presetSpellIds
     .map(id => allSpells.find(s => s.id === id))
-    .filter((s): s is Spell => !!s && !s.isDomainSpell)
+    .filter((s): s is Spell => !!s && !s.isDomainSpell && s.level > 0)
     .slice(0, maxPrepared);
   
-  return nonDomainSpells.map(s => s.name);
+  return nonDomainNonCantripSpells.map(s => s.name);
 }
 
 export function PreparationPage() {
@@ -127,7 +128,7 @@ export function PreparationPage() {
   
   const domainSpells = allSpells.filter(s => s.isDomainSpell);
   const nonDomainPrepared = allSpells.filter(s => 
-    preparedSpellIds.includes(s.id) && !s.isDomainSpell
+    preparedSpellIds.includes(s.id) && !s.isDomainSpell && s.level > 0
   );
   
   const preparedCount = nonDomainPrepared.length;
@@ -353,6 +354,30 @@ export function PreparationPage() {
         </div>
       </section>
       
+      {/* Tours de magie (mineurs) */}
+      <section className="pt-6">
+        <h3 className="font-display text-lg text-ink mb-1 flex items-center gap-2">
+          <span className="text-steel-blue">✦</span>
+          Tours de magie
+        </h3>
+        <p className="text-xs text-ink-muted mb-3 italic">
+          Ces sorts mineurs sont toujours connus et disponibles sans préparation ni emplacement de sort.
+        </p>
+        <div className="space-y-2">
+          {allSpells
+            .filter((s: Spell) => s.level === 0)
+            .map((spell: Spell) => (
+              <SpellCard
+                key={spell.id}
+                spell={spell}
+                isPrepared={true}
+                onTogglePrepare={() => {}}
+                showActions={false}
+              />
+            ))}
+        </div>
+      </section>
+      
       {/* Sorts à choisir */}
       <section className="pt-6">
         <div className="flex items-center justify-between mb-2">
@@ -379,7 +404,7 @@ export function PreparationPage() {
         
         <div className="space-y-2">
           {allSpells
-            .filter((s: Spell) => !s.isDomainSpell)
+            .filter((s: Spell) => !s.isDomainSpell && s.level > 0)
             .map((spell: Spell) => (
               <SpellCard
                 key={spell.id}

@@ -146,11 +146,15 @@ export const useSpellStore = create<SpellState>()(
           .filter(s => s.isDomainSpell)
           .map(s => s.id);
         
-        // Filtre les sorts de domaine de la liste
-        const nonDomainSpellIds = spellIds.filter(id => !domainSpellIds.includes(id));
+        // Filtre les sorts de domaine ET les sorts mineurs (niveau 0) de la liste
+        // Les sorts mineurs ne comptent pas dans la limite de préparation
+        const nonDomainNonCantripSpellIds = spellIds.filter(id => {
+          const spell = get().allSpells.find(s => s.id === id);
+          return !domainSpellIds.includes(id) && spell && spell.level > 0;
+        });
         
         // Limite au maximum autorisé
-        const limitedNonDomain = nonDomainSpellIds.slice(0, maxAllowed);
+        const limitedNonDomain = nonDomainNonCantripSpellIds.slice(0, maxAllowed);
         
         set({
           preparedSpellIds: [...domainSpellIds, ...limitedNonDomain],
@@ -188,7 +192,7 @@ export const useSpellStore = create<SpellState>()(
       getNonDomainPreparedSpells: () => {
         const { allSpells, preparedSpellIds } = get();
         return allSpells.filter(s => 
-          preparedSpellIds.includes(s.id) && !s.isDomainSpell
+          preparedSpellIds.includes(s.id) && !s.isDomainSpell && s.level > 0
         );
       },
       
