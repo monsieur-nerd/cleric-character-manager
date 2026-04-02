@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Check, RotateCcw, Sword, Flame, Skull, Compass, Shield, Star, Heart, Scroll, Sparkles, CloudLightning, Droplets, Snowflake, Zap, X, AlertTriangle, Sun, Leaf, BookOpen, Ghost, Hammer, Coffee } from 'lucide-react';
+import { ArrowLeft, Check, RotateCcw, Sword, Flame, Skull, Compass, Shield, Star, Heart, Scroll, Sparkles, CloudLightning, Droplets, Snowflake, Zap, X, AlertTriangle, Sun, Leaf, BookOpen, Ghost, Hammer, Coffee, Users } from 'lucide-react';
 import { useSpellStore, useCharacterStore } from '@/stores';
 import { SpellCard } from '@/components/spells/SpellCard';
 import { defaultPresets, getKimiRecommendedSpells, getDomainPresets } from '@/data/presets';
@@ -40,6 +40,7 @@ const presetIcons: Record<string, React.ReactNode> = {
   'forge-fire-warrior': <Flame className="w-5 h-5 text-red-600 fill-red-600" />,
   'grave-keeper': <Coffee className="w-5 h-5 text-stone-600" />,
   'grave-death-watcher': <Skull className="w-5 h-5 text-stone-800" />,
+  'social-investigation': <Users className="w-5 h-5 text-indigo-500" />,
 };
 
 const presetColors: Record<string, string> = {
@@ -76,6 +77,7 @@ const presetColors: Record<string, string> = {
   'forge-fire-warrior': 'border-red-600 bg-red-600/10',
   'grave-keeper': 'border-stone-600 bg-stone-600/10',
   'grave-death-watcher': 'border-stone-800 bg-stone-800/10',
+  'social-investigation': 'border-indigo-500 bg-indigo-500/10',
 };
 
 /**

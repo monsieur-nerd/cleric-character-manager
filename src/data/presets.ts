@@ -327,6 +327,34 @@ export const defaultPresets: SpellPreset[] = [
     ],
     isDefault: true,
   },
+  {
+    id: 'social-investigation',
+    name: '🕵️ Enquête Sociale',
+    icon: 'users',
+    description: 'Communication, persuasion et investigation pour résoudre des mystères en groupe',
+    spellIds: [
+      // N3 - Outils d'enquête avancés
+      'communication-à-distance',       // Coordination à distance (ESSENTIEL)
+      'clairvoyance',                   // Espionnage à distance
+      'communication-avec-les-morts',   // Interroger les défunts
+      'langues',                        // Communiquer avec tous
+      // N2 - Interrogation et contrôle social
+      'zone-de-vérité',                 // Forcer la vérité (ESSENTIEL)
+      'apaisement-des-émotions',        // Désamorcer tensions
+      'amélioration-de-caractéristique', // Buff Charisme
+      'silence',                        // Discrétion
+      'immobilisation-de-personne',     // Retenir suspect
+      // N1 - Détection et base
+      'détection-de-la-magie',          // Détecter illusions/magie
+      'détection-du-mal-et-du-bien',    // Sentir intentions
+      'injonction',                     // Commandement
+      'bénédiction',                    // Aider alliés sociaux
+      // Utilitaires
+      'localisation-d-objet',           // Trouver indices
+      'augure',                         // Prédire danger
+    ],
+    isDefault: true,
+  },
 ];
 
 // Helper pour obtenir un préréglage par ID

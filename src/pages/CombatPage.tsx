@@ -153,6 +153,7 @@ export function CombatPage() {
   const [showWarClericInfo, setShowWarClericInfo] = useState(false);
   const [showChannelDivinityInfo, setShowChannelDivinityInfo] = useState(false);
   const [showActionExplanation, setShowActionExplanation] = useState(false);
+  const [showConcentrationExplanation, setShowConcentrationExplanation] = useState(false);
   
   const character = useCharacterStore((state) => state.character);
   const { warCleric, channelDivinity } = character.abilities;
@@ -456,6 +457,66 @@ export function CombatPage() {
                 <strong>Action :</strong> Attaque (arme principale)<br/>
                 <strong>Action Bonus :</strong> Clerc de Guerre (arme secondaire)<br/>
                 → Les 2 attaques ont le modificateur de dégâts !
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Explication Concentration */}
+      <div className="card bg-royal-purple/10 border-royal-purple/30">
+        <button 
+          onClick={() => setShowConcentrationExplanation(!showConcentrationExplanation)}
+          className="w-full flex items-center justify-between text-left"
+        >
+          <div className="flex items-center gap-2">
+            <Info className="w-4 h-4 text-royal-purple" />
+            <span className="text-sm font-bold text-ink">Règle importante : Concentration</span>
+          </div>
+          {showConcentrationExplanation ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+        </button>
+        
+        {showConcentrationExplanation && (
+          <div className="mt-3 pt-3 border-t border-royal-purple/30 text-sm space-y-3">
+            <p className="text-ink-light">
+              Certains sorts demandent de <strong>maintenir votre concentration</strong> pour rester actifs. 
+              Vous ne pouvez concentrer que sur <strong>un seul sort à la fois</strong> — lancer un nouveau sort de concentration annule le précédent.
+            </p>
+
+            <div className="bg-blood-red/10 p-2 rounded border border-blood-red/30">
+              <p className="font-bold text-blood-red">🚨 Quand faire un jet de concentration ?</p>
+              <ul className="text-ink-light list-disc list-inside space-y-1 mt-1">
+                <li>Vous subissez des <strong>dégâts</strong> (même 1 point) → jet de sauvegarde de Constitution DD 10 ou la moitié des dégâts, le plus élevé.</li>
+                <li>Vous êtes <strong>neutralisé</strong> (assommé, paralysé, étourdi) ou <strong>tué</strong> → concentration perdue automatiquement.</li>
+                <li>Le MJ peut exiger un jet si vous êtes secoué violemment (tempête, chute...).</li>
+              </ul>
+            </div>
+
+            <div className="bg-parchment p-2 rounded">
+              <p className="font-bold text-ink">🛡️ Conseils pour maintenir la concentration</p>
+              <ul className="text-ink-light list-disc list-inside space-y-1 mt-1">
+                <li>Restez à l'arrière : moins vous prenez de dégâts, moins vous risquez de perdre votre sort.</li>
+                <li>Le talent <strong>Lanceur de Guerre (War Caster)</strong> donne l'avantage sur les jets de concentration.</li>
+                <li>Un bouclier et une bonne CA réduisent les chances de subir des dégâts.</li>
+              </ul>
+            </div>
+
+            <div className="bg-forest/10 p-2 rounded border border-forest/30">
+              <p className="font-bold text-forest">✅ Sorts de clerc courants en concentration</p>
+              <p className="text-ink-light mt-1">
+                <em>Bénédiction, Flou, Silence, Spiritual Weapon</em> (non, erreur commune : Spiritual Weapon ne nécessite pas la concentration), 
+                <em>Garde contre la mort, Aura de vie, Sanctuaire sacré</em>...
+              </p>
+              <p className="text-xs text-ink-muted mt-1">
+                💡 Vérifiez toujours la durée du sort : si elle indique "Concentration, jusqu'à X minutes", vous devez la maintenir active.
+              </p>
+            </div>
+
+            <div className="bg-bronze/10 p-2 rounded border border-bronze/30">
+              <p className="font-bold text-bronze">⚔️ Implications pour le clerc de guerre</p>
+              <p className="text-ink-light">
+                Si vous maintenez <em>Bénédiction</em> tout en combattant au front, chaque coup reçu est un risque de perdre le buff de toute l'équipe. 
+                Privilégiez les sorts de concentration défensifs (ex: <em>Flou</em>) ou placez-vous stratégiquement.
               </p>
             </div>
           </div>
