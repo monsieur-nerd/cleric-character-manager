@@ -5,6 +5,13 @@ import type { CustomSkill } from '@/types/skills';
 import type { CustomFeat } from '@/types/feats';
 import { MAX_SPELL_SLOTS, DEITIES, CLERIC_DOMAINS } from '@/types';
 import { STORAGE_KEYS } from './storageKeys';
+import { 
+  CHARACTER_IDENTITY, 
+  CHARACTER_ABILITIES, 
+  MASTERED_SKILLS, 
+  CHARACTER_FEATS,
+  INITIAL_DAILY_STATE 
+} from '@/data/characterConfig';
 
 interface CharacterState {
   character: Character;
@@ -100,27 +107,29 @@ const calculateCarryingCapacity = (strength: number): number => {
 };
 
 const createDefaultCharacter = (): Character => {
-  const level = 5;
-  const con = 14; // Constitution par défaut
-  const str = 14; // Force par défaut
-  const dex = 12; // Dextérité par défaut
-  const int = 10; // Intelligence par défaut
-  const cha = 13; // Charisme par défaut
+  const level = CHARACTER_IDENTITY.level;
+  const con = CHARACTER_ABILITIES.constitution;
+  const str = CHARACTER_ABILITIES.strength;
+  const dex = CHARACTER_ABILITIES.dexterity;
+  const int = CHARACTER_ABILITIES.intelligence;
+  const cha = CHARACTER_ABILITIES.charisma;
+  const wis = CHARACTER_ABILITIES.wisdom;
   const maxHp = calculateMaxHp(level, con);
   const carryingCapacity = calculateCarryingCapacity(str);
-  const defaultDeity = DEITIES.find(d => d.id === 'torm') || DEITIES[0];
-  const defaultDomain = CLERIC_DOMAINS.find(d => d.id === 'war') || CLERIC_DOMAINS[0];
+  const defaultDeity = DEITIES.find(d => d.id === CHARACTER_IDENTITY.deity) || DEITIES[0];
+  const defaultDomain = CLERIC_DOMAINS.find(d => d.id === CHARACTER_IDENTITY.domain) || CLERIC_DOMAINS[0];
+  const wisdomModifier = calculateModifier(wis);
   
   return {
-    name: 'Imildar Souffle-Tempête',
-    class: 'cleric',
-    subclass: 'war',
-    avatar: null,
+    name: CHARACTER_IDENTITY.name,
+    class: CHARACTER_IDENTITY.class,
+    subclass: CHARACTER_IDENTITY.subclass,
+    avatar: CHARACTER_IDENTITY.avatar,
     deity: defaultDeity,
     domain: defaultDomain,
     level,
-    wisdom: 16,
-    wisdomModifier: 3,
+    wisdom: wis,
+    wisdomModifier,
     constitution: con,
     strength: str,
     dexterity: dex,
@@ -128,27 +137,30 @@ const createDefaultCharacter = (): Character => {
     charisma: cha,
     maxHp,
     currentHp: maxHp,
-    maxPreparedSpells: 8, // 3 + 5
+    maxPreparedSpells: wisdomModifier + level,
     domainSpellCount: defaultDomain.spellIds.length,
     carryingCapacity,
     abilities: {
       warCleric: {
-        maxUses: 3,
-        currentUses: 3,
+        maxUses: Math.max(1, wisdomModifier),
+        currentUses: Math.max(1, wisdomModifier),
       },
       channelDivinity: {
-        maxUses: 2,
-        currentUses: 2,
+        maxUses: level >= 18 ? 3 : level >= 6 ? 2 : 1,
+        currentUses: level >= 18 ? 3 : level >= 6 ? 2 : 1,
         shortRestRecovery: true,
       },
     },
-    masteredSkills: [], // Compétences maîtrisées
-    customMasteredSkills: [], // IDs des compétences perso maîtrisées
-    feats: [], // Talents possédés
-    customOwnedFeats: [], // IDs des talents perso possédés
+    masteredSkills: MASTERED_SKILLS,
+    customMasteredSkills: [],
+    feats: CHARACTER_FEATS,
+    customOwnedFeats: [],
+    description: CHARACTER_IDENTITY.description,
+    age: CHARACTER_IDENTITY.age,
+    height: CHARACTER_IDENTITY.height,
     currentState: {
       date: new Date().toISOString().split('T')[0],
-      preparedSpellIds: [],
+      preparedSpellIds: INITIAL_DAILY_STATE.preparedSpellIds,
       usedSpellSlots: { 1: 0, 2: 0, 3: 0 },
       usedAbilities: { warCleric: 0, channelDivinity: 0 },
       activeConcentration: null,
