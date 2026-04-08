@@ -1240,8 +1240,21 @@ export function Dashboard() {
     setShowEditor(true);
   };
   const character = useCharacterStore((state) => state.character);
+  const getSaveBonus = useCharacterStore((state) => state.getSaveBonus);
+  const getProficiencyBonus = useCharacterStore((state) => state.getProficiencyBonus);
   const { warCleric, channelDivinity } = character.abilities;
   const activeConcentration = character.currentState.activeConcentration;
+  
+  // Calcule tous les jets de sauvegarde
+  const saveBonuses = {
+    strength: getSaveBonus('strength'),
+    dexterity: getSaveBonus('dexterity'),
+    constitution: getSaveBonus('constitution'),
+    intelligence: getSaveBonus('intelligence'),
+    wisdom: getSaveBonus('wisdom'),
+    charisma: getSaveBonus('charisma'),
+  };
+  const profBonus = getProficiencyBonus();
   
   const spellSlots = useSpellStore((state) => state.spellSlots);
   const maxSlots: SpellSlots = MAX_SPELL_SLOTS[character.level] || MAX_SPELL_SLOTS[5];
@@ -1315,6 +1328,9 @@ export function Dashboard() {
               <span className="text-xs font-bold text-steel-blue">FOR</span>
               <span className="font-display text-lg text-ink">{character.strength}</span>
               <span className="text-xs text-steel-blue font-medium">{formatModifier(character.strength)}</span>
+              <span className="text-[10px] text-ink-muted mt-1">
+                JS {saveBonuses.strength.total >= 0 ? '+' : ''}{saveBonuses.strength.total}
+              </span>
             </button>
             
             {/* Dextérité */}
@@ -1325,6 +1341,9 @@ export function Dashboard() {
               <span className="text-xs font-bold text-forest">DEX</span>
               <span className="font-display text-lg text-ink">{character.dexterity}</span>
               <span className="text-xs text-forest font-medium">{formatModifier(character.dexterity)}</span>
+              <span className="text-[10px] text-ink-muted mt-1">
+                JS {saveBonuses.dexterity.total >= 0 ? '+' : ''}{saveBonuses.dexterity.total}
+              </span>
             </button>
             
             {/* Constitution */}
@@ -1335,6 +1354,9 @@ export function Dashboard() {
               <span className="text-xs font-bold text-blood-red">CON</span>
               <span className="font-display text-lg text-ink">{character.constitution}</span>
               <span className="text-xs text-blood-red font-medium">{formatModifier(character.constitution)}</span>
+              <span className="text-[10px] text-ink-muted mt-1">
+                JS {saveBonuses.constitution.total >= 0 ? '+' : ''}{saveBonuses.constitution.total}
+              </span>
             </button>
             
             {/* Intelligence */}
@@ -1345,9 +1367,12 @@ export function Dashboard() {
               <span className="text-xs font-bold text-royal-purple">INT</span>
               <span className="font-display text-lg text-ink">{character.intelligence}</span>
               <span className="text-xs text-royal-purple font-medium">{formatModifier(character.intelligence)}</span>
+              <span className="text-[10px] text-ink-muted mt-1">
+                JS {saveBonuses.intelligence.total >= 0 ? '+' : ''}{saveBonuses.intelligence.total}
+              </span>
             </button>
             
-            {/* Sagesse */}
+            {/* Sagesse - Maîtrise de classe */}
             <button 
               onClick={() => openEditor('stats')}
               className="flex flex-col items-center p-2 bg-divine-gold/20 rounded-lg hover:bg-divine-gold/30 transition-colors border border-divine-gold/30"
@@ -1355,17 +1380,29 @@ export function Dashboard() {
               <span className="text-xs font-bold text-divine-gold-dark">SAG</span>
               <span className="font-display text-lg text-ink">{character.wisdom}</span>
               <span className="text-xs text-divine-gold-dark font-medium">{formatModifier(character.wisdom)}</span>
+              <span className="text-[10px] text-divine-gold-dark font-bold mt-1">
+                JS {saveBonuses.wisdom.total >= 0 ? '+' : ''}{saveBonuses.wisdom.total} ★
+              </span>
             </button>
             
-            {/* Charisme */}
+            {/* Charisme - Maîtrise de classe */}
             <button 
               onClick={() => openEditor('stats')}
-              className="flex flex-col items-center p-2 bg-parchment-dark/40 rounded-lg hover:bg-parchment-dark/60 transition-colors"
+              className="flex flex-col items-center p-2 bg-bronze/10 rounded-lg hover:bg-bronze/20 transition-colors border border-bronze/30"
             >
               <span className="text-xs font-bold text-bronze">CHA</span>
               <span className="font-display text-lg text-ink">{character.charisma}</span>
               <span className="text-xs text-bronze font-medium">{formatModifier(character.charisma)}</span>
+              <span className="text-[10px] text-bronze font-bold mt-1">
+                JS {saveBonuses.charisma.total >= 0 ? '+' : ''}{saveBonuses.charisma.total} ★
+              </span>
             </button>
+          </div>
+          
+          {/* Légende des jets de sauvegarde */}
+          <div className="mt-2 flex items-center justify-center gap-4 text-[10px] text-ink-muted">
+            <span>JS = Jet de Sauvegarde</span>
+            <span className="text-divine-gold">★ = Maîtrise de classe (+{profBonus})</span>
           </div>
           
           {/* Bouton d'édition */}

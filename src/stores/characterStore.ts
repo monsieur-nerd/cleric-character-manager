@@ -55,6 +55,15 @@ interface CharacterState {
   getSkillBonus: (skillId: string) => number;
   getProficiencyBonus: () => number;
   
+  // Jets de sauvegarde
+  getSaveProficiencies: () => readonly ('strength' | 'dexterity' | 'constitution' | 'intelligence' | 'wisdom' | 'charisma')[];
+  getSaveBonus: (ability: 'strength' | 'dexterity' | 'constitution' | 'intelligence' | 'wisdom' | 'charisma') => {
+    total: number;
+    modifier: number;
+    proficiency: number;
+    isProficient: boolean;
+  };
+  
   // Compétences personnalisées
   customSkills: CustomSkill[];
   addCustomSkill: (skill: Omit<CustomSkill, 'id'>) => void;
@@ -715,6 +724,31 @@ export const useCharacterStore = create<CharacterState>()(
         const { level } = get().character;
         if (level === undefined || isNaN(level)) return 2;
         return Math.floor((level - 1) / 4) + 2;
+      },
+      
+      // Retourne les maîtrises de jets de sauvegarde du clerc
+      getSaveProficiencies: () => {
+        // Le clerc maîtrise les JS de Sagesse et Charisme
+        return ['wisdom', 'charisma'] as const;
+      },
+      
+      // Calcule le bonus d'un jet de sauvegarde pour une caractéristique
+      getSaveBonus: (ability: 'strength' | 'dexterity' | 'constitution' | 'intelligence' | 'wisdom' | 'charisma') => {
+        const state = get();
+        const character = state.character;
+        const profBonus = state.getProficiencyBonus();
+        const modifier = calculateModifier(character[ability]);
+        
+        // Vérifie si c'est une maîtrise de classe
+        const saveProficiencies = state.getSaveProficiencies();
+        const isProficient = saveProficiencies.includes(ability);
+        
+        return {
+          total: modifier + (isProficient ? profBonus : 0),
+          modifier,
+          proficiency: isProficient ? profBonus : 0,
+          isProficient,
+        };
       },
       
       getModifier: calculateModifier,
