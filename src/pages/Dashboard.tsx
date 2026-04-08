@@ -79,7 +79,7 @@ function DeitySelector({ currentDeity, onSelect }: { currentDeity: Deity | undef
         <div className="flex items-center gap-3">
           {(currentDeity?.symbol?.startsWith('/') || currentDeity?.symbol?.startsWith('images/')) ? (
             <img 
-              src={currentDeity.symbol} 
+              src={currentDeity.symbol?.startsWith('images/') ? `/cleric-character-manager/${currentDeity.symbol}` : currentDeity.symbol}
               alt={currentDeity.name}
               className="w-8 h-8 object-contain"
             />
@@ -109,7 +109,7 @@ function DeitySelector({ currentDeity, onSelect }: { currentDeity: Deity | undef
             >
               {(deity.symbol.startsWith('/') || deity.symbol.startsWith('images/')) ? (
                 <img 
-                  src={deity.symbol} 
+                  src={deity.symbol?.startsWith('images/') ? `/cleric-character-manager/${deity.symbol}` : deity.symbol}
                   alt={deity.name}
                   className="w-8 h-8 object-contain"
                 />
@@ -1359,7 +1359,7 @@ export function Dashboard() {
           <div className="flex items-center justify-center gap-2 text-amber-900 font-medium text-sm">
             {deitySymbol.startsWith('images/') || deitySymbol.startsWith('/') ? (
               <img 
-                src={deitySymbol} 
+                src={deitySymbol.startsWith('images/') ? `/cleric-character-manager/${deitySymbol}` : deitySymbol}
                 alt={character.deity?.name || 'Torm'}
                 className="w-5 h-5 object-contain flex-shrink-0"
               />
