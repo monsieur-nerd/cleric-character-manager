@@ -240,8 +240,11 @@ export interface Character {
   
   // Description et détails physiques
   description?: string;
+  race?: string; // Race du personnage
+  alignment?: string; // Alignement personnel
   age?: number;
   height?: string;
+  weight?: number; // Poids en kg
   
   // État courant
   currentState: DailyState;

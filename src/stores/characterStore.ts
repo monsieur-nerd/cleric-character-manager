@@ -22,6 +22,8 @@ interface CharacterState {
   setDeity: (deityId: string) => void;
   setDomain: (domainId: string) => void;
   syncDeity: () => void; // Synchronise la divinité avec les données à jour
+  setRace: (race: string) => void;
+  setAlignment: (alignment: string) => void;
   
   // Actions - Niveau et Caractéristiques
   setLevel: (level: number) => void;
@@ -87,6 +89,7 @@ interface CharacterState {
   setDescription: (description: string) => void;
   setAge: (age: number) => void;
   setHeight: (height: string) => void;
+  setWeight: (weight: number) => void;
   
   // Utils
   getModifier: (score: number | undefined) => number;
@@ -165,8 +168,11 @@ const createDefaultCharacter = (): Character => {
     feats: CHARACTER_FEATS,
     customOwnedFeats: [],
     description: CHARACTER_IDENTITY.description,
+    race: CHARACTER_IDENTITY.race,
+    alignment: CHARACTER_IDENTITY.alignment,
     age: CHARACTER_IDENTITY.age,
     height: CHARACTER_IDENTITY.height,
+    weight: CHARACTER_IDENTITY.weight,
     currentState: {
       date: new Date().toISOString().split('T')[0],
       preparedSpellIds: INITIAL_DAILY_STATE.preparedSpellIds,
@@ -254,6 +260,24 @@ export const useCharacterStore = create<CharacterState>()(
       setHeight: (height) => {
         set((state) => ({
           character: { ...state.character, height },
+        }));
+      },
+      
+      setWeight: (weight) => {
+        set((state) => ({
+          character: { ...state.character, weight },
+        }));
+      },
+      
+      setRace: (race) => {
+        set((state) => ({
+          character: { ...state.character, race },
+        }));
+      },
+      
+      setAlignment: (alignment) => {
+        set((state) => ({
+          character: { ...state.character, alignment },
         }));
       },
       

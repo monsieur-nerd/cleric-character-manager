@@ -20,8 +20,11 @@ export const CHARACTER_IDENTITY = {
   domain: 'war', // ID du domaine
   
   // Description physique
-  age: 28,
-  height: '1,75m',
+  race: 'Humain',
+  alignment: 'Neutre Bon',
+  age: 20,
+  height: '1,78m',
+  weight: 78,
   description: 'Clerc de guerre de Torm, dévoué à la protection des innocents et à la lutte contre les forces du mal.',
   
   // Avatar (URL ou null)
@@ -382,7 +385,10 @@ export function createInitialCharacter(): Partial<Character> {
     
     // Métadonnées
     description: CHARACTER_IDENTITY.description,
+    race: CHARACTER_IDENTITY.race,
+    alignment: CHARACTER_IDENTITY.alignment,
     age: CHARACTER_IDENTITY.age,
     height: CHARACTER_IDENTITY.height,
+    weight: CHARACTER_IDENTITY.weight,
   };
 }

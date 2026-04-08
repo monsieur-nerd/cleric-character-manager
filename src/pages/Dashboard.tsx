@@ -748,8 +748,11 @@ function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: { is
   const setIntelligence = useCharacterStore((state) => state.setIntelligence);
   const setCharisma = useCharacterStore((state) => state.setCharisma);
   const setDescription = useCharacterStore((state) => state.setDescription);
+  const setRace = useCharacterStore((state) => state.setRace);
+  const setAlignment = useCharacterStore((state) => state.setAlignment);
   const setAge = useCharacterStore((state) => state.setAge);
   const setHeight = useCharacterStore((state) => state.setHeight);
+  const setWeight = useCharacterStore((state) => state.setWeight);
   
   const [activeTab, setActiveTab] = useState<'identity' | 'stats' | 'abilities' | 'skills'>(initialTab);
   const [localName, setLocalName] = useState(character.name);
@@ -761,8 +764,11 @@ function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: { is
   const [localInt, setLocalInt] = useState(character.intelligence || 10);
   const [localCha, setLocalCha] = useState(character.charisma || 10);
   const [localDescription, setLocalDescription] = useState(character.description || '');
+  const [localRace, setLocalRace] = useState(character.race || 'Humain');
+  const [localAlignment, setLocalAlignment] = useState(character.alignment || 'Neutre Bon');
   const [localAge, setLocalAge] = useState(character.age || 25);
   const [localHeight, setLocalHeight] = useState(character.height || '');
+  const [localWeight, setLocalWeight] = useState(character.weight || 75);
   
   // Récupère la divinité à jour depuis DEITIES
   const currentDeity = character.deity?.id ? DEITIES.find(d => d.id === character.deity?.id) || character.deity : character.deity;
@@ -779,8 +785,11 @@ function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: { is
     setIntelligence(localInt);
     setCharisma(localCha);
     setDescription(localDescription);
+    setRace(localRace);
+    setAlignment(localAlignment);
     setAge(localAge);
     setHeight(localHeight);
+    setWeight(localWeight);
     onClose();
   };
   
@@ -846,6 +855,38 @@ function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: { is
                 </div>
               </div>
               
+              {/* Race et Alignement */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-ink mb-2">Race</label>
+                  <input
+                    type="text"
+                    value={localRace}
+                    onChange={(e) => setLocalRace(e.target.value)}
+                    className="w-full input-field text-center"
+                    placeholder="Humain"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-ink mb-2">Alignement</label>
+                  <select
+                    value={localAlignment}
+                    onChange={(e) => setLocalAlignment(e.target.value)}
+                    className="w-full input-field text-center"
+                  >
+                    <option value="Loyal Bon">Loyal Bon</option>
+                    <option value="Neutre Bon">Neutre Bon</option>
+                    <option value="Chaotique Bon">Chaotique Bon</option>
+                    <option value="Loyal Neutre">Loyal Neutre</option>
+                    <option value="Neutre">Neutre</option>
+                    <option value="Chaotique Neutre">Chaotique Neutre</option>
+                    <option value="Loyal Mauvais">Loyal Mauvais</option>
+                    <option value="Neutre Mauvais">Neutre Mauvais</option>
+                    <option value="Chaotique Mauvais">Chaotique Mauvais</option>
+                  </select>
+                </div>
+              </div>
+              
               {/* Dieu */}
               <div>
                 <label className="block text-sm font-medium text-ink mb-2">Divinité vénérée</label>
@@ -878,8 +919,8 @@ function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: { is
                 />
               </div>
               
-              {/* Âge et Taille */}
-              <div className="grid grid-cols-2 gap-4">
+              {/* Âge, Taille et Poids */}
+              <div className="grid grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-ink mb-2">Âge</label>
                   <input
@@ -898,7 +939,18 @@ function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: { is
                     value={localHeight}
                     onChange={(e) => setLocalHeight(e.target.value)}
                     className="w-full input-field text-center"
-                    placeholder="1m75"
+                    placeholder="1m78"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-ink mb-2">Poids (kg)</label>
+                  <input
+                    type="number"
+                    value={localWeight}
+                    onChange={(e) => setLocalWeight(Math.max(1, parseInt(e.target.value) || 1))}
+                    className="w-full input-field text-center"
+                    min="1"
+                    max="500"
                   />
                 </div>
               </div>
@@ -1297,8 +1349,14 @@ export function Dashboard() {
         
         <h2 className="font-display text-xl text-ink mt-4">{character.name}</h2>
         <div className="flex flex-col gap-1 mt-2 items-center">
-          {/* Ligne Clerc de Torm */}
+          {/* Ligne Race et Alignement */}
           <div className="flex items-center justify-center gap-2 text-ink-muted font-ui text-sm">
+            <span>{character.race || 'Humain'}</span>
+            <span>•</span>
+            <span>{character.alignment || 'Neutre Bon'}</span>
+          </div>
+          {/* Ligne Clerc de Torm */}
+          <div className="flex items-center justify-center gap-2 text-amber-900 font-medium text-sm">
             {deitySymbol.startsWith('images/') || deitySymbol.startsWith('/') ? (
               <img 
                 src={deitySymbol} 
@@ -1308,10 +1366,10 @@ export function Dashboard() {
             ) : (
               <span className="text-lg flex-shrink-0">{deitySymbol}</span>
             )}
-            <span>Clerc de {character.deity?.name} ({character.deity?.alignment})</span>
+            <span>Clerc de {character.deity?.name}</span>
           </div>
           {/* Ligne Domaine */}
-          <div className="flex items-center justify-center gap-2 text-amber-900 font-medium text-sm">
+          <div className="flex items-center justify-center gap-2 text-ink-light text-sm">
             <span className="text-lg flex-shrink-0">{character.domain?.icon}</span>
             <span>{character.domain?.name} • Niveau {character.level}</span>
           </div>

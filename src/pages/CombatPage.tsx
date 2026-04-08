@@ -154,6 +154,7 @@ export function CombatPage() {
   const [showChannelDivinityInfo, setShowChannelDivinityInfo] = useState(false);
   const [showActionExplanation, setShowActionExplanation] = useState(false);
   const [showConcentrationExplanation, setShowConcentrationExplanation] = useState(false);
+  const [showCombatManeuvers, setShowCombatManeuvers] = useState(false);
   
   const character = useCharacterStore((state) => state.character);
   const { warCleric, channelDivinity } = character.abilities;
@@ -518,6 +519,156 @@ export function CombatPage() {
                 Si vous maintenez <em>Bénédiction</em> tout en combattant au front, chaque coup reçu est un risque de perdre le buff de toute l'équipe. 
                 Privilégiez les sorts de concentration défensifs (ex: <em>Flou</em>) ou placez-vous stratégiquement.
               </p>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Manoeuvres de combat */}
+      <div className="card bg-steel-blue/10 border-steel-blue/30">
+        <button 
+          onClick={() => setShowCombatManeuvers(!showCombatManeuvers)}
+          className="w-full flex items-center justify-between text-left"
+        >
+          <div className="flex items-center gap-2">
+            <Info className="w-4 h-4 text-steel-blue" />
+            <span className="text-sm font-bold text-ink">Règle importante : Les manoeuvres de combat</span>
+          </div>
+          {showCombatManeuvers ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+        </button>
+        
+        {showCombatManeuvers && (
+          <div className="mt-3 pt-3 border-t border-steel-blue/30 text-sm space-y-3">
+            <p className="text-ink-light">
+              En plus de l'action <strong>Attaquer</strong>, vous disposez de plusieurs manoeuvres tactiques. 
+              Choisir la bonne action selon la situation peut sauver votre vie — ou celle de vos alliés.
+            </p>
+
+            {/* Foncer */}
+            <div className="bg-parchment p-2 rounded border-l-4 border-forest">
+              <p className="font-bold text-forest">🏃 Foncer (Dash)</p>
+              <p className="text-ink-light mt-1">
+                Vous gagnez un <strong>déplacement supplémentaire</strong> égal à votre vitesse ce tour-ci. 
+                Utile pour rejoindre un allié en danger, fuir, ou se positionner stratégiquement.
+              </p>
+              <p className="text-xs text-ink-muted mt-1">
+                💡 Combine avec <em>Action bonus</em> (Prêtre de guerre) pour avancer ET attaquer dans le même tour.
+              </p>
+            </div>
+
+            {/* Esquiver */}
+            <div className="bg-parchment p-2 rounded border-l-4 border-divine-gold">
+              <p className="font-bold text-divine-gold-dark">💨 Esquiver (Dodge)</p>
+              <p className="text-ink-light mt-1">
+                Jusqu'à votre prochain tour, les attaques contre vous ont un <strong>désavantage</strong>, 
+                et vous avez l'<strong>avantage</strong> sur les jets de sauvegarde de Dextérité (effets de zone).
+              </p>
+              <p className="text-xs text-blood-red mt-1">
+                ⚠️ Vous perdez ce bénéfice si vous êtes neutralisé (assommé, paralysé) ou si votre vitesse tombe à 0.
+              </p>
+            </div>
+
+            {/* Aider */}
+            <div className="bg-parchment p-2 rounded border-l-4 border-steel-blue">
+              <p className="font-bold text-steel-blue">🤝 Aider (Help)</p>
+              <p className="text-ink-light mt-1">
+                Vous aidez une créature à portée. Elle obtient l'<strong>avantage</strong> sur :
+              </p>
+              <ul className="text-ink-light list-disc list-inside space-y-1 mt-1">
+                <li>Son <strong>prochain jet d'attaque</strong> contre une cible à 1,50m de vous</li>
+                <li>Son <strong>prochain test de caractéristique</strong> de la compétence que vous maîtrisez</li>
+              </ul>
+              <p className="text-xs text-ink-muted mt-1">
+                💡 Excellent pour préparer un gros coup d'allié ou garantir qu'une compétence critique réussisse.
+              </p>
+            </div>
+
+            {/* Se désengager */}
+            <div className="bg-parchment p-2 rounded border-l-4 border-bronze">
+              <p className="font-bold text-bronze">🏃‍♂️ Se désengager (Disengage)</p>
+              <p className="text-ink-light mt-1">
+                Votre mouvement ne provoque pas d'<strong>attaques d'opportunité</strong> pour le reste du tour.
+              </p>
+              <p className="text-xs text-ink-muted mt-1">
+                💡 À utiliser quand vous êtes encerclé et devez rejoindre vos alliés en sécurité.
+              </p>
+            </div>
+
+            {/* Se cacher */}
+            <div className="bg-parchment p-2 rounded border-l-4 border-royal-purple">
+              <p className="font-bold text-royal-purple">🌑 Se cacher (Hide)</p>
+              <p className="text-ink-light mt-1">
+                Faites un test de <strong>Discrétion</strong> (DEX) contre la Perception passive des ennemis. 
+                En cas de succès, vous obtenez :
+              </p>
+              <ul className="text-ink-light list-disc list-inside space-y-1 mt-1">
+                <li>L'état <strong>invisible</strong> pour ceux qui ne vous ont pas détecté</li>
+                <li><strong>Avantage</strong> sur votre prochaine attaque (puis vous êtes révélé)</li>
+                <li>Les attaques contre vous ont un <strong>désavantage</strong> tant que vous restez caché</li>
+              </ul>
+            </div>
+
+            {/* Se précipiter */}
+            <div className="bg-parchment p-2 rounded border-l-4 border-blood-red">
+              <p className="font-bold text-blood-red">⚡ Se précipiter (Haste)</p>
+              <p className="text-ink-light mt-1">
+                Vous effectuez une action bonus supplémentaire ce tour-ci, limitée à :
+              </p>
+              <ul className="text-ink-light list-disc list-inside space-y-1 mt-1">
+                <li>Frappe avec une arme (uniquement)</li>
+                <li>Courir (Dash)</li>
+                <li>Se désengager (Disengage)</li>
+                <li>Utiliser un objet</li>
+              </ul>
+              <p className="text-xs text-ink-muted mt-1">
+                💡 Le sort <em>Hâte</em> donne cette action bonus à chaque tour — très puissant !
+              </p>
+            </div>
+
+            {/* Recherche */}
+            <div className="bg-parchment p-2 rounded border-l-4 border-ink-muted">
+              <p className="font-bold text-ink">🔍 Recherche (Search)</p>
+              <p className="text-ink-light mt-1">
+                Consacrez votre action à chercher quelque chose. Faites un test de <strong>Sagesse (Perception)</strong> 
+                ou <strong>Intelligence (Investigation)</strong> selon ce que le MJ demande.
+              </p>
+            </div>
+
+            {/* Utiliser un objet */}
+            <div className="bg-parchment p-2 rounded border-l-4 border-ink-muted">
+              <p className="font-bold text-ink">🧪 Utiliser un objet (Use an Object)</p>
+              <p className="text-ink-light mt-1">
+                Interagissez avec un objet secondaire : ouvrir une porte, vider un sac, sortir une potion... 
+                Certains objets magiques nécessitent cette action pour être activés.
+              </p>
+              <p className="text-xs text-divine-gold mt-1">
+                💡 Le talent <strong>Agile avec les mains (Fast Hands)</strong> permet d'utiliser un objet comme action bonus.
+              </p>
+            </div>
+
+            {/* Tableau récapitulatif */}
+            <div className="bg-steel-blue/10 p-2 rounded border border-steel-blue/30">
+              <p className="font-bold text-steel-blue">📋 Quand utiliser quelle manoeuvre ?</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2 text-xs">
+                <div className="bg-parchment p-1.5 rounded">
+                  <strong className="text-forest">Foncer</strong> → Rejoindre/quitter rapidement
+                </div>
+                <div className="bg-parchment p-1.5 rounded">
+                  <strong className="text-divine-gold-dark">Esquiver</strong> → Vous faites trop de mal
+                </div>
+                <div className="bg-parchment p-1.5 rounded">
+                  <strong className="text-steel-blue">Aider</strong> → Allié a besoin d'un coup sûr
+                </div>
+                <div className="bg-parchment p-1.5 rounded">
+                  <strong className="text-bronze">Se désengager</strong> → Fuir sans prendre d'AO
+                </div>
+                <div className="bg-parchment p-1.5 rounded">
+                  <strong className="text-blood-red">Se précipiter</strong> → Besoin d'action bonus
+                </div>
+                <div className="bg-parchment p-1.5 rounded">
+                  <strong className="text-royal-purple">Se cacher</strong> → Embuscade tactique
+                </div>
+              </div>
             </div>
           </div>
         )}
