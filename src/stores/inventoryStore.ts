@@ -176,10 +176,10 @@ export const useInventoryStore = create<InventoryState>()(
     }),
     {
       name: STORAGE_KEYS.INVENTORY,
-      version: 3, // Incrémenté pour forcer la réinitialisation avec les équipements de départ
+      version: 4, // Incrémenté pour ajouter les nouveaux équipements
       migrate: (persistedState: unknown, version) => {
         // Si la version est ancienne, on réinitialise les items (ils seront rechargés depuis App.tsx)
-        if (version < 3) {
+        if (version < 4) {
           return { items: [] } as unknown as InventoryState;
         }
         return persistedState as InventoryState;

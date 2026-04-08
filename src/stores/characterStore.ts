@@ -791,6 +791,17 @@ export const useCharacterStore = create<CharacterState>()(
     }),
     {
       name: STORAGE_KEYS.CHARACTER,
+      version: 2, // Incrémenté pour mettre à jour les compétences maîtrisées
+      migrate: (persistedState: unknown, version) => {
+        if (version < 2) {
+          // Met à jour les compétences maîtrisées avec les nouvelles valeurs
+          const state = persistedState as { character?: { masteredSkills?: string[] } };
+          if (state.character) {
+            state.character.masteredSkills = MASTERED_SKILLS;
+          }
+        }
+        return persistedState as CharacterState;
+      },
     }
   )
 );
