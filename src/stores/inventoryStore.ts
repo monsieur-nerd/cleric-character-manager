@@ -38,6 +38,8 @@ export const useInventoryStore = create<InventoryState>()(
       componentMapping: [],
       
       loadItems: (items) => {
+        const { items: existingItems } = get();
+        
         // Marque les composantes
         const componentKeywords = [
           'diamant', 'encens', 'symbole', 'filament', 'liege',
@@ -45,7 +47,12 @@ export const useInventoryStore = create<InventoryState>()(
           'sang', 'chair', 'ossement'
         ];
         
-        const itemsWithComponentFlag = items.map(item => ({
+        // Fusionne les nouveaux items avec les existants
+        // Préserve les quantités existantes, ajoute les nouveaux items si pas présents
+        const existingIds = new Set(existingItems.map(item => item.id));
+        const newItems = items.filter(item => !existingIds.has(item.id));
+        
+        const itemsWithComponentFlag = [...existingItems, ...newItems].map(item => ({
           ...item,
           isComponent: componentKeywords.some(kw => 
             (item.name || '').toLowerCase().includes(kw.toLowerCase())
@@ -169,10 +176,10 @@ export const useInventoryStore = create<InventoryState>()(
     }),
     {
       name: STORAGE_KEYS.INVENTORY,
-      version: 2, // Incrémenté pour forcer la réinitialisation avec les nouveaux équipements de combat
+      version: 3, // Incrémenté pour forcer la réinitialisation avec les équipements de départ
       migrate: (persistedState: unknown, version) => {
         // Si la version est ancienne, on réinitialise les items (ils seront rechargés depuis App.tsx)
-        if (version < 2) {
+        if (version < 3) {
           return { items: [] } as unknown as InventoryState;
         }
         return persistedState as InventoryState;

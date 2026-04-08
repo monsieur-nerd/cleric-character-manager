@@ -49,6 +49,10 @@ function App() {
   const setDexterity = useCharacterStore((state) => state.setDexterity);
   const setIntelligence = useCharacterStore((state) => state.setIntelligence);
   const setCharisma = useCharacterStore((state) => state.setCharisma);
+  const setAge = useCharacterStore((state) => state.setAge);
+  const setHeight = useCharacterStore((state) => state.setHeight);
+  const setWeight = useCharacterStore((state) => state.setWeight);
+  const setDescription = useCharacterStore((state) => state.setDescription);
   const longRest = useCharacterStore((state) => state.longRest);
 
   useEffect(() => {
@@ -87,6 +91,8 @@ function App() {
         
       const isWrongLevel = character.level !== CHARACTER_IDENTITY.level;
       const isWrongWisdom = character.wisdom !== CHARACTER_ABILITIES.wisdom;
+      const isWrongAge = character.age !== CHARACTER_IDENTITY.age;
+      const isWrongWeight = character.weight !== CHARACTER_IDENTITY.weight;
       
       console.log('Migration check:', { 
         name: character.name, 
@@ -96,7 +102,7 @@ function App() {
         expectedName: CHARACTER_IDENTITY.name 
       });
       
-      if (isWrongName || isWrongLevel || isWrongWisdom) {
+      if (isWrongName || isWrongLevel || isWrongWisdom || isWrongAge || isWrongWeight) {
         setNeedsMigration(true);
       }
     }
@@ -113,6 +119,12 @@ function App() {
     setDexterity(CHARACTER_ABILITIES.dexterity);
     setIntelligence(CHARACTER_ABILITIES.intelligence);
     setCharisma(CHARACTER_ABILITIES.charisma);
+    
+    // Met à jour les infos physiques
+    setAge(CHARACTER_IDENTITY.age);
+    setHeight(CHARACTER_IDENTITY.height);
+    setWeight(CHARACTER_IDENTITY.weight);
+    setDescription(CHARACTER_IDENTITY.description);
     
     // Réinitialise l'état journalier
     longRest();
