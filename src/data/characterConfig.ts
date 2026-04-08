@@ -27,8 +27,8 @@ export const CHARACTER_IDENTITY = {
   weight: 78,
   description: 'Clerc de guerre de Torm, dévoué à la protection des innocents et à la lutte contre les forces du mal.',
   
-  // Avatar (URL ou null)
-  avatar: null as string | null,
+  // Avatar (URL ou null) - préfixé pour GitHub Pages
+  avatar: '/cleric-character-manager/images/clerc_de_Torm.png' as string | null,
   
   // Langues parlées
   languages: ['Commun', 'Illiskien', 'Drakonique', 'Elfe', 'Nain'] as string[],
@@ -64,6 +64,40 @@ export const MASTERED_SKILLS = [
 export const CHARACTER_FEATS: string[] = [
   // Exemples : 'war-caster', 'shield-master', 'sentinel'
   // À remplir selon les talents choisis
+];
+
+// ============================================
+// TRAITS DE BACKGROUND (ACOLYTE DE TORM)
+// ============================================
+export const BACKGROUND_TRAITS = [
+  {
+    id: 'ceremonie',
+    name: 'Cérémonie',
+    description: "En tant qu'acolyte de Torm, vous pouvez demander des soins gratuits et un abri dans n'importe quel temple de Torm ou de divinités alliées.",
+    effect: 'Soins gratuits et hébergement dans les temples de Torm et alliés.',
+    type: 'background' as const,
+  },
+  {
+    id: 'abris-divin',
+    name: 'Abris du Divin',
+    description: 'Les fidèles de Torm vous reconnaissent comme un servant de la foi et vous offrent leur aide. Les prêtres de divinités alliées vous considèrent comme un allié.',
+    effect: 'Reconnu par les fidèles de Torm, accès aux ressources ecclésiastiques.',
+    type: 'background' as const,
+  },
+  {
+    id: 'maitrise-armes-courantes',
+    name: 'Maîtrise des armes courantes',
+    description: "En tant que clerc de guerre, vous êtes formé à l'utilisation de toutes les armes courantes.",
+    effect: 'Maîtrise de toutes les armes courantes (masses, épées courtes, arcs, etc.).',
+    type: 'class' as const,
+  },
+  {
+    id: 'style-combat',
+    name: 'Style de Combat : Défense',
+    description: 'Vous avez adopté un style de combat défensif qui vous confère un bonus de +1 à la CA tant que vous portez une armure.',
+    effect: '+1 à la CA en portant une armure (pas un bouclier requis).',
+    type: 'class' as const,
+  },
 ];
 
 // ============================================

@@ -12,4 +12,5 @@ export {
   STARTING_EQUIPMENT,
   INITIAL_DAILY_STATE,
   createInitialCharacter,
+  BACKGROUND_TRAITS,
 } from './characterConfig';

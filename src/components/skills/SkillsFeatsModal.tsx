@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { 
   X, GraduationCap, Star, Check, Filter, BookOpen, Plus, 
   Trash2, Shield, Zap, Eye, Sparkles, Swords, Brain, Heart,
-  ChevronDown, ChevronUp
+  ChevronDown, ChevronUp, Scroll
 } from 'lucide-react';
 import { useCharacterStore } from '@/stores';
 import { SKILLS, type AbilityScore, ABILITY_SCORES, type CustomSkill, type Skill } from '@/types/skills';
 import { FEATS, type CustomFeat, type Feat } from '@/types/feats';
+import { BACKGROUND_TRAITS } from '@/data/characterConfig';
 
 interface SkillsFeatsModalProps {
   isOpen: boolean;
@@ -45,7 +46,7 @@ const ABILITY_ICONS: Record<AbilityScore, typeof Swords> = {
 // ============================================
 
 export function SkillsFeatsModal({ isOpen, onClose }: SkillsFeatsModalProps) {
-  const [activeTab, setActiveTab] = useState<'skills' | 'feats'>('skills');
+  const [activeTab, setActiveTab] = useState<'skills' | 'feats' | 'traits'>('skills');
   const [showOnlyMastered, setShowOnlyMastered] = useState(false);
   const [showOnlyOwned, setShowOnlyOwned] = useState(false);
   const [filterAbility, setFilterAbility] = useState<AbilityScore | 'all'>('all');
@@ -109,6 +110,20 @@ export function SkillsFeatsModal({ isOpen, onClose }: SkillsFeatsModalProps) {
         <div className="flex border-b border-parchment-dark bg-parchment-dark/10">
           {/* Version desktop : icône + texte horizontal */}
           <button
+            onClick={() => setActiveTab('traits')}
+            className={`hidden sm:flex flex-1 items-center justify-center gap-2 py-3 text-sm font-medium transition-colors ${
+              activeTab === 'traits'
+                ? 'text-divine-gold-dark border-b-2 border-divine-gold bg-divine-gold/5'
+                : 'text-ink-muted hover:text-ink hover:bg-parchment-dark/30'
+            }`}
+          >
+            <Scroll className="w-4 h-4" />
+            Traits
+            <span className="text-xs bg-parchment-dark px-2 py-0.5 rounded-full">
+              {BACKGROUND_TRAITS.length}
+            </span>
+          </button>
+          <button
             onClick={() => setActiveTab('feats')}
             className={`hidden sm:flex flex-1 items-center justify-center gap-2 py-3 text-sm font-medium transition-colors ${
               activeTab === 'feats'
@@ -138,6 +153,20 @@ export function SkillsFeatsModal({ isOpen, onClose }: SkillsFeatsModalProps) {
           </button>
 
           {/* Version mobile : icône au-dessus du texte */}
+          <button
+            onClick={() => setActiveTab('traits')}
+            className={`sm:hidden flex-1 flex flex-col items-center justify-center gap-1 py-3 text-xs font-medium transition-colors ${
+              activeTab === 'traits'
+                ? 'text-divine-gold-dark border-b-2 border-divine-gold bg-divine-gold/5'
+                : 'text-ink-muted hover:text-ink hover:bg-parchment-dark/30'
+            }`}
+          >
+            <Scroll className="w-5 h-5" />
+            <span>Traits</span>
+            <span className="text-[10px] bg-parchment-dark px-1.5 py-0.5 rounded-full">
+              {BACKGROUND_TRAITS.length}
+            </span>
+          </button>
           <button
             onClick={() => setActiveTab('feats')}
             className={`sm:hidden flex-1 flex flex-col items-center justify-center gap-1 py-3 text-xs font-medium transition-colors ${
@@ -202,7 +231,7 @@ export function SkillsFeatsModal({ isOpen, onClose }: SkillsFeatsModalProps) {
                 ))}
               </div>
             </div>
-          ) : (
+          ) : activeTab === 'feats' ? (
             <button
               onClick={() => setShowOnlyOwned(!showOnlyOwned)}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
@@ -214,6 +243,10 @@ export function SkillsFeatsModal({ isOpen, onClose }: SkillsFeatsModalProps) {
               <Filter className="w-3.5 h-3.5" />
               {showOnlyOwned ? 'Mes talents' : 'Tous les talents'}
             </button>
+          ) : (
+            <div className="text-sm text-ink-muted">
+              Traits de background et capacités de classe
+            </div>
           )}
         </div>
 
@@ -230,7 +263,7 @@ export function SkillsFeatsModal({ isOpen, onClose }: SkillsFeatsModalProps) {
               expandedSkill={expandedSkill}
               setExpandedSkill={setExpandedSkill}
             />
-          ) : (
+          ) : activeTab === 'feats' ? (
             <FeatsContent 
               feats={filteredFeats}
               ownedFeats={ownedFeats}
@@ -239,6 +272,8 @@ export function SkillsFeatsModal({ isOpen, onClose }: SkillsFeatsModalProps) {
               expandedFeat={expandedFeat}
               setExpandedFeat={setExpandedFeat}
             />
+          ) : (
+            <TraitsContent />
           )}
         </div>
 
@@ -253,13 +288,22 @@ export function SkillsFeatsModal({ isOpen, onClose }: SkillsFeatsModalProps) {
                 Bonus de maîtrise : +{profBonus}
               </span>
             </div>
-          ) : (
+          ) : activeTab === 'feats' ? (
             <div className="flex justify-between items-center text-sm">
               <span className="text-ink-muted">
                 {ownedFeats.length} talent{ownedFeats.length > 1 ? 's' : ''} possédé{ownedFeats.length > 1 ? 's' : ''}
               </span>
               <span className="text-ink-muted">
                 {FEATS.length} talents disponibles
+              </span>
+            </div>
+          ) : (
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-ink-muted">
+                {BACKGROUND_TRAITS.length} traits
+              </span>
+              <span className="text-ink-muted">
+                Background & Classe
               </span>
             </div>
           )}
@@ -643,6 +687,75 @@ function AddSkillModal({ onClose, onAdd }: AddSkillModalProps) {
             </button>
           </div>
         </form>
+      </div>
+    </div>
+  );
+}
+
+// ============================================
+// CONTENU DES TRAITS (BACKGROUND & CLASSE)
+// ============================================
+
+function TraitsContent() {
+  return (
+    <div className="space-y-4">
+      {/* Introduction */}
+      <div className="p-4 bg-divine-gold/10 rounded-lg border border-divine-gold/30">
+        <h3 className="font-display text-lg text-ink mb-2">Traits de background & Capacités de classe</h3>
+        <p className="text-sm text-ink-light">
+          Ces avantages proviennent de votre background d&apos;acolyte de Torm et de votre classe de clerc de guerre.
+        </p>
+      </div>
+
+      {/* Liste des traits */}
+      <div className="space-y-3">
+        {BACKGROUND_TRAITS.map((trait) => (
+          <div
+            key={trait.id}
+            className="p-4 bg-parchment-dark/30 rounded-lg border border-parchment-dark hover:border-divine-gold/30 transition-colors"
+          >
+            <div className="flex items-start gap-3">
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
+                trait.type === 'background' 
+                  ? 'bg-royal-purple/10 text-royal-purple' 
+                  : 'bg-blood-red/10 text-blood-red'
+              }`}>
+                {trait.type === 'background' ? <Scroll className="w-5 h-5" /> : <Shield className="w-5 h-5" />}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1">
+                  <h4 className="font-display text-ink">{trait.name}</h4>
+                  <span className={`text-xs px-2 py-0.5 rounded-full ${
+                    trait.type === 'background'
+                      ? 'bg-royal-purple/10 text-royal-purple'
+                      : 'bg-blood-red/10 text-blood-red'
+                  }`}>
+                    {trait.type === 'background' ? 'Background' : 'Classe'}
+                  </span>
+                </div>
+                <p className="text-sm text-ink-light leading-relaxed">{trait.description}</p>
+                <div className="mt-2 p-2 bg-parchment-light rounded text-sm">
+                  <span className="text-divine-gold-dark font-medium">Effet : </span>
+                  <span className="text-ink-light">{trait.effect}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Note sur les talents */}
+      <div className="p-4 bg-parchment-dark/20 rounded-lg border border-parchment-dark/50">
+        <div className="flex items-start gap-3">
+          <Star className="w-5 h-5 text-divine-gold flex-shrink-0 mt-0.5" />
+          <div>
+            <h4 className="font-medium text-ink mb-1">Prochain talent au niveau 8</h4>
+            <p className="text-sm text-ink-light">
+              Vous gagnerez votre prochain talent au niveau 8 (puis aux niveaux 12, 16 et 19). 
+              Pensez à consulter l&apos;onglet <strong>Talents</strong> pour voir les options disponibles.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

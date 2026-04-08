@@ -54,6 +54,7 @@ function App() {
   const setWeight = useCharacterStore((state) => state.setWeight);
   const setDescription = useCharacterStore((state) => state.setDescription);
   const setLanguages = useCharacterStore((state) => state.setLanguages);
+  const setAvatar = useCharacterStore((state) => state.setAvatar);
   const longRest = useCharacterStore((state) => state.longRest);
 
   useEffect(() => {
@@ -94,6 +95,7 @@ function App() {
       const isWrongWisdom = character.wisdom !== CHARACTER_ABILITIES.wisdom;
       const isWrongAge = character.age !== CHARACTER_IDENTITY.age;
       const isWrongWeight = character.weight !== CHARACTER_IDENTITY.weight;
+      const isWrongAvatar = character.avatar !== CHARACTER_IDENTITY.avatar;
       
       console.log('Migration check:', { 
         name: character.name, 
@@ -103,7 +105,7 @@ function App() {
         expectedName: CHARACTER_IDENTITY.name 
       });
       
-      if (isWrongName || isWrongLevel || isWrongWisdom || isWrongAge || isWrongWeight) {
+      if (isWrongName || isWrongLevel || isWrongWisdom || isWrongAge || isWrongWeight || isWrongAvatar) {
         setNeedsMigration(true);
       }
     }
@@ -127,6 +129,7 @@ function App() {
     setWeight(CHARACTER_IDENTITY.weight);
     setDescription(CHARACTER_IDENTITY.description);
     setLanguages(CHARACTER_IDENTITY.languages);
+    setAvatar(CHARACTER_IDENTITY.avatar);
     
     // Réinitialise l'état journalier
     longRest();
