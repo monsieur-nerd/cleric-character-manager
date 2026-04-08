@@ -33,9 +33,9 @@ export const CHARACTER_IDENTITY = {
 // ============================================
 export const CHARACTER_ABILITIES = {
   strength: 14,      // Force
-  dexterity: 12,     // Dextérité
-  constitution: 14,  // Constitution
-  intelligence: 10,  // Intelligence
+  dexterity: 10,     // Dextérité
+  constitution: 10,  // Constitution
+  intelligence: 8,   // Intelligence
   wisdom: 16,        // Sagesse (principale pour clerc)
   charisma: 13,      // Charisme
 };
