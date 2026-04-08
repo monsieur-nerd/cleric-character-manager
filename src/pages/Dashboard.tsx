@@ -1304,14 +1304,77 @@ export function Dashboard() {
           </div>
         </div>
         
-        <div className="mt-3 pb-2 flex justify-center gap-4 text-sm font-ui">
+        <div className="mt-4 pb-2">
+          {/* Grille des caractéristiques */}
+          <div className="grid grid-cols-3 gap-2 sm:grid-cols-6 sm:gap-3">
+            {/* Force */}
+            <button 
+              onClick={() => openEditor('stats')}
+              className="flex flex-col items-center p-2 bg-parchment-dark/40 rounded-lg hover:bg-parchment-dark/60 transition-colors"
+            >
+              <span className="text-xs font-bold text-steel-blue">FOR</span>
+              <span className="font-display text-lg text-ink">{character.strength}</span>
+              <span className="text-xs text-steel-blue font-medium">{formatModifier(character.strength)}</span>
+            </button>
+            
+            {/* Dextérité */}
+            <button 
+              onClick={() => openEditor('stats')}
+              className="flex flex-col items-center p-2 bg-parchment-dark/40 rounded-lg hover:bg-parchment-dark/60 transition-colors"
+            >
+              <span className="text-xs font-bold text-forest">DEX</span>
+              <span className="font-display text-lg text-ink">{character.dexterity}</span>
+              <span className="text-xs text-forest font-medium">{formatModifier(character.dexterity)}</span>
+            </button>
+            
+            {/* Constitution */}
+            <button 
+              onClick={() => openEditor('stats')}
+              className="flex flex-col items-center p-2 bg-parchment-dark/40 rounded-lg hover:bg-parchment-dark/60 transition-colors"
+            >
+              <span className="text-xs font-bold text-blood-red">CON</span>
+              <span className="font-display text-lg text-ink">{character.constitution}</span>
+              <span className="text-xs text-blood-red font-medium">{formatModifier(character.constitution)}</span>
+            </button>
+            
+            {/* Intelligence */}
+            <button 
+              onClick={() => openEditor('stats')}
+              className="flex flex-col items-center p-2 bg-parchment-dark/40 rounded-lg hover:bg-parchment-dark/60 transition-colors"
+            >
+              <span className="text-xs font-bold text-royal-purple">INT</span>
+              <span className="font-display text-lg text-ink">{character.intelligence}</span>
+              <span className="text-xs text-royal-purple font-medium">{formatModifier(character.intelligence)}</span>
+            </button>
+            
+            {/* Sagesse */}
+            <button 
+              onClick={() => openEditor('stats')}
+              className="flex flex-col items-center p-2 bg-divine-gold/20 rounded-lg hover:bg-divine-gold/30 transition-colors border border-divine-gold/30"
+            >
+              <span className="text-xs font-bold text-divine-gold-dark">SAG</span>
+              <span className="font-display text-lg text-ink">{character.wisdom}</span>
+              <span className="text-xs text-divine-gold-dark font-medium">{formatModifier(character.wisdom)}</span>
+            </button>
+            
+            {/* Charisme */}
+            <button 
+              onClick={() => openEditor('stats')}
+              className="flex flex-col items-center p-2 bg-parchment-dark/40 rounded-lg hover:bg-parchment-dark/60 transition-colors"
+            >
+              <span className="text-xs font-bold text-bronze">CHA</span>
+              <span className="font-display text-lg text-ink">{character.charisma}</span>
+              <span className="text-xs text-bronze font-medium">{formatModifier(character.charisma)}</span>
+            </button>
+          </div>
+          
+          {/* Bouton d'édition */}
           <button 
             onClick={() => openEditor('stats')}
-            className="flex items-center gap-1 hover:text-divine-gold-dark transition-colors"
+            className="mt-2 w-full text-xs text-ink-muted hover:text-divine-gold-dark transition-colors flex items-center justify-center gap-1"
           >
-            <Brain className="w-4 h-4 text-divine-gold" />
-            SAG {character.wisdom} ({formatModifier(character.wisdom)})
-            <Edit3 className="w-3 h-3 ml-1" />
+            <Edit3 className="w-3 h-3" />
+            Modifier les caractéristiques
           </button>
         </div>
       </div>

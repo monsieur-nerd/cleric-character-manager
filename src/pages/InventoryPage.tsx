@@ -1,29 +1,36 @@
 import { useState } from 'react';
-import { Package, Plus, Minus, AlertCircle, ShoppingCart, PlusCircle } from 'lucide-react';
+import { Package, Plus, Minus, AlertCircle, ShoppingCart, PlusCircle, Sword } from 'lucide-react';
 import { useInventoryStore } from '@/stores';
 import { useCharacterStore } from '@/stores';
 import { formatWeight, formatPrice } from '@/utils/formatters';
 import { ShoppingList } from '@/components/inventory/ShoppingList';
 import { AddItemModal } from '@/components/inventory/AddItemModal';
+import { CombatEquipmentTab } from '@/components/inventory/CombatEquipmentTab';
 import type { EquipmentItem } from '@/types';
 
 const categories = [
   'Tous',
-  'Composante',
-  'Arme',
-  'Armure',
-  'Consommable',
-  'Équipement aventure',
+  'Monture',
+  'Éclairage',
+  'Hygiène',
+  'Écriture / Dessin',
+  'Sacs / Étuis',
+  'Escalade',
+  'Correspondances',
+  'Soins',
+  'Pièges',
+  'Autre',
 ];
 
 const tabs = [
   { id: 'inventory', label: 'Inventaire', icon: Package },
+  { id: 'combat', label: 'Armement', icon: Sword },
   { id: 'shopping', label: 'À acheter', icon: ShoppingCart },
 ];
 
 export function InventoryPage() {
   const [selectedCategory, setSelectedCategory] = useState('Tous');
-  const [activeTab, setActiveTab] = useState<'inventory' | 'shopping'>('inventory');
+  const [activeTab, setActiveTab] = useState<'inventory' | 'combat' | 'shopping'>('inventory');
   const [showAddModal, setShowAddModal] = useState(false);
   
   const items = useInventoryStore((state) => state.items);
@@ -95,7 +102,7 @@ export function InventoryPage() {
         {tabs.map(tab => (
           <button
             key={tab.id}
-            onClick={() => setActiveTab(tab.id as 'inventory' | 'shopping')}
+            onClick={() => setActiveTab(tab.id as 'inventory' | 'combat' | 'shopping')}
             className={`flex items-center gap-2 px-4 py-2 font-ui text-sm border-b-2 transition-colors ${
               activeTab === tab.id
                 ? 'border-divine-gold text-ink'
@@ -110,6 +117,8 @@ export function InventoryPage() {
       
       {activeTab === 'shopping' ? (
         <ShoppingList />
+      ) : activeTab === 'combat' ? (
+        <CombatEquipmentTab />
       ) : (
         <>
           {/* Stats */}

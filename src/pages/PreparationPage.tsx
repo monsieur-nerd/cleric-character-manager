@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Check, RotateCcw, Sword, Flame, Skull, Compass, Shield, Star, Heart, Scroll, Sparkles, CloudLightning, Droplets, Snowflake, Zap, X, AlertTriangle, Sun, Leaf, BookOpen, Ghost, Hammer, Coffee, Users } from 'lucide-react';
-import { useSpellStore, useCharacterStore } from '@/stores';
+import { ArrowLeft, Check, RotateCcw, Sword, Flame, Skull, Compass, Shield, Star, Heart, Scroll, Sparkles, CloudLightning, Droplets, Snowflake, Zap, X, AlertTriangle, Sun, Leaf, BookOpen, Ghost, Hammer, Coffee, Users, Edit3, Save, Plus, Trash2, GripVertical, Edit } from 'lucide-react';
+import { useSpellStore, useCharacterStore, usePresetStore } from '@/stores';
 import { SpellCard } from '@/components/spells/SpellCard';
 import { defaultPresets, getKimiRecommendedSpells, getDomainPresets } from '@/data/presets';
 import type { Spell, SpellPreset } from '@/types';
@@ -41,6 +41,7 @@ const presetIcons: Record<string, React.ReactNode> = {
   'grave-keeper': <Coffee className="w-5 h-5 text-stone-600" />,
   'grave-death-watcher': <Skull className="w-5 h-5 text-stone-800" />,
   'social-investigation': <Users className="w-5 h-5 text-indigo-500" />,
+  'custom-user': <Edit3 className="w-5 h-5 text-pink-500" />,
 };
 
 const presetColors: Record<string, string> = {
@@ -78,6 +79,7 @@ const presetColors: Record<string, string> = {
   'grave-keeper': 'border-stone-600 bg-stone-600/10',
   'grave-death-watcher': 'border-stone-800 bg-stone-800/10',
   'social-investigation': 'border-indigo-500 bg-indigo-500/10',
+  'custom-user': 'border-pink-500 bg-pink-500/10',
 };
 
 /**
@@ -114,7 +116,23 @@ export function PreparationPage() {
   
   // Get domain-specific presets if character has a domain
   const domainPresets = character.domain ? getDomainPresets(character.domain.id) : [];
-  const allPresets: SpellPreset[] = [...defaultPresets, ...domainPresets];
+  
+  // Get custom preset from store
+  const customPreset = usePresetStore((state) => state.customPreset);
+  const isEditingCustom = usePresetStore((state) => state.isEditingCustom);
+  const setEditMode = usePresetStore((state) => state.setEditMode);
+  const addSpellToCustom = usePresetStore((state) => state.addSpellToCustom);
+  const removeSpellFromCustom = usePresetStore((state) => state.removeSpellFromCustom);
+  const moveSpellInCustom = usePresetStore((state) => state.moveSpellInCustom);
+  const updateCustomPresetDetails = usePresetStore((state) => state.updateCustomPresetDetails);
+  const resetCustomPreset = usePresetStore((state) => state.resetCustomPreset);
+  
+  // Combine all presets including custom
+  const allPresets: SpellPreset[] = [
+    ...defaultPresets, 
+    ...(customPreset ? [customPreset] : []),
+    ...domainPresets
+  ];
   
   const allSpells = useSpellStore((state) => state.allSpells);
   const preparedSpellIds = useSpellStore((state) => state.preparedSpellIds);
@@ -266,36 +284,56 @@ export function PreparationPage() {
                 {/* Détails du preset (expandable) */}
                 {isExpanded && (
                   <div className="mt-3 pt-3 border-t border-parchment-dark animate-slide-up">
-                    <p className="text-xs text-ink-muted mb-2">
-                      Sorts qui seront sélectionnés ({selectionCount} sur {maxPrepared}):
-                    </p>
-                    <div className="flex flex-wrap gap-1 mb-3">
-                      {getSelectedSpellNames(preset.spellIds, maxPrepared, allSpells).map((name, i) => (
-                        <span 
-                          key={i} 
-                          className="text-xs bg-parchment-dark px-2 py-1 rounded text-ink"
+                    {/* Interface spéciale pour le preset custom */}
+                    {preset.id === 'custom-user' ? (
+                      <CustomPresetEditor 
+                        preset={preset}
+                        allSpells={allSpells}
+                        maxPrepared={maxPrepared}
+                        isEditing={isEditingCustom}
+                        onToggleEdit={() => setEditMode(!isEditingCustom)}
+                        onAddSpell={addSpellToCustom}
+                        onRemoveSpell={removeSpellFromCustom}
+                        onMoveSpell={moveSpellInCustom}
+                        onUpdateDetails={updateCustomPresetDetails}
+                        onReset={resetCustomPreset}
+                        onApply={() => handleApplyPreset(preset)}
+                        isActive={isActive}
+                      />
+                    ) : (
+                      <>
+                        <p className="text-xs text-ink-muted mb-2">
+                          Sorts qui seront sélectionnés ({selectionCount} sur {maxPrepared}):
+                        </p>
+                        <div className="flex flex-wrap gap-1 mb-3">
+                          {getSelectedSpellNames(preset.spellIds, maxPrepared, allSpells).map((name, i) => (
+                            <span 
+                              key={i} 
+                              className="text-xs bg-parchment-dark px-2 py-1 rounded text-ink"
+                            >
+                              {name}
+                            </span>
+                          ))}
+                          {selectionCount < maxPrepared && (
+                            <span className="text-xs bg-bronze/20 text-bronze px-2 py-1 rounded">
+                              +{maxPrepared - selectionCount} sorts libres
+                            </span>
+                          )}
+                        </div>
+                        <button
+                          onClick={() => handleApplyPreset(preset)}
+                          className="w-full bg-divine-gold hover:bg-divine-gold-light active:bg-divine-gold-dark 
+                            text-ink font-bold py-3 px-4 rounded-lg 
+                            transform transition-all duration-100
+                            hover:shadow-lg hover:scale-[1.02]
+                            active:scale-[0.98] active:shadow-inner
+                            flex items-center justify-center gap-2"
                         >
-                          {name}
-                        </span>
-                      ))}
-                      {selectionCount < maxPrepared && (
-                        <span className="text-xs bg-bronze/20 text-bronze px-2 py-1 rounded">
-                          +{maxPrepared - selectionCount} sorts libres
-                        </span>
-                      )}
-                    </div>
-                    <button
-                      onClick={() => handleApplyPreset(preset)}
-                      className="w-full bg-divine-gold hover:bg-divine-gold-light active:bg-divine-gold-dark 
-                        text-ink font-bold py-3 px-4 rounded-lg 
-                        transform transition-all duration-100
-                        hover:shadow-lg hover:scale-[1.02]
-                        active:scale-[0.98] active:shadow-inner
-                        flex items-center justify-center gap-2"
-                    >
-                      <Check className="w-4 h-4" />
-                      {isActive ? '✓ Appliqué !' : `Appliquer ce préréglage (${selectionCount} sorts)`}
-                    </button>
+                          <Check className="w-4 h-4" />
+                          {isActive ? '✓ Appliqué !' : `Appliquer ce préréglage (${selectionCount} sorts)`}
+                        </button>
+                      </>
+                    )}
                   </div>
                 )}
               </div>
@@ -482,6 +520,249 @@ export function PreparationPage() {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+// Composant d'édition du preset custom
+interface CustomPresetEditorProps {
+  preset: SpellPreset;
+  allSpells: Spell[];
+  maxPrepared: number;
+  isEditing: boolean;
+  onToggleEdit: () => void;
+  onAddSpell: (spellId: string) => void;
+  onRemoveSpell: (spellId: string) => void;
+  onMoveSpell: (fromIndex: number, toIndex: number) => void;
+  onUpdateDetails: (name: string, description: string) => void;
+  onReset: () => void;
+  onApply: () => void;
+  isActive: boolean;
+}
+
+function CustomPresetEditor({
+  preset,
+  allSpells,
+  maxPrepared,
+  isEditing,
+  onToggleEdit,
+  onAddSpell,
+  onRemoveSpell,
+  onMoveSpell,
+  onUpdateDetails,
+  onReset,
+  onApply,
+  isActive,
+}: CustomPresetEditorProps) {
+  const [editName, setEditName] = useState(preset.name);
+  const [editDesc, setEditDesc] = useState(preset.description);
+  const [showAddSpells, setShowAddSpells] = useState(false);
+  const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
+
+  // Sauvegarder les modifications du nom/description
+  const handleSaveDetails = () => {
+    onUpdateDetails(editName, editDesc);
+  };
+
+  // Annuler l'édition
+  const handleCancelEdit = () => {
+    setEditName(preset.name);
+    setEditDesc(preset.description);
+    onToggleEdit();
+  };
+
+  // Réinitialiser le preset
+  const handleReset = () => {
+    if (confirm('Voulez-vous vraiment réinitialiser votre préréglage personnalisé ?')) {
+      onReset();
+      setEditName('✏️ Mon Préréglage');
+      setEditDesc('Votre préréglage personnalisé - modifiez-le librement');
+    }
+  };
+
+  // Obtenir les sorts du preset avec leurs détails
+  const presetSpells = preset.spellIds
+    .map(id => allSpells.find(s => s.id === id))
+    .filter((s): s is Spell => !!s);
+
+  // Nombre de sorts qui seront sélectionnés
+  const selectionCount = Math.min(
+    presetSpells.filter(s => !s.isDomainSpell && s.level > 0).length,
+    maxPrepared
+  );
+
+  // Sorts disponibles à ajouter (tous sauf ceux déjà dans le preset, les sorts de domaine et mineurs)
+  const availableSpells = allSpells.filter(
+    s => !preset.spellIds.includes(s.id) && !s.isDomainSpell && s.level > 0
+  );
+
+  return (
+    <div className="space-y-4">
+      {/* Mode édition des détails */}
+      {isEditing ? (
+        <div className="space-y-3 bg-parchment-dark/20 p-3 rounded-lg">
+          <div>
+            <label className="text-xs font-bold text-ink-light block mb-1">Nom du préréglage</label>
+            <input
+              type="text"
+              value={editName}
+              onChange={(e) => setEditName(e.target.value)}
+              className="w-full px-3 py-2 rounded border border-parchment-dark bg-parchment-light text-ink text-sm"
+              placeholder="Nom de votre préréglage"
+            />
+          </div>
+          <div>
+            <label className="text-xs font-bold text-ink-light block mb-1">Description</label>
+            <textarea
+              value={editDesc}
+              onChange={(e) => setEditDesc(e.target.value)}
+              className="w-full px-3 py-2 rounded border border-parchment-dark bg-parchment-light text-ink text-sm resize-none"
+              rows={2}
+              placeholder="Description de votre préréglage"
+            />
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={handleSaveDetails}
+              className="flex-1 bg-forest hover:bg-forest-dark text-white py-2 px-3 rounded text-sm font-bold flex items-center justify-center gap-1"
+            >
+              <Save className="w-4 h-4" />
+              Sauvegarder
+            </button>
+            <button
+              onClick={handleCancelEdit}
+              className="flex-1 bg-parchment-dark hover:bg-parchment-dark/80 text-ink py-2 px-3 rounded text-sm font-bold"
+            >
+              Annuler
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="flex items-center justify-between">
+          <p className="text-xs text-ink-muted">
+            {preset.spellIds.length} sort{preset.spellIds.length > 1 ? 's' : ''} enregistré
+            {preset.spellIds.length > 1 ? 's' : ''} • {selectionCount} sélectionné{selectionCount > 1 ? 's' : ''} sur {maxPrepared}
+          </p>
+          <div className="flex gap-1">
+            <button
+              onClick={onToggleEdit}
+              className="p-2 hover:bg-parchment-dark rounded text-ink-light hover:text-ink"
+              title="Modifier nom et description"
+            >
+              <Edit className="w-4 h-4" />
+            </button>
+            <button
+              onClick={handleReset}
+              className="p-2 hover:bg-blood-red/10 rounded text-ink-light hover:text-blood-red"
+              title="Réinitialiser le préréglage"
+            >
+              <RotateCcw className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Liste des sorts du preset */}
+      {presetSpells.length > 0 && (
+        <div className="space-y-1">
+          <p className="text-xs font-bold text-ink-light mb-2">Sorts dans ce préréglage :</p>
+          <div className="max-h-48 overflow-y-auto space-y-1">
+            {presetSpells.map((spell, index) => (
+              <div
+                key={spell.id}
+                draggable
+                onDragStart={() => setDraggingIndex(index)}
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={() => {
+                  if (draggingIndex !== null && draggingIndex !== index) {
+                    onMoveSpell(draggingIndex, index);
+                    setDraggingIndex(null);
+                  }
+                }}
+                className={`flex items-center gap-2 p-2 rounded text-sm ${
+                  spell.isDomainSpell || spell.level === 0
+                    ? 'bg-parchment-dark/30 text-ink-muted'
+                    : index < maxPrepared
+                    ? 'bg-forest/10 text-forest-dark'
+                    : 'bg-parchment-dark/50 text-ink-light'
+                }`}
+              >
+                <GripVertical className="w-4 h-4 text-ink-muted cursor-grab" />
+                <span className="flex-1 truncate">{spell.name}</span>
+                <span className="text-xs text-ink-muted">N{spell.level}</span>
+                <button
+                  onClick={() => onRemoveSpell(spell.id)}
+                  className="p-1 hover:bg-blood-red/20 rounded text-ink-muted hover:text-blood-red"
+                  title="Retirer ce sort"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
+            ))}
+          </div>
+          <p className="text-xs text-ink-muted italic">
+            💡 Glissez-déposez pour réorganiser l'ordre de priorité
+          </p>
+        </div>
+      )}
+
+      {/* Bouton pour ajouter des sorts */}
+      {!showAddSpells ? (
+        <button
+          onClick={() => setShowAddSpells(true)}
+          className="w-full py-2 border-2 border-dashed border-parchment-dark hover:border-divine-gold rounded-lg text-ink-muted hover:text-divine-gold text-sm font-bold flex items-center justify-center gap-2 transition-colors"
+        >
+          <Plus className="w-4 h-4" />
+          Ajouter des sorts ({availableSpells.length} disponibles)
+        </button>
+      ) : (
+        <div className="bg-parchment-dark/10 rounded-lg p-3 space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-bold text-ink">Ajouter des sorts</span>
+            <button
+              onClick={() => setShowAddSpells(false)}
+              className="p-1 hover:bg-parchment-dark rounded"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+          <div className="max-h-40 overflow-y-auto space-y-1">
+            {availableSpells.length === 0 ? (
+              <p className="text-sm text-ink-muted italic">Tous les sorts sont déjà dans le préréglage.</p>
+            ) : (
+              availableSpells
+                .sort((a, b) => a.level - b.level || a.name.localeCompare(b.name))
+                .map(spell => (
+                  <button
+                    key={spell.id}
+                    onClick={() => onAddSpell(spell.id)}
+                    className="w-full flex items-center gap-2 p-2 rounded hover:bg-parchment-dark text-left text-sm"
+                  >
+                    <Plus className="w-4 h-4 text-forest" />
+                    <span className="flex-1">{spell.name}</span>
+                    <span className="text-xs text-ink-muted">N{spell.level}</span>
+                  </button>
+                ))
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Bouton Appliquer */}
+      <button
+        onClick={onApply}
+        disabled={presetSpells.length === 0}
+        className="w-full bg-divine-gold hover:bg-divine-gold-light active:bg-divine-gold-dark 
+          disabled:opacity-50 disabled:cursor-not-allowed
+          text-ink font-bold py-3 px-4 rounded-lg 
+          transform transition-all duration-100
+          hover:shadow-lg hover:scale-[1.02]
+          active:scale-[0.98] active:shadow-inner
+          flex items-center justify-center gap-2"
+      >
+        <Check className="w-4 h-4" />
+        {isActive ? '✓ Appliqué !' : `Appliquer ce préréglage (${selectionCount} sorts)`}
+      </button>
     </div>
   );
 }

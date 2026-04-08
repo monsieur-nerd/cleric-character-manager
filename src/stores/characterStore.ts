@@ -112,7 +112,7 @@ const createDefaultCharacter = (): Character => {
   const defaultDomain = CLERIC_DOMAINS.find(d => d.id === 'war') || CLERIC_DOMAINS[0];
   
   return {
-    name: 'Torm',
+    name: 'Imildar Souffle-Tempête',
     class: 'cleric',
     subclass: 'war',
     avatar: null,

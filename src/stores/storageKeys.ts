@@ -7,6 +7,7 @@ export const STORAGE_KEYS = {
   CHARACTER: `${STORAGE_PREFIX}character-store`,
   SPELL: `${STORAGE_PREFIX}spell-store`,
   INVENTORY: `${STORAGE_PREFIX}inventory-store`,
+  PRESET: `${STORAGE_PREFIX}preset-store`,
 } as const;
 
 /**

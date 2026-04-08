@@ -114,6 +114,15 @@ export interface EquipmentItem {
   // Pour composantes
   isComponent?: boolean;
   relatedSpells?: string[];
+  
+  // Pour le combat
+  damage?: string;           // Ex: "1d8", "2d6"
+  damageType?: string;       // Ex: "tranchants", "contondants", "perforants"
+  weaponProperties?: string[]; // Ex: ["Finesse", "Légère", "À deux mains"]
+  armorClass?: number;       // CA de base pour armures/boucliers
+  armorType?: 'légère' | 'intermédiaire' | 'lourde' | 'bouclier';
+  stealthDisadvantage?: boolean; // Désavantage en Discrétion
+  strengthRequired?: number; // Force minimum requise
 }
 
 export type EquipmentType =
