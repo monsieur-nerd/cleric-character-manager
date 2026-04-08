@@ -53,6 +53,7 @@ function App() {
   const setHeight = useCharacterStore((state) => state.setHeight);
   const setWeight = useCharacterStore((state) => state.setWeight);
   const setDescription = useCharacterStore((state) => state.setDescription);
+  const setLanguages = useCharacterStore((state) => state.setLanguages);
   const longRest = useCharacterStore((state) => state.longRest);
 
   useEffect(() => {
@@ -125,6 +126,7 @@ function App() {
     setHeight(CHARACTER_IDENTITY.height);
     setWeight(CHARACTER_IDENTITY.weight);
     setDescription(CHARACTER_IDENTITY.description);
+    setLanguages(CHARACTER_IDENTITY.languages);
     
     // Réinitialise l'état journalier
     longRest();

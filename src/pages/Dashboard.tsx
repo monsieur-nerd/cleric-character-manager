@@ -753,6 +753,7 @@ function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: { is
   const setAge = useCharacterStore((state) => state.setAge);
   const setHeight = useCharacterStore((state) => state.setHeight);
   const setWeight = useCharacterStore((state) => state.setWeight);
+  const setLanguages = useCharacterStore((state) => state.setLanguages);
   
   const [activeTab, setActiveTab] = useState<'identity' | 'stats' | 'abilities' | 'skills'>(initialTab);
   const [localName, setLocalName] = useState(character.name);
@@ -769,6 +770,7 @@ function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: { is
   const [localAge, setLocalAge] = useState(character.age || 25);
   const [localHeight, setLocalHeight] = useState(character.height || '');
   const [localWeight, setLocalWeight] = useState(character.weight || 75);
+  const [localLanguages, setLocalLanguages] = useState(character.languages?.join(', ') || 'Commun');
   
   // Récupère la divinité à jour depuis DEITIES
   const currentDeity = character.deity?.id ? DEITIES.find(d => d.id === character.deity?.id) || character.deity : character.deity;
@@ -790,6 +792,7 @@ function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: { is
     setAge(localAge);
     setHeight(localHeight);
     setWeight(localWeight);
+    setLanguages(localLanguages.split(',').map(l => l.trim()).filter(l => l));
     onClose();
   };
   
@@ -953,6 +956,19 @@ function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: { is
                     max="500"
                   />
                 </div>
+              </div>
+              
+              {/* Langues */}
+              <div>
+                <label className="block text-sm font-medium text-ink mb-2">Langues parlées</label>
+                <input
+                  type="text"
+                  value={localLanguages}
+                  onChange={(e) => setLocalLanguages(e.target.value)}
+                  className="w-full input-field"
+                  placeholder="Commun, Elfique, Draconique..."
+                />
+                <p className="text-xs text-ink-muted mt-1">Séparez les langues par des virgules</p>
               </div>
             </div>
           )}
@@ -1456,6 +1472,18 @@ export function Dashboard() {
               </span>
             </button>
           </div>
+          
+          {/* Langues parlées */}
+          {character.languages && character.languages.length > 0 && (
+            <div className="mt-3 pt-3 border-t border-parchment-dark">
+              <p className="text-xs text-ink-muted mb-1">Langues parlées</p>
+              <div className="flex flex-wrap gap-1">
+                {character.languages.map((lang, i) => (
+                  <span key={i} className="badge badge-secondary text-xs">{lang}</span>
+                ))}
+              </div>
+            </div>
+          )}
           
           {/* Légende des jets de sauvegarde */}
           <div className="mt-2 flex items-center justify-center gap-4 text-[10px] text-ink-muted">

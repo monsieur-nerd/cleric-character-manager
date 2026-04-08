@@ -29,6 +29,9 @@ export const CHARACTER_IDENTITY = {
   
   // Avatar (URL ou null)
   avatar: null as string | null,
+  
+  // Langues parlées
+  languages: ['Commun', 'Illiskien', 'Drakonique', 'Elfe', 'Nain'] as string[],
 };
 
 // ============================================

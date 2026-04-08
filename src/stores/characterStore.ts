@@ -90,6 +90,7 @@ interface CharacterState {
   setAge: (age: number) => void;
   setHeight: (height: string) => void;
   setWeight: (weight: number) => void;
+  setLanguages: (languages: string[]) => void;
   
   // Utils
   getModifier: (score: number | undefined) => number;
@@ -266,6 +267,12 @@ export const useCharacterStore = create<CharacterState>()(
       setWeight: (weight) => {
         set((state) => ({
           character: { ...state.character, weight },
+        }));
+      },
+      
+      setLanguages: (languages) => {
+        set((state) => ({
+          character: { ...state.character, languages },
         }));
       },
       

@@ -245,6 +245,7 @@ export interface Character {
   age?: number;
   height?: string;
   weight?: number; // Poids en kg
+  languages?: string[]; // Langues parlées
   
   // État courant
   currentState: DailyState;
