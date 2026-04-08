@@ -56,21 +56,41 @@ function App() {
       loadSpells(spellsData);
       loadItems(equipmentData);
       loadComponentMapping(componentMappingData);
-      
-      // Vérifie si le personnage doit être migré
-      const isWrongName = character.name === 'Mon Nom' || character.name === '' || !character.name;
-      const isWrongLevel = character.level !== CHARACTER_IDENTITY.level;
-      
-      if (isWrongName || isWrongLevel) {
-        setNeedsMigration(true);
-      }
-      
       setIsLoading(false);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erreur de chargement');
       setIsLoading(false);
     }
   }, [loadSpells, loadItems, loadComponentMapping]);
+  
+  // Vérifie la migration une fois le chargement terminé
+  useEffect(() => {
+    if (!isLoading && character) {
+      // Détection plus permissive : contient "mon" et "nom" (insensible à la casse)
+      const nameLower = character.name?.toLowerCase() || '';
+      const isWrongName = 
+        nameLower.includes('mon') && nameLower.includes('nom') ||
+        nameLower === '' || 
+        !character.name ||
+        nameLower === 'test' ||
+        nameLower === 'personnage';
+        
+      const isWrongLevel = character.level !== CHARACTER_IDENTITY.level;
+      const isWrongWisdom = character.wisdom !== CHARACTER_ABILITIES.wisdom;
+      
+      console.log('Migration check:', { 
+        name: character.name, 
+        isWrongName, 
+        isWrongLevel, 
+        isWrongWisdom,
+        expectedName: CHARACTER_IDENTITY.name 
+      });
+      
+      if (isWrongName || isWrongLevel || isWrongWisdom) {
+        setNeedsMigration(true);
+      }
+    }
+  }, [isLoading, character]);
   
   // Fonction pour migrer le personnage vers les bonnes données
   const migrateCharacter = () => {
@@ -120,34 +140,53 @@ function App() {
     );
   }
   
+  // Fonction pour réinitialiser complètement les données
+  const hardReset = () => {
+    if (confirm('⚠️ Réinitialiser complètement le personnage ?\n\nToutes les données seront effacées et remplacées par Imildar Souffle-Tempête.')) {
+      localStorage.removeItem('cleric-character-data');
+      localStorage.removeItem('cleric-inventory-data');
+      localStorage.removeItem('cleric-spells-data');
+      window.location.reload();
+    }
+  };
+
   // Bannière de migration
   const MigrationBanner = () => {
     if (!needsMigration) return null;
     
     return (
-      <div className="fixed top-0 left-0 right-0 z-50 bg-divine-gold/90 border-b-2 border-divine-gold-dark p-4">
-        <div className="max-w-2xl mx-auto flex items-center justify-between">
-          <div>
-            <p className="font-display text-ink">
-              🎭 Personnage détecté : <strong>{CHARACTER_IDENTITY.name}</strong>
-            </p>
-            <p className="text-sm text-ink-light">
-              Niveau {CHARACTER_IDENTITY.level} • Clerc de Guerre de Torm
-            </p>
-          </div>
-          <div className="flex gap-2">
-            <button
-              onClick={() => setNeedsMigration(false)}
-              className="px-3 py-1 text-sm text-ink-muted hover:text-ink"
-            >
-              Ignorer
-            </button>
-            <button
-              onClick={migrateCharacter}
-              className="btn-primary text-sm py-1 px-3"
-            >
-              Mettre à jour
-            </button>
+      <div className="fixed top-0 left-0 right-0 z-[100] bg-divine-gold border-b-4 border-divine-gold-dark shadow-lg p-4 animate-fade-in">
+        <div className="max-w-3xl mx-auto">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div className="text-center sm:text-left">
+              <p className="font-display text-ink text-lg">
+                🎭 Personnage configuré : <strong>{CHARACTER_IDENTITY.name}</strong>
+              </p>
+              <p className="text-sm text-ink-light">
+                Niveau {CHARACTER_IDENTITY.level} • Clerc de Guerre de Torm • Actuellement : <strong>{character.name || 'Inconnu'}</strong>
+              </p>
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setNeedsMigration(false)}
+                className="px-3 py-2 text-sm text-ink-muted hover:text-ink bg-parchment/50 rounded"
+              >
+                Ignorer
+              </button>
+              <button
+                onClick={migrateCharacter}
+                className="btn-primary text-sm py-2 px-4 shadow-md"
+              >
+                ✨ Mettre à jour
+              </button>
+              <button
+                onClick={hardReset}
+                className="px-3 py-2 text-sm text-blood-red hover:bg-blood-red/10 rounded"
+                title="Réinitialiser tout"
+              >
+                🗑️
+              </button>
+            </div>
           </div>
         </div>
       </div>
