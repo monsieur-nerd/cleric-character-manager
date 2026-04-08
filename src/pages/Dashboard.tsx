@@ -1459,7 +1459,7 @@ export function Dashboard() {
           
           {/* Légende des jets de sauvegarde */}
           <div className="mt-2 flex items-center justify-center gap-4 text-[10px] text-ink-muted">
-            <span>JS = Jet de Sauvegarde</span>
+            <span>JS = Jet de sauvegarde</span>
             <span className="text-divine-gold">★ = Maîtrise de classe (+{profBonus})</span>
           </div>
           

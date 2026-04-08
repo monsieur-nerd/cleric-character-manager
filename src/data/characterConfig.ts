@@ -95,7 +95,7 @@ export const SPELL_PRESETS: SpellPreset[] = [
   },
   {
     id: 'combat',
-    name: 'Mode Combat',
+    name: 'Mode combat',
     icon: '⚔️',
     description: 'Optimisé pour les combats difficiles',
     spellIds: [

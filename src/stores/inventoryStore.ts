@@ -169,6 +169,14 @@ export const useInventoryStore = create<InventoryState>()(
     }),
     {
       name: STORAGE_KEYS.INVENTORY,
+      version: 2, // Incrémenté pour forcer la réinitialisation avec les nouveaux équipements de combat
+      migrate: (persistedState: unknown, version) => {
+        // Si la version est ancienne, on réinitialise les items (ils seront rechargés depuis App.tsx)
+        if (version < 2) {
+          return { items: [] } as unknown as InventoryState;
+        }
+        return persistedState as InventoryState;
+      },
       partialize: (state) => ({
         items: state.items,
       }),

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useSpellStore, useInventoryStore, useCharacterStore } from '@/stores';
+import type { EquipmentItem } from '@/types';
 import { Dashboard } from '@/pages/Dashboard';
 import { SpellListPage } from '@/pages/SpellListPage';
 import { CombatPage } from '@/pages/CombatPage';
@@ -10,7 +11,7 @@ import { Layout } from '@/components/layout/Layout';
 import { spellsData } from '@/data/spellsData';
 import { equipmentData } from '@/data/equipmentData';
 import { componentMappingData } from '@/data/componentMappingData';
-import { CHARACTER_IDENTITY, CHARACTER_ABILITIES } from '@/data/characterConfig';
+import { CHARACTER_IDENTITY, CHARACTER_ABILITIES, STARTING_EQUIPMENT } from '@/data/characterConfig';
 
 // Gère la redirection depuis 404.html pour GitHub Pages
 function RedirectHandler() {
@@ -54,7 +55,16 @@ function App() {
     try {
       // Charge les données directement depuis les imports
       loadSpells(spellsData);
-      loadItems(equipmentData);
+      // Fusionne les équipements de base avec l'équipement de départ du personnage
+      const allEquipment = [
+        ...equipmentData,
+        ...STARTING_EQUIPMENT.map(item => ({
+          ...item,
+          totalPrice: Number(item.totalPrice),
+          totalWeight: item.totalWeight || 0,
+        })) as EquipmentItem[],
+      ];
+      loadItems(allEquipment);
       loadComponentMapping(componentMappingData);
       setIsLoading(false);
     } catch (err) {

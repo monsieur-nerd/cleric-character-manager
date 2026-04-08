@@ -131,7 +131,7 @@ export function CombatEquipmentTab() {
         
         <div className="grid grid-cols-2 gap-3 mb-3">
           <div className="bg-parchment-light rounded-lg p-3 text-center">
-            <div className="text-xs text-ink-muted">Classe d'Armure</div>
+            <div className="text-xs text-ink-muted">Classe d'armure</div>
             <div className="font-display text-3xl text-ink">{ac.total}</div>
             <div className="text-xs text-ink-light mt-1">
               {ac.base} base {ac.dexBonus > 0 && `+ ${ac.dexBonus} DEX`} {ac.shieldBonus > 0 && `+ ${ac.shieldBonus} bouclier`}

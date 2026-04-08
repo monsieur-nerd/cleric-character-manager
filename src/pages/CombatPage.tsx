@@ -249,7 +249,7 @@ export function CombatPage() {
       <div className="flex items-center justify-between">
         <h2 className="font-display text-2xl text-ink flex items-center gap-2">
           <Swords className="w-6 h-6 text-blood-red" />
-          Mode Combat
+          Mode combat
         </h2>
       </div>
       
@@ -426,7 +426,7 @@ export function CombatPage() {
         >
           <div className="flex items-center gap-2">
             <Info className="w-4 h-4 text-steel-blue" />
-            <span className="text-sm font-bold text-ink">Règle importante : Action vs Action Bonus</span>
+            <span className="text-sm font-bold text-ink">Règle importante : Action vs action bonus</span>
           </div>
           {showActionExplanation ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         </button>
@@ -437,7 +437,7 @@ export function CombatPage() {
               <div className="bg-parchment p-2 rounded">
                 <span className="font-bold text-blood-red">ACTION</span>
                 <p className="text-ink-muted">1 par tour</p>
-                <p className="text-ink">Attaquer, Lancer un sort, Conduit Divin</p>
+                <p className="text-ink">Attaquer, Lancer un sort, Conduit divin</p>
               </div>
               <div className="bg-parchment p-2 rounded">
                 <span className="font-bold text-divine-gold">ACTION BONUS</span>
@@ -456,7 +456,7 @@ export function CombatPage() {
               <p className="font-bold text-forest">✅ Le combo optimal</p>
               <p className="text-ink-light">
                 <strong>Action :</strong> Attaque (arme principale)<br/>
-                <strong>Action Bonus :</strong> Clerc de Guerre (arme secondaire)<br/>
+                <strong>Action bonus :</strong> Clerc de Guerre (arme secondaire)<br/>
                 → Les 2 attaques ont le modificateur de dégâts !
               </p>
             </div>
@@ -722,7 +722,7 @@ export function CombatPage() {
           )}
         </div>
         
-        {/* Conduit Divin */}
+        {/* Conduit divin */}
         <div className={`card p-3 ${channelDivinity.currentUses > 0 ? 'border-royal-purple' : ''}`}>
           <button
             onClick={() => useChannelDivinity()}
@@ -781,7 +781,7 @@ export function CombatPage() {
               </div>
               
               <p className="text-xs text-ink-muted mt-2">
-                💡 <strong>Conseil :</strong> "Clerc de Guerre" du Conduit Divin ≠ "Clerc de Guerre" l'aptitude !
+                💡 <strong>Conseil :</strong> "Clerc de Guerre" du Conduit divin ≠ "Clerc de Guerre" l'aptitude !
                 L'un donne +10 à toucher (Action), l'autre une attaque bonus (Action Bonus).
               </p>
             </div>
