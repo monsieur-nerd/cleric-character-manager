@@ -736,6 +736,7 @@ function CharacterSheetMobileNav({
 // Modal d'édition du personnage
 function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: { isOpen: boolean; onClose: () => void; initialTab?: 'identity' | 'stats' | 'abilities' | 'skills' }) {
   const character = useCharacterStore((state) => state.character);
+  const getSpellById = useSpellStore((state) => state.getSpellById);
   const setName = useCharacterStore((state) => state.setName);
   const setAvatar = useCharacterStore((state) => state.setAvatar);
   const setDeity = useCharacterStore((state) => state.setDeity);
@@ -1263,11 +1264,14 @@ function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: { is
               <div className="mt-4 p-4 bg-divine-gold/10 rounded-lg border border-divine-gold/30">
                 <h4 className="font-display text-ink mb-2">Sorts de domaine toujours préparés</h4>
                 <div className="flex flex-wrap gap-2">
-                  {character.domain?.spellIds.map((spellId) => (
-                    <span key={spellId} className="badge-domain text-xs">
-                      {spellId.replace(/-/g, ' ')}
-                    </span>
-                  ))}
+                  {character.domain?.spellIds.map((spellId) => {
+                    const spell = getSpellById(spellId);
+                    return (
+                      <span key={spellId} className="badge-domain text-xs">
+                        {spell?.name || spellId.replace(/-/g, ' ')}
+                      </span>
+                    );
+                  })}
                 </div>
               </div>
             </div>

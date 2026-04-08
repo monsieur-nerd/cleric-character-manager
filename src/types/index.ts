@@ -351,7 +351,7 @@ export const CLERIC_DOMAINS: ClericDomain[] = [
     abilities: {
       level1: { name: 'Clerc de guerre', nameEn: 'War Priest', description: 'Attaque bonus avec arme', uses: 3, shortRest: false, longRest: true },
       level2: { name: 'Conduit divin : Guided Strike', nameEn: 'Guided Strike', description: '+10 à un jet d\'attaque', uses: 2, shortRest: false, longRest: true },
-      level6: { name: 'Conduit divin : War God\'s Blessing', nameEn: 'War God\'s Blessing', description: 'Reroll dégâts ou attaque pour un allié', uses: 2, shortRest: false, longRest: true },
+      level6: { name: 'Conduit divin : Bénédiction du dieu de la guerre', nameEn: 'War God\'s Blessing', description: 'Relancer dégâts ou attaque pour un allié', uses: 2, shortRest: false, longRest: true },
       level8: { name: 'Frappe divine', nameEn: 'Divine Strike', description: '+1d8 dégâts radiants sur une attaque', uses: 0 },
       level17: { name: 'Avatar de bataille', nameEn: 'Avatar of Battle', description: 'Résistance aux dégâts contondants/perforants/tranchants', uses: 0 }
     },
@@ -399,7 +399,7 @@ export const CLERIC_DOMAINS: ClericDomain[] = [
     abilities: {
       level1: { name: 'Acolyte de la nature', nameEn: 'Acolyte of Nature', description: 'Maîtrise d\'une compétence de nature', uses: 0 },
       level2: { name: 'Conduit divin : Charme animal/plante', nameEn: 'Charm Animals and Plants', description: 'Charme créatures dans 9m', uses: 1, shortRest: false, longRest: true },
-      level6: { name: 'Dampen Elements', nameEn: 'Dampen Elements', description: 'Réaction pour résistance aux dégâts élémentaires', uses: 0 },
+      level6: { name: 'Atténuation des éléments', nameEn: 'Dampen Elements', description: 'Réaction pour résistance aux dégâts élémentaires', uses: 0 },
       level8: { name: 'Frappe divine', nameEn: 'Divine Strike', description: '+1d8 dégâts de froid/feu/foudre', uses: 0 },
       level17: { name: 'Maître de la nature', nameEn: 'Master of Nature', description: 'Commande les animaux et plantes charmés', uses: 0 }
     },
@@ -433,7 +433,7 @@ export const CLERIC_DOMAINS: ClericDomain[] = [
       level2: { name: 'Conduit divin : Invocation du double', nameEn: 'Invoke Duplicity', description: 'Crée un illusion de vous', uses: 1, shortRest: false, longRest: true },
       level6: { name: 'Déplacement insaisissable', nameEn: 'Cloak of Shadows', description: 'Devenir invisible en lumière faible', uses: 0 },
       level8: { name: 'Frappe divine', nameEn: 'Divine Strike', description: '+1d8 dégâts de poison', uses: 0 },
-      level17: { name: 'Improved Duplicity', nameEn: 'Improved Duplicity', description: 'Jusqu\'à 4 doubles', uses: 0 }
+      level17: { name: 'Duplicité améliorée', nameEn: 'Improved Duplicity', description: 'Jusqu\'à 4 doubles', uses: 0 }
     },
     spellProfile: { healing: 4, damage: 5, control: 7, buff: 6, protection: 4, utility: 9 }
   },

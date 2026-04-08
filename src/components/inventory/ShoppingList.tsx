@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { ShoppingCart, Check, Plus, AlertCircle, Package, Sparkles } from 'lucide-react';
-import { useInventoryStore } from '@/stores';
+import { useInventoryStore, useSpellStore } from '@/stores';
 import { shoppingListItems, priorityCategories, getShoppingListByPriority } from '@/data';
 import { formatPrice } from '@/utils/formatters';
 import type { EquipmentItem } from '@/types';
@@ -9,6 +9,7 @@ export function ShoppingList() {
   const items = useInventoryStore((state) => state.items);
   const addItem = useInventoryStore((state) => state.addItem);
   const updateQuantity = useInventoryStore((state) => state.updateQuantity);
+  const getSpellById = useSpellStore((state) => state.getSpellById);
   
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
     critical: true,
@@ -206,14 +207,17 @@ export function ShoppingList() {
                             {/* Sorts liés */}
                             {item.relatedSpells && item.relatedSpells.length > 0 && (
                               <div className="flex gap-1 mt-1.5 flex-wrap">
-                                {item.relatedSpells.map(spellId => (
-                                  <span 
-                                    key={spellId}
-                                    className="text-[10px] bg-royal-purple/10 text-royal-purple px-1.5 py-0.5 rounded"
-                                  >
-                                    {spellId.replace(/-/g, ' ')}
-                                  </span>
-                                ))}
+                                {item.relatedSpells.map(spellId => {
+                                  const spell = getSpellById(spellId);
+                                  return (
+                                    <span 
+                                      key={spellId}
+                                      className="text-[10px] bg-royal-purple/10 text-royal-purple px-1.5 py-0.5 rounded"
+                                    >
+                                      {spell?.name || spellId.replace(/-/g, ' ')}
+                                    </span>
+                                  );
+                                })}
                               </div>
                             )}
                           </div>
