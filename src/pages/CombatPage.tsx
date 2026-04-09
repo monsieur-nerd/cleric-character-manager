@@ -168,9 +168,6 @@ export function CombatPage() {
   
   const preparedSpells = useSpellStore((state) => state.getPreparedSpells(character.level));
   const currentDomainSpellIds = character.domain?.spellIds || [];
-  
-  // DEBUG: Vérifier le domaine
-  console.log('Combat - Character domain:', character.domain?.name, 'spellIds:', currentDomainSpellIds);
   const markAsUsed = useSpellStore((state) => state.markAsUsed);
   const spellSlots = useSpellStore((state) => state.spellSlots);
   

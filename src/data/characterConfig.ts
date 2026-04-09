@@ -111,24 +111,24 @@ export const SPELL_PRESETS: SpellPreset[] = [
     description: 'Sorts de base pour aventure quotidienne',
     spellIds: [
       // Tours de magie
-      'sacre',
-      'illumination',
-      'guidance',
-      'resistance',
+      'flamme-sacrée',
+      'lumière',
+      'assistance',
+      'résistance',
       // Niveau 1
-      'bless',           // Bénédiction
-      'cure-wounds',     // Soins
-      'shield-of-faith', // Bouclier de foi
-      'divine-favor',    // Faveur divine
+      'bénédiction',
+      'soins',
+      'bouclier-de-la-foi',
+      'faveur-divine',
       // Niveau 2
-      'spiritual-weapon', // Arme spirituelle
-      'aid',              // Aide
-      'lesser-restoration', // Restauration inférieure
-      'hold-person',      // Immobiliser un humanoïde
+      'arme-spirituelle',
+      'aide',
+      'restauration-partielle',
+      'immobilisation-de-personne',
       // Niveau 3
-      'spiritual-guardians', // Gardiens spirituels
-      'revivify',            // Réanimation
-      'dispel-magic',        // Dissipation de la magie
+      'esprits-gardiens',
+      'retour-à-la-vie',
+      'dissipation-de-la-magie',
     ],
     isDefault: true,
   },
@@ -138,15 +138,15 @@ export const SPELL_PRESETS: SpellPreset[] = [
     icon: '⚔️',
     description: 'Optimisé pour les combats difficiles',
     spellIds: [
-      'sacre',
-      'guidance',
-      'bless',
-      'shield-of-faith',
-      'divine-favor',
-      'spiritual-weapon',
-      'aid',
-      'spiritual-guardians',
-      'revivify',
+      'flamme-sacrée',
+      'assistance',
+      'bénédiction',
+      'bouclier-de-la-foi',
+      'faveur-divine',
+      'arme-spirituelle',
+      'aide',
+      'esprits-gardiens',
+      'retour-à-la-vie',
     ],
   },
   {
@@ -155,14 +155,14 @@ export const SPELL_PRESETS: SpellPreset[] = [
     icon: '🗺️',
     description: 'Pour explorer et survivre en milieu hostile',
     spellIds: [
-      'illumination',
-      'guidance',
-      'resistance',
-      'detect-magic',      // Détection de la magie
-      'identify',          // Identification
-      'prayer-of-healing', // Prière de soins
-      'locate-object',     // Localiser un objet
-      'speak-with-dead',   // Communication avec les morts
+      'lumière',
+      'assistance',
+      'résistance',
+      'détection-de-la-magie',
+      'identification',
+      'prière-de-guérison',
+      'localisation-d-objet',
+      'communication-avec-les-morts',
     ],
   },
   {
@@ -171,14 +171,14 @@ export const SPELL_PRESETS: SpellPreset[] = [
     icon: '💀',
     description: 'Spécialisé contre les morts-vivants',
     spellIds: [
-      'sacre',
-      'guidance',
-      'protection-from-evil', // Protection contre le mal
-      'detect-evil',          // Détection du mal
-      'prayer-of-healing',
-      'lesser-restoration',
-      'dispel-magic',
-      'revivify',
+      'flamme-sacrée',
+      'assistance',
+      'protection-contre-le-mal-et-le-bien',
+      'détection-du-mal-et-du-bien',
+      'prière-de-guérison',
+      'restauration-partielle',
+      'dissipation-de-la-magie',
+      'retour-à-la-vie',
     ],
   },
 ];
@@ -362,7 +362,7 @@ export const STARTING_EQUIPMENT: Partial<EquipmentItem>[] = [
     totalWeight: 0,
     isCarried: true,
     isComponent: true,
-    relatedSpells: ['revivify'],
+    relatedSpells: ['retour-à-la-vie'],
   },
   {
     id: 'encens',
