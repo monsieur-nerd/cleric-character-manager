@@ -3,6 +3,7 @@ import { Zap, Swords, Info, ChevronDown, ChevronUp, Heart, Shield, Plus, Minus, 
 import { formatCastingTimeShort } from '@/utils/formatters';
 import { useInventoryStore } from '@/stores';
 import { useSpellStore, useCharacterStore } from '@/stores';
+import { CLERIC_DOMAINS } from '@/types';
 import type { Spell, Character } from '@/types';
 import { getFeatById } from '@/types/feats';
 import type { Feat } from '@/types/feats';
@@ -167,7 +168,9 @@ export function CombatPage() {
   const activeConcentration = character.currentState.activeConcentration;
   
   const preparedSpells = useSpellStore((state) => state.getPreparedSpells(character.level));
-  const currentDomainSpellIds = character.domain?.spellIds || [];
+  // Use CLERIC_DOMAINS to get fresh spell IDs (avoids stale IDs from localStorage)
+  const currentDomain = CLERIC_DOMAINS.find(d => d.id === character.domain?.id);
+  const currentDomainSpellIds = currentDomain?.spellIds || [];
   const markAsUsed = useSpellStore((state) => state.markAsUsed);
   const spellSlots = useSpellStore((state) => state.spellSlots);
   

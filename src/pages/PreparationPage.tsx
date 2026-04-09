@@ -147,8 +147,9 @@ export function PreparationPage() {
   const [activePresetId, setActivePresetId] = useState<string | null>(null);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   
-  // Get domain spell IDs for the current character's domain
-  const currentDomainSpellIds = character.domain?.spellIds || [];
+  // Get domain spell IDs for the current character's domain (from CLERIC_DOMAINS to avoid stale IDs)
+  const currentDomain = CLERIC_DOMAINS.find(d => d.id === character.domain?.id);
+  const currentDomainSpellIds = currentDomain?.spellIds || [];
   
   // Niveau de sort maximum accessible selon le niveau du personnage
   const maxSpellLevel = getMaxSpellLevelForCharacter(character.level);
@@ -631,9 +632,10 @@ function CustomPresetEditor({
   const [showAddSpells, setShowAddSpells] = useState(false);
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
   
-  // Get current domain spell IDs
+  // Get current domain spell IDs (from CLERIC_DOMAINS to avoid stale IDs)
   const character = useCharacterStore((state) => state.character);
-  const currentDomainSpellIds = character.domain?.spellIds || [];
+  const currentDomain = CLERIC_DOMAINS.find(d => d.id === character.domain?.id);
+  const currentDomainSpellIds = currentDomain?.spellIds || [];
   const maxSpellLevel = getMaxSpellLevelForCharacter(character.level);
 
   // Sauvegarder les modifications du nom/description

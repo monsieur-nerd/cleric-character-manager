@@ -3,7 +3,7 @@ import { Search, Filter } from 'lucide-react';
 import { useSpellStore, useCharacterStore } from '@/stores';
 import { Brain } from 'lucide-react';
 import { SpellCard } from '@/components/spells/SpellCard';
-import { getMaxSpellLevelForCharacter } from '@/types';
+import { getMaxSpellLevelForCharacter, CLERIC_DOMAINS } from '@/types';
 import type { Spell } from '@/types';
 
 export function SpellListPage() {
@@ -16,10 +16,9 @@ export function SpellListPage() {
   const toggleSpellPrepared = useSpellStore((state) => state.toggleSpellPrepared);
   const character = useCharacterStore((state) => state.character);
   const maxPrepared = character.maxPreparedSpells;
-  const currentDomainSpellIds = character.domain?.spellIds || [];
-  
-  // DEBUG
-  console.log('SpellList - Domain:', character.domain?.name, 'spellIds:', currentDomainSpellIds);
+  // Utilise CLERIC_DOMAINS pour obtenir les IDs à jour (évite les IDs obsolètes du localStorage)
+  const currentDomain = CLERIC_DOMAINS.find(d => d.id === character.domain?.id);
+  const currentDomainSpellIds = currentDomain?.spellIds || [];
   
   // Niveau de sort maximum accessible selon le niveau du personnage
   const maxSpellLevel = getMaxSpellLevelForCharacter(character.level);
