@@ -42,10 +42,6 @@ export function SpellListPage() {
     // IMPORTANT: Filtre les sorts de domaine qui ne sont pas du domaine du personnage
     // Les sorts avec isDomainSpell: true ne sont visibles que si ils sont dans le domaine actuel
     if (spell.isDomainSpell && !currentDomainSpellIds.includes(spell.id)) {
-      // DEBUG
-      if (spell.name === 'Boule de feu' || spell.name === 'Marche sur l\'eau') {
-        console.log('Filtered out:', spell.name, 'isDomainSpell:', spell.isDomainSpell, 'inDomain:', currentDomainSpellIds.includes(spell.id));
-      }
       return false;
     }
     

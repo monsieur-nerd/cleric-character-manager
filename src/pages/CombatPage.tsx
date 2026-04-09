@@ -171,9 +171,6 @@ export function CombatPage() {
   // Use CLERIC_DOMAINS to get fresh spell IDs (avoids stale IDs from localStorage)
   const currentDomain = CLERIC_DOMAINS.find(d => d.id === character.domain?.id);
   const currentDomainSpellIds = currentDomain?.spellIds || [];
-  
-  // DEBUG
-  console.log('Combat - Domain:', currentDomain?.name, 'spellIds:', currentDomainSpellIds.slice(0, 6));
   const markAsUsed = useSpellStore((state) => state.markAsUsed);
   const spellSlots = useSpellStore((state) => state.spellSlots);
   
@@ -909,10 +906,6 @@ export function CombatPage() {
                     <div className="space-y-2">
                       {spells.map((spell: Spell) => {
                         const isDomainSpell = currentDomainSpellIds.includes(spell.id);
-                        // DEBUG
-                        if (spell.name === 'Bouclier de foi' || spell.name === 'Faveur divine') {
-                          console.log('Combat card:', spell.name, 'id:', spell.id, 'isDomain:', isDomainSpell);
-                        }
                         const hasComponent = useInventoryStore.getState().hasComponentForSpell(spell.id);
                         const missingComponent = spell.components.material && !hasComponent;
                         
@@ -928,7 +921,7 @@ export function CombatPage() {
                             <div className="min-w-0 flex-1">
                               <div className="flex items-center gap-2">
                                 <div className="font-display text-ink break-words leading-tight text-sm sm:text-base">{spell.name}</div>
-                                {isDomainSpell && (() => { console.log('Rendering Domain badge for:', spell.name); return (
+                                {isDomainSpell && (
                                   <span 
                                     className="badge-domain text-xs flex items-center gap-1"
                                     title="Sort de domaine - Toujours préparé gratuitement"
@@ -936,7 +929,7 @@ export function CombatPage() {
                                     <Shield className="w-3 h-3" />
                                     Domaine
                                   </span>
-                                );})()}
+                                )}
                               </div>
                               <div className="flex flex-wrap gap-x-2 gap-y-0.5 text-xs text-ink-light mt-0.5">
                                 <span className="flex items-center gap-1">
