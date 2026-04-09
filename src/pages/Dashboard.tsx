@@ -1477,18 +1477,6 @@ export function Dashboard() {
             </button>
           </div>
           
-          {/* Langues parlées */}
-          {character.languages && character.languages.length > 0 && (
-            <div className="mt-3 pt-3 border-t border-parchment-dark">
-              <p className="text-xs text-ink-muted mb-1">Langues parlées</p>
-              <div className="flex flex-wrap gap-1">
-                {character.languages.map((lang, i) => (
-                  <span key={i} className="badge badge-secondary text-xs">{lang}</span>
-                ))}
-              </div>
-            </div>
-          )}
-          
           {/* Légende des jets de sauvegarde */}
           <div className="mt-2 flex items-center justify-center gap-4 text-[10px] text-ink-muted">
             <span>JS = Jet de sauvegarde</span>
