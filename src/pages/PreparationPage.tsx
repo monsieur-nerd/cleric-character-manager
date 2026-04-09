@@ -233,7 +233,7 @@ export function PreparationPage() {
       <div className="grid grid-cols-2 gap-2 mb-2">
         <button
           onClick={handleResetSelection}
-          className="btn-outline flex items-center justify-center gap-2 text-sm"
+          className="flex items-center justify-center gap-2 text-sm px-4 py-2 rounded-lg border-2 border-orange-500/70 bg-orange-50 text-orange-800 font-medium shadow-sm hover:bg-orange-100 hover:border-orange-600 hover:text-orange-900 transition-all"
           title="Désélectionne tous les sorts sauf sorts de domaine et mineurs"
         >
           <X className="w-4 h-4" />
@@ -494,7 +494,7 @@ export function PreparationPage() {
       <div className="grid grid-cols-2 gap-2">
         <button
           onClick={handleResetSelection}
-          className="btn-outline flex items-center justify-center gap-2"
+          className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg border-2 border-orange-500/70 bg-orange-50 text-orange-800 font-medium shadow-sm hover:bg-orange-100 hover:border-orange-600 hover:text-orange-900 transition-all"
           title="Désélectionne tous les sorts sauf sorts de domaine et mineurs"
         >
           <X className="w-4 h-4" />
