@@ -477,7 +477,7 @@ export const CLERIC_DOMAINS: ClericDomain[] = [
     nameEn: 'War Domain',
     icon: '⚔️',
     description: 'Clercs de guerre qui bénissent les armes et mènent les batailles.',
-    spellIds: ['faveur-divine', 'bouclier-de-la-foi', 'arme-magique', 'arme-spirituelle'],
+    spellIds: ['faveur-divine', 'bouclier-de-la-foi', 'arme-magique', 'arme-spirituelle', 'aura-du-croisé', 'esprits-gardiens', 'liberte-de-mouvement', 'peau-de-pierre', 'colonne-de-flammes', 'immobiliser-monstre'],
     abilities: {
       level1: { name: 'Clerc de guerre', nameEn: 'War Priest', description: 'Attaque bonus avec arme', uses: 3, shortRest: false, longRest: true },
       level2: { name: 'Conduit divin : Frappe guidée', nameEn: 'Guided Strike', description: '+10 à un jet d\'attaque', uses: 2, shortRest: false, longRest: true },
@@ -633,8 +633,8 @@ export interface SpellSlots {
   1: number;
   2: number;
   3: number;
-  4?: number;
-  5?: number;
+  4: number;
+  5: number;
   6?: number;
   7?: number;
   8?: number;
@@ -706,26 +706,40 @@ export interface SpellComponentMapping {
 }
 
 export const MAX_SPELL_SLOTS: Record<number, SpellSlots> = {
-  1: { 1: 2, 2: 0, 3: 0 },
-  2: { 1: 3, 2: 0, 3: 0 },
-  3: { 1: 4, 2: 2, 3: 0 },
-  4: { 1: 4, 2: 3, 3: 0 },
-  5: { 1: 4, 2: 3, 3: 2 },
-  6: { 1: 4, 2: 3, 3: 3 },
-  7: { 1: 4, 2: 3, 3: 3 },
-  8: { 1: 4, 2: 3, 3: 3 },
-  9: { 1: 4, 2: 3, 3: 3 },
-  10: { 1: 4, 2: 3, 3: 3 },
-  11: { 1: 4, 2: 3, 3: 3 },
-  12: { 1: 4, 2: 3, 3: 3 },
-  13: { 1: 4, 2: 3, 3: 3 },
-  14: { 1: 4, 2: 3, 3: 3 },
-  15: { 1: 4, 2: 3, 3: 3 },
-  16: { 1: 4, 2: 3, 3: 3 },
-  17: { 1: 4, 2: 3, 3: 3 },
-  18: { 1: 4, 2: 3, 3: 3 },
-  19: { 1: 4, 2: 3, 3: 3 },
-  20: { 1: 4, 2: 3, 3: 3 },
+  1: { 1: 2, 2: 0, 3: 0, 4: 0, 5: 0 },
+  2: { 1: 3, 2: 0, 3: 0, 4: 0, 5: 0 },
+  3: { 1: 4, 2: 2, 3: 0, 4: 0, 5: 0 },
+  4: { 1: 4, 2: 3, 3: 0, 4: 0, 5: 0 },
+  5: { 1: 4, 2: 3, 3: 2, 4: 0, 5: 0 },
+  6: { 1: 4, 2: 3, 3: 3, 4: 0, 5: 0 },
+  7: { 1: 4, 2: 3, 3: 3, 4: 1, 5: 0 },
+  8: { 1: 4, 2: 3, 3: 3, 4: 2, 5: 0 },
+  9: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 1 },
+  10: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 2 },
+  11: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 2 },
+  12: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 2 },
+  13: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 2 },
+  14: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 2 },
+  15: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 2 },
+  16: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 2 },
+  17: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 2 },
+  18: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 3 },
+  19: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 3 },
+  20: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 3 },
+};
+
+// Sorts de domaine par niveau de clerc (D&D 2014)
+export const DOMAIN_SPELLS_BY_LEVEL: Record<number, string[]> = {
+  1: [], // Pas de sorts de domaine au niveau 1
+  2: [],
+  3: ['faveur-divine', 'bouclier-de-la-foi', 'arme-magique', 'arme-spirituelle'], // Guerre niveau 3
+  4: ['faveur-divine', 'bouclier-de-la-foi', 'arme-magique', 'arme-spirituelle'],
+  5: ['faveur-divine', 'bouclier-de-la-foi', 'arme-magique', 'arme-spirituelle', 'aura-du-croisé', 'esprits-gardiens'], // Guerre niveau 5
+  6: ['faveur-divine', 'bouclier-de-la-foi', 'arme-magique', 'arme-spirituelle', 'aura-du-croisé', 'esprits-gardiens'],
+  7: ['faveur-divine', 'bouclier-de-la-foi', 'arme-magique', 'arme-spirituelle', 'aura-du-croisé', 'esprits-gardiens', 'liberte-de-mouvement', 'peau-de-pierre'], // Guerre niveau 7
+  8: ['faveur-divine', 'bouclier-de-la-foi', 'arme-magique', 'arme-spirituelle', 'aura-du-croisé', 'esprits-gardiens', 'liberte-de-mouvement', 'peau-de-pierre'],
+  9: ['faveur-divine', 'bouclier-de-la-foi', 'arme-magique', 'arme-spirituelle', 'aura-du-croisé', 'esprits-gardiens', 'liberte-de-mouvement', 'peau-de-pierre', 'colonne-de-flammes', 'immobiliser-monstre'], // Guerre niveau 9
+  10: ['faveur-divine', 'bouclier-de-la-foi', 'arme-magique', 'arme-spirituelle', 'aura-du-croisé', 'esprits-gardiens', 'liberte-de-mouvement', 'peau-de-pierre', 'colonne-de-flammes', 'immobiliser-monstre'],
 };
 
 // ============================================

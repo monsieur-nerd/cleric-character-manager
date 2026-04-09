@@ -838,7 +838,7 @@ export const spellsData: Spell[] = [
     "levelDisplay": "Niveau 2",
     "school": "evocation",
     "type": "Évocation",
-    "isDomainSpell": false,
+    "isDomainSpell": true,
     "castingTime": "1 action bonus",
     "range": "18 mètres",
     "components": {
@@ -1873,15 +1873,146 @@ export const spellsData: Spell[] = [
     "recommendation": "RECOMMANDÉ - Excellent pour les soins de groupe",
     "source": "extended",
     "summary": "Avantage JS SAG/CON, Soins max"
+  },
+  {
+    "id": "liberte-de-mouvement",
+    "name": "Liberté de mouvement",
+    "nameEn": "Freedom of Movement",
+    "level": 4,
+    "levelDisplay": "Niveau 4",
+    "school": "abjuration",
+    "type": "Abjuration / Défense",
+    "isDomainSpell": true,
+    "castingTime": "1 action",
+    "range": "contact",
+    "components": {
+      "verbal": true,
+      "somatic": true,
+      "material": "une lanière de cuir enroulée autour d'un bras ou d'une jambe",
+      "materialConsumed": false
+    },
+    "duration": {
+      "type": "timed",
+      "value": "1 heure"
+    },
+    "concentration": false,
+    "ritual": false,
+    "description": "Vous touchez une créature consentante. Pour la durée du sort, les mouvements de la cible ne sont pas affectés par un terrain difficile, et les sorts et autres effets magiques ne peuvent ni réduire sa vitesse, ni l'empêcher de se déplacer, ni la paralyser ou l'entraver. La cible peut également utiliser une action bonus pour s'échapper d'une immobilisation ou d'une empoignade.",
+    "descriptionShort": "Vous touchez une créature consentante. Pour la durée du sort, les mouvements de la cible ne sont pas affectés par un terrain difficile, et les sorts et autres effets magiques ne peuvent ni réduire sa vitesse...",
+    "higherLevels": null,
+    "incantation": "Libertas movendi, que rien ne puisse entraver mes pas par la grâce de Torm !",
+    "recommendation": "ESSENTIEL - Toujours préparé",
+    "source": "extended",
+    "summary": "Immunité entrave"
+  },
+  {
+    "id": "peau-de-pierre",
+    "name": "Peau de pierre",
+    "nameEn": "Stoneskin",
+    "level": 4,
+    "levelDisplay": "Niveau 4",
+    "school": "abjuration",
+    "type": "Abjuration / Défense",
+    "isDomainSpell": true,
+    "castingTime": "1 action",
+    "range": "contact",
+    "components": {
+      "verbal": true,
+      "somatic": true,
+      "material": "diamant d'une valeur de 100 po, que le sort consomme",
+      "materialConsumed": true
+    },
+    "duration": {
+      "type": "concentration",
+      "value": "concentration, jusqu'à 1 heure"
+    },
+    "concentration": true,
+    "ritual": false,
+    "description": "Ce sort rend la peau de la cible aussi dure que la pierre. Jusqu'à la fin du sort, chaque fois que la cible est touchée par une attaque, elle obtient une résistance aux dégâts contondants, perforants et tranchants non magiques.",
+    "descriptionShort": "Ce sort rend la peau de la cible aussi dure que la pierre. Jusqu'à la fin du sort, chaque fois que la cible est touchée par une attaque, elle obtient une résistance aux dégâts contondants, perforants...",
+    "higherLevels": null,
+    "incantation": "Cutis lapidis, que ma peau devienne aussi dure que la pierre sous la protection de Torm !",
+    "recommendation": "ESSENTIEL - Toujours préparé",
+    "source": "extended",
+    "summary": "Résistance armes"
+  },
+  {
+    "id": "colonne-de-flammes",
+    "name": "Colonne de flammes",
+    "nameEn": "Flame Strike",
+    "level": 5,
+    "levelDisplay": "Niveau 5",
+    "school": "evocation",
+    "type": "Évocation / Attaque",
+    "isDomainSpell": true,
+    "castingTime": "1 action",
+    "range": "18 mètres",
+    "components": {
+      "verbal": true,
+      "somatic": true,
+      "material": "un peu de soufre",
+      "materialConsumed": false
+    },
+    "duration": {
+      "type": "instantaneous"
+    },
+    "concentration": false,
+    "ritual": false,
+    "description": "Un pilier vertical de feu divin s'abat du ciel sur un point que vous choisissez à portée. Chaque créature dans un cylindre de 3 mètres de rayon et 12 mètres de haut centrée sur ce point doit effectuer un jet de sauvegarde de Dextérité. Une créature subit 4d6 dégâts de feu et 4d6 dégâts radiants en cas d'échec, ou la moitié de ces dégâts en cas de réussite.",
+    "descriptionShort": "Un pilier vertical de feu divin s'abat du ciel sur un point que vous choisissez à portée. Chaque créature dans un cylindre de 3 mètres de rayon et 12 mètres de haut centrée sur ce point doit effectuer...",
+    "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 6 ou supérieur, les dégâts de feu ou les dégâts radiants (au choix) augmentent de 1d6 pour chaque niveau d'emplacement au-dessus du niveau 5.",
+    "incantation": "Columna ignis, que le feu divin de Torm s'abatte sur mes ennemis !",
+    "recommendation": "ESSENTIEL - Toujours préparé",
+    "source": "extended",
+    "summary": "4d6 feu + 4d6 radiants"
+  },
+  {
+    "id": "immobiliser-monstre",
+    "name": "Immobiliser un monstre",
+    "nameEn": "Hold Monster",
+    "level": 5,
+    "levelDisplay": "Niveau 5",
+    "school": "enchantment",
+    "type": "Enchantement / Contrôle",
+    "isDomainSpell": true,
+    "castingTime": "1 action",
+    "range": "18 mètres",
+    "components": {
+      "verbal": true,
+      "somatic": true,
+      "material": "un petit morceau de fer droit",
+      "materialConsumed": false
+    },
+    "duration": {
+      "type": "concentration",
+      "value": "concentration, jusqu'à 1 minute"
+    },
+    "concentration": true,
+    "ritual": false,
+    "description": "Choisissez une créature visible dans la portée du sort. La cible doit réussir un jet de sauvegarde de Sagesse ou être paralysée pour la durée du sort. Ce sort n'a aucun effet sur les morts-vivants. À la fin de chacun de ses tours, la cible peut effectuer un nouveau jet de sauvegarde de Sagesse. En cas de réussite, le sort prend fin.",
+    "descriptionShort": "Choisissez une créature visible dans la portée du sort. La cible doit réussir un jet de sauvegarde de Sagesse ou être paralysée pour la durée du sort. Ce sort n'a aucun effet sur les morts-vivants...",
+    "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 6 ou supérieur, vous pouvez cibler une créature supplémentaire pour chaque niveau d'emplacement au-dessus du niveau 5.",
+    "incantation": "Monstrum immobilus, que Torm paralyse cette créature !",
+    "recommendation": "ESSENTIEL - Toujours préparé",
+    "source": "extended",
+    "summary": "Paralyse créature"
   }
 ];
 
 // Sorts de domaine ajoutés pour l'affichage correct
 export const DOMAIN_SPELLS: { id: string; name: string; level: number }[] = [
-  { id: 'divine-favor', name: 'Faveur divine', level: 1 },
-  { id: 'shield-of-faith', name: 'Bouclier de foi', level: 1 },
-  { id: 'magic-weapon', name: 'Arme magique', level: 2 },
-  { id: 'spiritual-weapon', name: 'Arme spirituelle', level: 2 },
+  // Domaine de la Guerre
+  { id: 'faveur-divine', name: 'Faveur divine', level: 1 },
+  { id: 'bouclier-de-la-foi', name: 'Bouclier de foi', level: 1 },
+  { id: 'arme-magique', name: 'Arme magique', level: 2 },
+  { id: 'arme-spirituelle', name: 'Arme spirituelle', level: 2 },
+  { id: 'aura-du-croisé', name: 'Aura du croisé', level: 3 },
+  { id: 'esprits-gardiens', name: 'Esprits gardiens', level: 3 },
+  { id: 'liberte-de-mouvement', name: 'Liberté de mouvement', level: 4 },
+  { id: 'peau-de-pierre', name: 'Peau de pierre', level: 4 },
+  { id: 'colonne-de-flammes', name: 'Colonne de flammes', level: 5 },
+  { id: 'immobiliser-monstre', name: 'Immobiliser un monstre', level: 5 },
+  // Autres domaines
   { id: 'bless', name: 'Bénédiction', level: 1 },
   { id: 'cure-wounds', name: 'Soins', level: 1 },
   { id: 'lesser-restoration', name: 'Restauration inférieure', level: 2 },

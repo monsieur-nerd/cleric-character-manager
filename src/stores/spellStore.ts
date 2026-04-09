@@ -21,8 +21,8 @@ interface SpellState {
   clearNonDomainPrepared: () => void;
   resetPreparedSpells: () => void;
 
-  useSpellSlot: (level: 1 | 2 | 3) => boolean;
-  restoreSpellSlot: (level: 1 | 2 | 3, maxSlots: SpellSlots) => void;
+  useSpellSlot: (level: 1 | 2 | 3 | 4 | 5) => boolean;
+  restoreSpellSlot: (level: 1 | 2 | 3 | 4 | 5, maxSlots: SpellSlots) => void;
   resetDaily: (characterLevel: number) => void;
   prepareMultipleSpells: (spellIds: string[], maxAllowed: number) => void;
   
@@ -44,7 +44,7 @@ export const useSpellStore = create<SpellState>()(
       allSpells: [],
       preparedSpellIds: [],
 
-      spellSlots: { 1: 4, 2: 3, 3: 2 },
+      spellSlots: { 1: 4, 2: 3, 3: 2, 4: 0, 5: 0 },
       
       loadSpells: (spells) => {
         set({ allSpells: spells });
@@ -93,7 +93,7 @@ export const useSpellStore = create<SpellState>()(
         if (!spell) return;
         
         // Vérifie s'il reste des emplacements (pour les sorts de niveau > 0)
-        const level = spell.level as 1 | 2 | 3;
+        const level = spell.level as 1 | 2 | 3 | 4 | 5;
         if (level > 0 && get().spellSlots[level] <= 0) {
           return;
         }
@@ -238,7 +238,7 @@ export const useSpellStore = create<SpellState>()(
       },
       
       getSpellCountByLevel: () => {
-        const counts: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0 };
+        const counts: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
         get().allSpells.forEach(spell => {
           counts[spell.level] = (counts[spell.level] || 0) + 1;
         });
