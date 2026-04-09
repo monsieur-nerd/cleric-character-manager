@@ -89,6 +89,53 @@ export type SpellType =
 // ÉQUIPEMENT
 // ============================================
 
+export type ShoppingPriority = 'critical' | 'high' | 'medium' | 'low' | 'none';
+
+export type ComponentType = 'consumed_per_cast' | 'consumed_per_use' | 'reusable_focus' | 'permanent';
+
+export interface RestockConfig {
+  enabled: boolean;
+  minStock: number;
+  restockAmount: number;
+  autoAddToShoppingList: boolean;
+}
+
+export interface RelatedSpellInfo {
+  spellId: string;
+  spellName: string;
+  consumed: boolean;
+}
+
+export interface ShoppingListItem {
+  itemId: string;
+  priority: ShoppingPriority;
+  category: 'component' | 'consumable' | 'equipment' | 'weapon' | 'armor';
+  componentType?: ComponentType;
+  relatedSpells?: RelatedSpellInfo[];
+  restockConfig: RestockConfig;
+  quantityIdeal: number;
+  quantityToBuy: number;
+  notes?: string;
+  autoAdded: boolean;
+  lastPurchased?: string;
+  classSource?: 'cleric' | 'wizard';
+}
+
+export interface InventoryNotification {
+  id: string;
+  type: 'low_stock' | 'out_of_stock' | 'restocked' | 'consumed' | 'purchased' | 'component_needed';
+  itemId: string;
+  itemName: string;
+  message: string;
+  timestamp: string;
+  read: boolean;
+  actions?: {
+    label: string;
+    action: string;
+    params?: Record<string, unknown>;
+  }[];
+}
+
 export interface EquipmentItem {
   id: string;
   name: string;
@@ -113,7 +160,12 @@ export interface EquipmentItem {
   
   // Pour composantes
   isComponent?: boolean;
-  relatedSpells?: string[];
+  relatedSpells?: RelatedSpellInfo[] | string[];
+  
+  // Système d'achat et composants
+  shoppingPriority?: ShoppingPriority;
+  componentType?: ComponentType;
+  classSource?: 'cleric' | 'wizard';
   
   // Pour le combat
   damage?: string;           // Ex: "1d8", "2d6"
@@ -277,14 +329,16 @@ export interface DomainAbility {
 export interface Character {
   // Identité
   name: string;
-  class: 'cleric';
-  subclass: 'war';
+  class: 'cleric' | 'multiclass';
+  subclass: 'war' | string;
   avatar?: string | null; // URL de l'avatar/photo
   deity?: Deity; // Dieu vénéré
   domain?: ClericDomain; // Domaine du clerc
   
-  // Niveau
+  // Niveau et multiclassage
   level: number;
+  multiclassConfig?: MulticlassConfig;
+  knownSpellIds: string[]; // Tous les sorts connus (préparables)
   
   // Caractéristiques
   wisdom: number;
@@ -578,6 +632,76 @@ export interface SpellSlots {
   1: number;
   2: number;
   3: number;
+  4?: number;
+  5?: number;
+  6?: number;
+  7?: number;
+  8?: number;
+  9?: number;
+}
+
+// ============================================
+// MULTICLASSAGE
+// ============================================
+
+export type CharacterClassType = 'cleric' | 'wizard' | 'multiclass';
+
+export interface CharacterClass {
+  id: CharacterClassType;
+  name: string;
+  level: number;
+  spellcastingAbility: 'wisdom' | 'intelligence';
+}
+
+export interface MulticlassConfig {
+  classes: CharacterClass[];
+  primaryClass: 'cleric' | 'wizard';
+  totalLevel: number;
+  combinedSpellSlots: SpellSlots;
+  spellsByClass: {
+    cleric: string[];
+    wizard: string[];
+  };
+}
+
+// ============================================
+// SHOPPING LIST ENRICHIE
+// ============================================
+
+export interface ClassRelatedSpellInfo {
+  spellId: string;
+  spellName: string;
+  consumed: boolean;
+  classSource: 'cleric' | 'wizard';
+}
+
+export interface EnrichedShoppingListItem {
+  itemId: string;
+  priority: ShoppingPriority;
+  category: 'component' | 'consumable' | 'equipment' | 'weapon' | 'armor';
+  componentType?: ComponentType;
+  relatedSpells?: ClassRelatedSpellInfo[];
+  restockConfig: RestockConfig;
+  quantityIdeal: number;
+  quantityToBuy: number;
+  notes?: string;
+  autoAdded: boolean;
+  lastPurchased?: string;
+  classSource?: 'cleric' | 'wizard';
+}
+
+// Mapping complet des composants par sort
+export interface SpellComponentMapping {
+  spellId: string;
+  spellName: string;
+  spellLevel: number;
+  classSource: 'cleric' | 'wizard';
+  itemId: string;
+  itemName: string;
+  quantity: number;
+  consumed: boolean;
+  price: number;
+  priority: ShoppingPriority;
 }
 
 export const MAX_SPELL_SLOTS: Record<number, SpellSlots> = {

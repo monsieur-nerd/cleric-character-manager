@@ -11,6 +11,7 @@ export const STORAGE_KEYS = {
   SPELL: `${STORAGE_PREFIX}spell-store-${STORAGE_VERSION}`,
   INVENTORY: `${STORAGE_PREFIX}inventory-store-${STORAGE_VERSION}`,
   PRESET: `${STORAGE_PREFIX}preset-store-${STORAGE_VERSION}`,
+  SHOPPING_LIST: `${STORAGE_PREFIX}shopping-list-store-${STORAGE_VERSION}`,
 } as const;
 
 /**
