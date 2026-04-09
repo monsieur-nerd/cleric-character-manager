@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Sparkles, Zap, Brain, AlertCircle, Shield, Edit3, Sword, Stars, User, Camera, Cross, Heart, X, ChevronDown, ChevronUp, GraduationCap, Menu, Check } from 'lucide-react';
+import { Sparkles, Zap, Brain, AlertCircle, Shield, Edit3, Sword, Stars, User, Camera, Cross, Heart, X, ChevronDown, ChevronUp, GraduationCap, Menu, Check, Scroll } from 'lucide-react';
 import { useSpellStore, useCharacterStore } from '@/stores';
+import { SkillsFeatsModal } from '@/components/skills/SkillsFeatsModal';
 import { SpellSlotBar } from '@/components/spells/SpellSlotBar';
 import { DomainRadarChart, DomainRadarCompare } from '@/components/character/DomainRadarChart';
 
@@ -651,8 +652,8 @@ function CharacterSheetMobileNav({
   activeTab, 
   onTabChange 
 }: { 
-  activeTab: 'identity' | 'stats' | 'abilities' | 'skills';
-  onTabChange: (tab: 'identity' | 'stats' | 'abilities' | 'skills') => void;
+  activeTab: 'identity' | 'stats' | 'abilities' | 'skills' | 'traits';
+  onTabChange: (tab: 'identity' | 'stats' | 'abilities' | 'skills' | 'traits') => void;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   
@@ -660,6 +661,7 @@ function CharacterSheetMobileNav({
     { id: 'identity' as const, label: 'Identité', icon: User },
     { id: 'stats' as const, label: 'Caractéristiques', icon: Brain },
     { id: 'abilities' as const, label: 'Capacités', icon: Zap },
+    { id: 'traits' as const, label: 'Traits', icon: Scroll },
     { id: 'skills' as const, label: 'Talents et compétences', icon: GraduationCap },
   ];
   
@@ -734,7 +736,7 @@ function CharacterSheetMobileNav({
 }
 
 // Modal d'édition du personnage
-function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: { isOpen: boolean; onClose: () => void; initialTab?: 'identity' | 'stats' | 'abilities' | 'skills' }) {
+function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: { isOpen: boolean; onClose: () => void; initialTab?: 'identity' | 'stats' | 'abilities' | 'skills' | 'traits' }) {
   const character = useCharacterStore((state) => state.character);
   const getSpellById = useSpellStore((state) => state.getSpellById);
   const setName = useCharacterStore((state) => state.setName);
@@ -756,7 +758,7 @@ function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: { is
   const setWeight = useCharacterStore((state) => state.setWeight);
   const setLanguages = useCharacterStore((state) => state.setLanguages);
   
-  const [activeTab, setActiveTab] = useState<'identity' | 'stats' | 'abilities' | 'skills'>(initialTab);
+  const [activeTab, setActiveTab] = useState<'identity' | 'stats' | 'abilities' | 'skills' | 'traits'>(initialTab);
   const [localName, setLocalName] = useState(character.name);
   const [localLevel, setLocalLevel] = useState(character.level);
   const [localWisdom, setLocalWisdom] = useState(character.wisdom);
@@ -1300,6 +1302,7 @@ function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: { is
 export function Dashboard() {
   const [showEditor, setShowEditor] = useState(false);
   const [editorInitialTab, setEditorInitialTab] = useState<'identity' | 'stats' | 'abilities' | 'skills'>('identity');
+  const [showSkillsFeatsModal, setShowSkillsFeatsModal] = useState(false);
   
   // Synchronise la divinité au chargement pour mettre à jour le symbole
   const syncDeity = useCharacterStore((state) => state.syncDeity);
@@ -1635,7 +1638,7 @@ export function Dashboard() {
             Talents et compétences
           </h3>
           <button 
-            onClick={() => openEditor('skills')}
+            onClick={() => setShowSkillsFeatsModal(true)}
             className="p-1.5 text-ink-muted hover:text-divine-gold transition-colors"
             title="Éditer les talents et compétences"
           >
@@ -1741,13 +1744,19 @@ export function Dashboard() {
       {/* Actions rapides */}
       <section className="grid grid-cols-1 gap-3">
         <button 
-          onClick={() => openEditor('skills')}
+          onClick={() => setShowSkillsFeatsModal(true)}
           className="btn-secondary text-center flex items-center justify-center gap-2"
         >
           <GraduationCap className="w-5 h-5" />
           Talents et compétences
         </button>
       </section>
+      
+      {/* Modale Talents et compétences (avec Traits) */}
+      <SkillsFeatsModal
+        isOpen={showSkillsFeatsModal}
+        onClose={() => setShowSkillsFeatsModal(false)}
+      />
       
       {/* Éditeur de personnage */}
       <CharacterEditorModal 

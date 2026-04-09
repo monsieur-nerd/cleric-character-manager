@@ -1875,3 +1875,40 @@ export const spellsData: Spell[] = [
     "summary": "Avantage JS SAG/CON, Soins max"
   }
 ];
+
+// Sorts de domaine ajoutés pour l'affichage correct
+export const DOMAIN_SPELLS: { id: string; name: string; level: number }[] = [
+  { id: 'divine-favor', name: 'Faveur divine', level: 1 },
+  { id: 'shield-of-faith', name: 'Bouclier de foi', level: 1 },
+  { id: 'magic-weapon', name: 'Arme magique', level: 2 },
+  { id: 'spiritual-weapon', name: 'Arme spirituelle', level: 2 },
+  { id: 'bless', name: 'Bénédiction', level: 1 },
+  { id: 'cure-wounds', name: 'Soins', level: 1 },
+  { id: 'lesser-restoration', name: 'Restauration inférieure', level: 2 },
+  { id: 'burning-hands', name: 'Mains brûlantes', level: 1 },
+  { id: 'faerie-fire', name: 'Feu follet', level: 1 },
+  { id: 'flaming-sphere', name: 'Sphère de feu', level: 2 },
+  { id: 'scorching-ray', name: 'Rayon ardent', level: 2 },
+  { id: 'animal-friendship', name: 'Amitié avec les animaux', level: 1 },
+  { id: 'speak-with-animals', name: 'Communication avec les animaux', level: 1 },
+  { id: 'barkskin', name: 'Peau d\'écorce', level: 2 },
+  { id: 'spike-growth', name: 'Croissance d\'épines', level: 2 },
+  { id: 'fog-cloud', name: 'Nuage de brouillard', level: 1 },
+  { id: 'thunderwave', name: 'Onde de tonnerre', level: 1 },
+  { id: 'gust-of-wind', name: 'Rafale de vent', level: 2 },
+  { id: 'shatter', name: 'Fracassement', level: 2 },
+  { id: 'charm-person', name: 'Charme-personne', level: 1 },
+  { id: 'disguise-self', name: 'Déguisement', level: 1 },
+  { id: 'mirror-image', name: 'Image miroir', level: 2 },
+  { id: 'pass-without-trace', name: 'Passage sans trace', level: 2 },
+  { id: 'command', name: 'Injonction', level: 1 },
+  { id: 'identify', name: 'Identification', level: 1 },
+  { id: 'augury', name: 'Augure', level: 2 },
+  { id: 'suggestion', name: 'Suggestion', level: 2 },
+  { id: 'searing-smite', name: 'Châtiment brûlant', level: 1 },
+  { id: 'heat-metal', name: 'Chaleur métallique', level: 2 },
+  { id: 'bane', name: 'Fléau', level: 1 },
+  { id: 'false-life', name: 'Vie factice', level: 1 },
+  { id: 'gentle-repose', name: 'Repose en paix', level: 2 },
+  { id: 'ray-of-enfeeblement', name: 'Rayon d\'affaiblissement', level: 2 },
+];

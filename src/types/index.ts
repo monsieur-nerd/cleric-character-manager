@@ -350,7 +350,7 @@ export const CLERIC_DOMAINS: ClericDomain[] = [
     spellIds: ['divine-favor', 'shield-of-faith', 'magic-weapon', 'spiritual-weapon'],
     abilities: {
       level1: { name: 'Clerc de guerre', nameEn: 'War Priest', description: 'Attaque bonus avec arme', uses: 3, shortRest: false, longRest: true },
-      level2: { name: 'Conduit divin : Guided Strike', nameEn: 'Guided Strike', description: '+10 à un jet d\'attaque', uses: 2, shortRest: false, longRest: true },
+      level2: { name: 'Conduit divin : Frappe guidée', nameEn: 'Guided Strike', description: '+10 à un jet d\'attaque', uses: 2, shortRest: false, longRest: true },
       level6: { name: 'Conduit divin : Bénédiction du dieu de la guerre', nameEn: 'War God\'s Blessing', description: 'Relancer dégâts ou attaque pour un allié', uses: 2, shortRest: false, longRest: true },
       level8: { name: 'Frappe divine', nameEn: 'Divine Strike', description: '+1d8 dégâts radiants sur une attaque', uses: 0 },
       level17: { name: 'Avatar de bataille', nameEn: 'Avatar of Battle', description: 'Résistance aux dégâts contondants/perforants/tranchants', uses: 0 }

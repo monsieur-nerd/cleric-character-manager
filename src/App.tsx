@@ -8,7 +8,7 @@ import { CombatPage } from '@/pages/CombatPage';
 import { InventoryPage } from '@/pages/InventoryPage';
 import { PreparationPage } from '@/pages/PreparationPage';
 import { Layout } from '@/components/layout/Layout';
-import { spellsData } from '@/data/spellsData';
+import { spellsData, DOMAIN_SPELLS } from '@/data/spellsData';
 import { equipmentData } from '@/data/equipmentData';
 import { componentMappingData } from '@/data/componentMappingData';
 import { CHARACTER_IDENTITY, CHARACTER_ABILITIES, STARTING_EQUIPMENT } from '@/data/characterConfig';
@@ -59,8 +59,33 @@ function App() {
 
   useEffect(() => {
     try {
-      // Charge les données directement depuis les imports
-      loadSpells(spellsData);
+      // Fusionne les sorts de base avec les sorts de domaine
+      const allSpells = [
+        ...spellsData,
+        ...DOMAIN_SPELLS.map(ds => ({
+          id: ds.id,
+          name: ds.name,
+          nameEn: '',
+          level: ds.level,
+          levelDisplay: ds.level === 0 ? 'Mineur' : `Niveau ${ds.level}`,
+          school: 'evocation' as const,
+          type: 'Sort de domaine',
+          isDomainSpell: true,
+          castingTime: '1 action',
+          range: 'contact',
+          components: { verbal: true, somatic: true, material: null, materialConsumed: false },
+          duration: { type: 'instantaneous' as const },
+          concentration: false,
+          ritual: false,
+          description: `Sort de domaine - ${ds.name}`,
+          descriptionShort: `Sort de domaine - ${ds.name}`,
+          higherLevels: null,
+          recommendation: null,
+          source: 'extended' as const,
+          incantation: null,
+        }))
+      ];
+      loadSpells(allSpells);
       // Fusionne les équipements de base avec l'équipement de départ du personnage
       const allEquipment = [
         ...equipmentData,
