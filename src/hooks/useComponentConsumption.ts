@@ -114,7 +114,7 @@ export function useComponentConsumption() {
    */
   const checkComponentsForNewSpells = useCallback((
     newSpellIds: string[],
-    classSource: 'cleric' | 'wizard'
+    _classSource: 'cleric' | 'wizard'
   ): NewSpellCheckResult[] => {
     const ownedItemIds = inventoryItems.map(i => i.id);
     const results: NewSpellCheckResult[] = [];

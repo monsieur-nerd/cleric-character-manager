@@ -1,9 +1,7 @@
 import { useState, useMemo } from 'react';
 import { 
   ShoppingCart, 
-  Check, 
   AlertCircle, 
-  Package, 
   Flame, 
   Recycle, 
   ChevronDown, 
@@ -11,9 +9,8 @@ import {
   Sparkles,
   Filter,
   Zap,
-  Skull,
   BookOpen,
-  FlameKindle,
+  FlameKindling,
   Info
 } from 'lucide-react';
 import { useShoppingListStore, useInventoryStore, useSpellStore } from '@/stores';

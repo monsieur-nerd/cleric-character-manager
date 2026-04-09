@@ -764,7 +764,7 @@ function CharacterSheetMobileNav({
 // Modal d'édition du personnage
 // NOTE: Cette modale n'est plus utilisée directement - voir CharacterEditorGlobal dans Layout
 // Gardée pour référence et potentielles fonctionnalités avancées (onglet Skills complet)
-function _UnusedCharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: { isOpen: boolean; onClose: () => void; initialTab?: 'identity' | 'stats' | 'abilities' | 'skills' | 'traits' }) {
+function UnusedCharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: { isOpen: boolean; onClose: () => void; initialTab?: 'identity' | 'stats' | 'abilities' | 'skills' | 'traits' }) {
   const character = useCharacterStore((state) => state.character);
   const getSpellById = useSpellStore((state) => state.getSpellById);
   const setName = useCharacterStore((state) => state.setName);
@@ -1329,9 +1329,9 @@ function _UnusedCharacterEditorModal({ isOpen, onClose, initialTab = 'identity' 
 
 export function Dashboard() {
   // Modal store for character editor
-  const isCharacterEditorOpen = useModalStore((state) => state.isCharacterEditorOpen);
-  const closeCharacterEditor = useModalStore((state) => state.closeCharacterEditor);
-  const editorInitialTab = useModalStore((state) => state.editorInitialTab);
+  const _isCharacterEditorOpen = useModalStore((state) => state.isCharacterEditorOpen);
+  const _closeCharacterEditor = useModalStore((state) => state.closeCharacterEditor);
+  const _editorInitialTab = useModalStore((state) => state.editorInitialTab);
   const openCharacterEditor = useModalStore((state) => state.openCharacterEditor);
   const [showSkillsFeatsModal, setShowSkillsFeatsModal] = useState(false);
   
@@ -1518,7 +1518,7 @@ export function Dashboard() {
           
           {/* Bouton d'édition */}
           <button 
-            onClick={() => openEditor('stats')}
+            onClick={() => openCharacterEditor('stats')}
             className="mt-2 w-full text-xs text-ink-muted hover:text-divine-gold-dark transition-colors flex items-center justify-center gap-1"
           >
             <Edit3 className="w-3 h-3" />
@@ -1638,7 +1638,7 @@ export function Dashboard() {
         </div>
         
         <button
-          onClick={() => openEditor('abilities')}
+          onClick={() => openCharacterEditor('abilities')}
           className="w-full mt-3 text-xs text-ink-muted hover:text-ink flex items-center justify-center gap-1"
         >
           <Edit3 className="w-3 h-3" />

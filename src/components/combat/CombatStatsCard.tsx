@@ -1,4 +1,4 @@
-import { Shield, Sword, Target, Info, ChevronDown, ChevronUp } from 'lucide-react';
+import { Shield, Sword, Info, ChevronDown, ChevronUp } from 'lucide-react';
 import { useState } from 'react';
 import { useInventoryStore } from '@/stores';
 import { useCharacterStore } from '@/stores';

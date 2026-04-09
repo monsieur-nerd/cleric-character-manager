@@ -69,7 +69,7 @@ export function useEquipment() {
       
       if (equippedArmor.armorType === 'lourde') {
         maxDexBonus = 0;
-      } else if (equippedArmor.armorType === 'intermediaire') {
+      } else if (equippedArmor.armorType === 'intermédiaire') {
         maxDexBonus = 2;
       }
     }

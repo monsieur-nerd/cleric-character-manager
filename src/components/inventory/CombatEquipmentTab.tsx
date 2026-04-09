@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Sword, Shield, Zap, ChevronDown, ChevronUp, Swords, Info, CheckSquare, Square, Battery, BatteryWarning, RefreshCw } from 'lucide-react';
+import { Sword, Shield, Zap, ChevronDown, ChevronUp, Swords, Info, CheckSquare, Battery, BatteryWarning, RefreshCw } from 'lucide-react';
 import { useInventoryStore } from '@/stores';
 import { useCharacterStore } from '@/stores';
 import { getFeatById } from '@/types/feats';
@@ -82,9 +82,9 @@ export function CombatEquipmentTab() {
   const handleUseCharge = (itemId: string) => {
     const result = useCharge(itemId, 1);
     if (result.success) {
-      setLastActionMessage(result.message);
+      setLastActionMessage(result.message || 'Action effectuée');
     } else {
-      setLastActionMessage(`Erreur: ${result.message}`);
+      setLastActionMessage(`Erreur: ${result.message || 'Inconnue'}`);
     }
     setTimeout(() => setLastActionMessage(null), 3000);
   };
@@ -93,7 +93,7 @@ export function CombatEquipmentTab() {
   const handleRecharge = (itemId: string) => {
     const result = rechargeItem(itemId);
     if (result.success) {
-      setLastActionMessage(result.message);
+      setLastActionMessage(result.message || 'Rechargé');
     }
     setTimeout(() => setLastActionMessage(null), 3000);
   };
@@ -503,7 +503,7 @@ export function CombatEquipmentTab() {
                         {armor.armorType === 'lourde' && (
                           <p className="text-ink-muted text-xs mt-1">Armure lourde : pas de bonus de DEX</p>
                         )}
-                        {armor.armorType === 'intermediaire' && dexMod > 2 && (
+                        {armor.armorType === 'intermédiaire' && dexMod > 2 && (
                           <p className="text-ink-muted text-xs mt-1">Armure intermediaire : max +2 DEX</p>
                         )}
                       </div>

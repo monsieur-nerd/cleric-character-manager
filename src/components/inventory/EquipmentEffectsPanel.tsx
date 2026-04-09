@@ -1,7 +1,7 @@
 // components/inventory/EquipmentEffectsPanel.tsx
 // Panneau recapitulatif des effets d equipement actifs (US-008)
 
-import { Shield, Target, AlertTriangle, EyeOff, Sword, Sparkles, Zap, Sun, Eye, Moon } from 'lucide-react';
+import { Shield, Target, AlertTriangle, EyeOff, Sword, Sparkles, Sun, Eye, Moon } from 'lucide-react';
 import { useEquipment, useLightSources, useVisionEffects } from '@/hooks/useEquipment';
 import { useCharacterStore } from '@/stores';
 import { useInventoryStore } from '@/stores';

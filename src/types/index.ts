@@ -244,6 +244,7 @@ export interface VisionEffect {
   truesight?: number;
   blindsight?: number;
   special?: string;
+  isActive?: boolean;         // état actif/inactif de l'effet
 }
 
 // Slots d'équipement pour la gestion des conflits
