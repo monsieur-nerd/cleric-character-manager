@@ -172,7 +172,10 @@ export const useSpellStore = create<SpellState>()(
       
       getPreparedSpells: () => {
         const { allSpells, preparedSpellIds } = get();
-        return allSpells.filter(s => preparedSpellIds.includes(s.id));
+        // Retourne les sorts préparés + les tours de magie (niveau 0) + les sorts de domaine
+        return allSpells.filter(s => 
+          preparedSpellIds.includes(s.id) || s.level === 0 || s.isDomainSpell
+        );
       },
       
       getAvailableSpells: () => {

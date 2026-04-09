@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Search, Filter } from 'lucide-react';
 import { useSpellStore, useCharacterStore } from '@/stores';
+import { Brain } from 'lucide-react';
 import { SpellCard } from '@/components/spells/SpellCard';
 import type { Spell } from '@/types';
 
@@ -38,15 +39,32 @@ export function SpellListPage() {
   }, {} as Record<number, Spell[]>);
   
   const levels = Object.keys(spellsByLevel).map(Number).sort((a, b) => a - b);
+  
+  // Compte les sorts préparés (excluant tours de magie et sorts de domaine)
+  const preparedNonDomain = allSpells.filter(s => 
+    preparedSpellIds.includes(s.id) && !s.isDomainSpell && s.level > 0
+  );
+  const remainingSlots = maxPrepared - preparedNonDomain.length;
 
   return (
     <div className="p-4 space-y-4 animate-fade-in">
       {/* Header */}
       <div className="flex items-center justify-between">
         <h2 className="font-display text-2xl text-ink">Sorts disponibles</h2>
-        <span className="text-sm text-ink-muted font-ui">
-          {filteredSpells.length} sorts
-        </span>
+        <div className="flex items-center gap-3">
+          {/* Indicateur de limite */}
+          <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium ${
+            remainingSlots <= 0 
+              ? 'bg-blood-red/10 text-blood-red border border-blood-red/30' 
+              : 'bg-divine-gold/10 text-divine-gold-dark border border-divine-gold/30'
+          }`}>
+            <Brain className="w-4 h-4" />
+            <span>{preparedNonDomain.length} / {maxPrepared} sorts préparés</span>
+          </div>
+          <span className="text-sm text-ink-muted font-ui">
+            {filteredSpells.length} sorts
+          </span>
+        </div>
       </div>
       
       {/* Barre de recherche */}
