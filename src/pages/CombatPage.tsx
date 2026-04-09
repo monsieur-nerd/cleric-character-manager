@@ -335,7 +335,7 @@ export function CombatPage() {
                 value={damageInput}
                 onChange={(e) => setDamageInput(e.target.value)}
                 placeholder="0"
-                className="w-full input-field text-center"
+                className="w-full input-field text-left pl-3"
                 min="0"
               />
               <button
@@ -363,7 +363,7 @@ export function CombatPage() {
                 value={healInput}
                 onChange={(e) => setHealInput(e.target.value)}
                 placeholder="0"
-                className="w-full input-field text-center"
+                className="w-full input-field text-left pl-3"
                 min="0"
               />
               <button

@@ -38,7 +38,7 @@ export function InventoryPage() {
 
   
   // Hook pour les effets d'items
-  const { activeEffects, addEffect, removeEffect, clearAllEffects } = useItemEffects();
+  const { activeEffects, removeEffect, clearAllEffects } = useItemEffects();
   
   const items = useInventoryStore((state) => state.items);
   const updateQuantity = useInventoryStore((state) => state.updateQuantity);
