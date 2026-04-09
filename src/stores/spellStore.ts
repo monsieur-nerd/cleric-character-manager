@@ -26,6 +26,7 @@ interface SpellState {
   useSpellSlot: (level: 1 | 2 | 3 | 4 | 5) => boolean;
   restoreSpellSlot: (level: 1 | 2 | 3 | 4 | 5, maxSlots: SpellSlots) => void;
   resetDaily: (characterLevel: number, domainId?: string) => void;
+  resetSpellSlotsOnly: (characterLevel: number) => void; // Repos long : reset emplacements seulement
   prepareMultipleSpells: (spellIds: string[], maxAllowed: number) => void;
   
   // Sélecteurs
@@ -168,7 +169,7 @@ export const useSpellStore = create<SpellState>()(
       },
       
       resetDaily: (characterLevel, domainId) => {
-        // Utilise le domainId fourni ou le domaine actuel
+        // Réinitialise completement : emplacements + sorts (garde seulement domaine)
         const effectiveDomainId = domainId || get().currentDomainId;
         const domainSpellIds = getDomainSpellIds(effectiveDomainId);
         
@@ -176,6 +177,13 @@ export const useSpellStore = create<SpellState>()(
           spellSlots: MAX_SPELL_SLOTS[characterLevel] || MAX_SPELL_SLOTS[5],
           preparedSpellIds: domainSpellIds,
           currentDomainId: effectiveDomainId,
+        });
+      },
+
+      resetSpellSlotsOnly: (characterLevel) => {
+        // Repos long : réinitialise uniquement les emplacements, garde les sorts préparés
+        set({
+          spellSlots: MAX_SPELL_SLOTS[characterLevel] || MAX_SPELL_SLOTS[5],
         });
       },
       

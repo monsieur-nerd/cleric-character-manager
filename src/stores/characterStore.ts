@@ -573,10 +573,8 @@ export const useCharacterStore = create<CharacterState>()(
         set((state) => {
           const character = state.character;
           
-          // Réinitialise aussi les sorts dans le spellStore
-          // Ne garde que les sorts de domaine du personnage actuel
-          const domainId = character.domain?.id;
-          useSpellStore.getState().resetDaily(character.level, domainId);
+          // Repos long : réinitialise les emplacements mais garde les sorts préparés
+          useSpellStore.getState().resetSpellSlotsOnly(character.level);
           
           return {
             character: {
@@ -594,7 +592,8 @@ export const useCharacterStore = create<CharacterState>()(
               },
               currentState: {
                 date: new Date().toISOString().split('T')[0],
-                preparedSpellIds: [],
+                // Garde les sorts préparés (pas de réinitialisation)
+                preparedSpellIds: character.currentState.preparedSpellIds,
                 usedSpellSlots: { 1: 0, 2: 0, 3: 0 },
                 usedAbilities: { warCleric: 0, channelDivinity: 0 },
                 activeConcentration: null,

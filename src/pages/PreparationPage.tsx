@@ -167,12 +167,28 @@ export function PreparationPage() {
     setTimeout(() => setActivePresetId(null), 2000);
   };
   
-  const handleReset = () => {
+  const [resetMode, setResetMode] = useState<'selection' | 'longRest'>('selection');
+  
+  const handleResetSelection = () => {
+    setResetMode('selection');
+    setShowResetConfirm(true);
+  };
+  
+  const handleLongRest = () => {
+    setResetMode('longRest');
     setShowResetConfirm(true);
   };
   
   const confirmReset = () => {
-    resetDaily(character.level);
+    if (resetMode === 'selection') {
+      // Réinitialise la sélection : garde seulement domaine + mineurs
+      resetDaily(character.level);
+    } else {
+      // Repos long : garde les sorts, reset les emplacements + PV + capacités
+      // C'est géré par le characterStore.longRest() appelé depuis le Dashboard/Combat
+      // Mais on reset aussi les emplacements ici pour être cohérent
+      useSpellStore.getState().resetSpellSlotsOnly(character.level);
+    }
     setShowResetConfirm(false);
   };
 
@@ -213,14 +229,25 @@ export function PreparationPage() {
         </div>
       </div>
       
-      {/* Bouton réinitialiser en haut */}
-      <button
-        onClick={handleReset}
-        className="w-full btn-danger flex items-center justify-center gap-2 mb-2"
-      >
-        <RotateCcw className="w-4 h-4" />
-        Réinitialiser (repos long)
-      </button>
+      {/* Boutons de réinitialisation */}
+      <div className="grid grid-cols-2 gap-2 mb-2">
+        <button
+          onClick={handleResetSelection}
+          className="btn-outline flex items-center justify-center gap-2 text-sm"
+          title="Désélectionne tous les sorts sauf sorts de domaine et mineurs"
+        >
+          <X className="w-4 h-4" />
+          Réinitialiser
+        </button>
+        <button
+          onClick={handleLongRest}
+          className="btn-primary flex items-center justify-center gap-2 text-sm"
+          title="Garde les sorts choisis, réinitialise les emplacements, PV et capacités"
+        >
+          <RotateCcw className="w-4 h-4" />
+          Repos long
+        </button>
+      </div>
 
       {/* Section Préréglages */}
       <section className="pt-6">
@@ -463,14 +490,25 @@ export function PreparationPage() {
         </div>
       </section>
       
-      {/* Bouton réinitialiser */}
-      <button
-        onClick={handleReset}
-        className="w-full btn-danger flex items-center justify-center gap-2"
-      >
-        <RotateCcw className="w-4 h-4" />
-        Réinitialiser (repos long)
-      </button>
+      {/* Boutons de réinitialisation en bas */}
+      <div className="grid grid-cols-2 gap-2">
+        <button
+          onClick={handleResetSelection}
+          className="btn-outline flex items-center justify-center gap-2"
+          title="Désélectionne tous les sorts sauf sorts de domaine et mineurs"
+        >
+          <X className="w-4 h-4" />
+          Réinitialiser
+        </button>
+        <button
+          onClick={handleLongRest}
+          className="btn-primary flex items-center justify-center gap-2"
+          title="Garde les sorts choisis, réinitialise les emplacements, PV et capacités"
+        >
+          <RotateCcw className="w-4 h-4" />
+          Repos long
+        </button>
+      </div>
       
       {/* Modale de confirmation de réinitialisation */}
       {showResetConfirm && (
@@ -482,12 +520,14 @@ export function PreparationPage() {
           
           <div className="relative bg-parchment-light w-full max-w-md rounded-xl shadow-2xl border border-parchment-dark overflow-hidden">
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-parchment-dark bg-blood-red/10">
+            <div className={`flex items-center justify-between p-4 border-b border-parchment-dark ${resetMode === 'selection' ? 'bg-blood-red/10' : 'bg-forest/10'}`}>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-blood-red/20 flex items-center justify-center">
-                  <AlertTriangle className="w-5 h-5 text-blood-red" />
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${resetMode === 'selection' ? 'bg-blood-red/20' : 'bg-forest/20'}`}>
+                  <AlertTriangle className={`w-5 h-5 ${resetMode === 'selection' ? 'text-blood-red' : 'text-forest'}`} />
                 </div>
-                <h2 className="font-display text-lg text-ink">Confirmer la réinitialisation</h2>
+                <h2 className="font-display text-lg text-ink">
+                  {resetMode === 'selection' ? 'Confirmer la réinitialisation' : 'Confirmer le repos long'}
+                </h2>
               </div>
               <button 
                 onClick={() => setShowResetConfirm(false)} 
@@ -499,14 +539,28 @@ export function PreparationPage() {
             
             {/* Body */}
             <div className="p-6 space-y-4">
-              <p className="text-ink-light">
-                Voulez-vous réinitialiser tous les sorts préparés ? Cette action effectue un <strong>repos long</strong> et :
-              </p>
-              <ul className="text-sm text-ink-muted list-disc list-inside space-y-1">
-                <li>Désélectionne tous les sorts préparés</li>
-                <li>Restaure tous les emplacements de sorts</li>
-                <li>Réinitialise les capacités utilisées</li>
-              </ul>
+              {resetMode === 'selection' ? (
+                <>
+                  <p className="text-ink-light">
+                    Voulez-vous réinitialiser votre sélection de sorts ? Cela va :
+                  </p>
+                  <ul className="text-sm text-ink-muted list-disc list-inside space-y-1">
+                    <li>Désélectionner tous les sorts <strong>sauf</strong> les sorts de domaine et les tours de magie</li>
+                    <li>Vous devrez rechoisir vos sorts pour le prochain combat</li>
+                  </ul>
+                </>
+              ) : (
+                <>
+                  <p className="text-ink-light">
+                    Effectuer un <strong>repos long</strong> ? Cette action va :
+                  </p>
+                  <ul className="text-sm text-ink-muted list-disc list-inside space-y-1">
+                    <li>Conserver tous vos sorts préparés actuels</li>
+                    <li>Restaurer tous les emplacements de sorts</li>
+                    <li>Réinitialiser vos points de vie et capacités</li>
+                  </ul>
+                </>
+              )}
             </div>
             
             {/* Footer */}
@@ -519,9 +573,9 @@ export function PreparationPage() {
               </button>
               <button 
                 onClick={confirmReset} 
-                className="flex-1 btn-danger"
+                className={resetMode === 'selection' ? 'flex-1 btn-danger' : 'flex-1 btn-primary'}
               >
-                Confirmer
+                {resetMode === 'selection' ? 'Réinitialiser' : 'Repos long'}
               </button>
             </div>
           </div>
