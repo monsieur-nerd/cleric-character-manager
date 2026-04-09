@@ -382,6 +382,56 @@ function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: {
           </button>
         </div>
         
+        {/* Info récapitulative du personnage */}
+        <div className="bg-divine-gold/10 px-4 py-3 border-b border-divine-gold/30">
+          <div className="flex items-center gap-3">
+            {/* Avatar miniature */}
+            <div className="w-12 h-12 rounded-full bg-parchment-dark border-2 border-divine-gold overflow-hidden flex-shrink-0">
+              {character.avatar ? (
+                <img 
+                  src={character.avatar} 
+                  alt={character.name}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <User className="w-6 h-6 text-ink-muted m-auto mt-2.5" />
+              )}
+            </div>
+            
+            {/* Informations */}
+            <div className="flex-1 min-w-0">
+              <h3 className="font-display text-lg text-ink truncate">{character.name}</h3>
+              <div className="flex flex-wrap items-center gap-x-2 text-sm text-ink-muted">
+                <span>{character.race || 'Humain'}</span>
+                <span>•</span>
+                <span>{character.alignment || 'Neutre Bon'}</span>
+              </div>
+              <div className="flex items-center gap-2 mt-1">
+                {character.deity?.symbol && (
+                  <span className="text-lg">
+                    {(character.deity.symbol.startsWith('images/') || character.deity.symbol.startsWith('/')) ? (
+                      <img 
+                        src={character.deity.symbol.startsWith('images/') ? `/cleric-character-manager/${character.deity.symbol}` : character.deity.symbol}
+                        alt={character.deity.name}
+                        className="w-4 h-4 object-contain inline"
+                      />
+                    ) : (
+                      character.deity.symbol
+                    )}
+                  </span>
+                )}
+                <span className="text-sm text-amber-900 font-medium">
+                  {character.deity?.name || 'Sans divinité'}
+                </span>
+                <span className="text-ink-muted">•</span>
+                <span className="text-sm text-ink">
+                  {character.domain?.name || 'Clerc'} • Niveau {character.level}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
         {/* Tabs - Desktop */}
         <div className="hidden sm:flex border-b border-parchment-dark bg-parchment-dark/5">
           {[

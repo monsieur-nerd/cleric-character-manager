@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { Spell, SpellSlots } from '@/types';
-import { MAX_SPELL_SLOTS } from '@/types';
+import { MAX_SPELL_SLOTS, CLERIC_DOMAINS } from '@/types';
 import { STORAGE_KEYS } from './storageKeys';
 
 interface SpellState {
@@ -11,9 +11,11 @@ interface SpellState {
   // État courant
   preparedSpellIds: string[];
   spellSlots: SpellSlots;
+  currentDomainId: string | null; // Domaine actuel du personnage
   
   // Actions
   loadSpells: (spells: Spell[]) => void;
+  setCurrentDomain: (domainId: string | null) => void; // Définit le domaine actuel
   prepareSpell: (spellId: string) => void;
   unprepareSpell: (spellId: string) => void;
   toggleSpellPrepared: (spellId: string, maxNonDomain?: number) => void;
@@ -23,7 +25,7 @@ interface SpellState {
 
   useSpellSlot: (level: 1 | 2 | 3 | 4 | 5) => boolean;
   restoreSpellSlot: (level: 1 | 2 | 3 | 4 | 5, maxSlots: SpellSlots) => void;
-  resetDaily: (characterLevel: number) => void;
+  resetDaily: (characterLevel: number, domainId?: string) => void;
   prepareMultipleSpells: (spellIds: string[], maxAllowed: number) => void;
   
   // Sélecteurs
@@ -38,24 +40,37 @@ interface SpellState {
   getSpellCountByLevel: () => Record<number, number>;
 }
 
+// Helper function to get domain spell IDs for a given domain
+const getDomainSpellIds = (domainId: string | null): string[] => {
+  if (!domainId) return [];
+  const domain = CLERIC_DOMAINS.find(d => d.id === domainId);
+  return domain?.spellIds || [];
+};
+
 export const useSpellStore = create<SpellState>()(
   persist(
     (set, get) => ({
       allSpells: [],
       preparedSpellIds: [],
-
+      currentDomainId: null,
       spellSlots: { 1: 4, 2: 3, 3: 2, 4: 0, 5: 0 },
       
       loadSpells: (spells) => {
         set({ allSpells: spells });
       },
+
+      setCurrentDomain: (domainId) => {
+        set({ currentDomainId: domainId });
+      },
       
       prepareSpell: (spellId) => {
-        const spell = get().allSpells.find(s => s.id === spellId);
+        const { allSpells, currentDomainId } = get();
+        const spell = allSpells.find(s => s.id === spellId);
         if (!spell) return;
         
-        // Les sorts de domaine sont toujours préparés
-        if (spell.isDomainSpell) return;
+        // Les sorts de domaine DU PERSONNAGE ACTUEL sont toujours préparés
+        const domainSpellIds = getDomainSpellIds(currentDomainId);
+        if (domainSpellIds.includes(spellId)) return;
         
         set((state) => ({
           preparedSpellIds: [...state.preparedSpellIds, spellId],
@@ -63,15 +78,16 @@ export const useSpellStore = create<SpellState>()(
       },
       
       unprepareSpell: (spellId) => {
-        const spell = get().allSpells.find(s => s.id === spellId);
+        const { allSpells, currentDomainId } = get();
+        const spell = allSpells.find(s => s.id === spellId);
         if (!spell) return;
         
-        // Les sorts de domaine ne peuvent pas être dépréparés
-        if (spell.isDomainSpell) return;
+        // Les sorts de domaine DU PERSONNAGE ACTUEL ne peuvent pas être dépréparés
+        const domainSpellIds = getDomainSpellIds(currentDomainId);
+        if (domainSpellIds.includes(spellId)) return;
         
         set((state) => ({
           preparedSpellIds: state.preparedSpellIds.filter(id => id !== spellId),
-
         }));
       },
       
@@ -112,21 +128,24 @@ export const useSpellStore = create<SpellState>()(
       },
 
       clearNonDomainPrepared: () => {
+        const { currentDomainId } = get();
+        const domainSpellIds = getDomainSpellIds(currentDomainId);
+        
         set((state) => ({
-          preparedSpellIds: state.preparedSpellIds.filter(id => {
-            const spell = state.allSpells.find(s => s.id === id);
-            return spell?.isDomainSpell;
-          }),
+          preparedSpellIds: state.preparedSpellIds.filter(id => 
+            domainSpellIds.includes(id)
+          ),
         }));
       },
       
       resetPreparedSpells: () => {
-        // Réinitialise complètement : garde seulement les sorts de domaine
-        set((state) => ({
-          preparedSpellIds: state.allSpells
-            .filter(s => s.isDomainSpell)
-            .map(s => s.id),
-        }));
+        const { currentDomainId } = get();
+        const domainSpellIds = getDomainSpellIds(currentDomainId);
+        
+        // Réinitialise complètement : garde seulement les sorts de domaine DU PERSONNAGE ACTUEL
+        set({
+          preparedSpellIds: domainSpellIds,
+        });
       },
       
       useSpellSlot: (level) => {
@@ -148,23 +167,21 @@ export const useSpellStore = create<SpellState>()(
         }));
       },
       
-      resetDaily: (characterLevel) => {
-        // Réinitialise les emplacements de sorts
-        // ET vide les sorts préparés (garde seulement les sorts de domaine)
-        const domainSpellIds = get().allSpells
-          .filter(s => s.isDomainSpell)
-          .map(s => s.id);
+      resetDaily: (characterLevel, domainId) => {
+        // Utilise le domainId fourni ou le domaine actuel
+        const effectiveDomainId = domainId || get().currentDomainId;
+        const domainSpellIds = getDomainSpellIds(effectiveDomainId);
+        
         set({
           spellSlots: MAX_SPELL_SLOTS[characterLevel] || MAX_SPELL_SLOTS[5],
           preparedSpellIds: domainSpellIds,
+          currentDomainId: effectiveDomainId,
         });
       },
       
       prepareMultipleSpells: (spellIds, maxAllowed) => {
-        // Garde les sorts de domaine
-        const domainSpellIds = get().allSpells
-          .filter(s => s.isDomainSpell)
-          .map(s => s.id);
+        const { currentDomainId } = get();
+        const domainSpellIds = getDomainSpellIds(currentDomainId);
         
         // Filtre les sorts de domaine ET les sorts mineurs (niveau 0) de la liste
         // Les sorts mineurs ne comptent pas dans la limite de préparation
@@ -187,10 +204,17 @@ export const useSpellStore = create<SpellState>()(
       },
       
       getPreparedSpells: () => {
-        const { allSpells, preparedSpellIds } = get();
-        // Retourne les sorts préparés + les tours de magie (niveau 0) + les sorts de domaine
+        const { allSpells, preparedSpellIds, currentDomainId } = get();
+        const domainSpellIds = getDomainSpellIds(currentDomainId);
+        
+        // Retourne:
+        // - Les sorts préparés manuellement
+        // - Les tours de magie (niveau 0)
+        // - Les sorts de domaine DU PERSONNAGE ACTUEL uniquement
         return allSpells.filter(s => 
-          preparedSpellIds.includes(s.id) || s.level === 0 || s.isDomainSpell
+          preparedSpellIds.includes(s.id) || 
+          s.level === 0 || 
+          domainSpellIds.includes(s.id)
         );
       },
       
@@ -209,28 +233,39 @@ export const useSpellStore = create<SpellState>()(
       },
       
       getDomainSpells: () => {
-        return get().allSpells.filter(s => s.isDomainSpell);
+        const { allSpells, currentDomainId } = get();
+        const domainSpellIds = getDomainSpellIds(currentDomainId);
+        
+        // Retourne seulement les sorts du domaine actuel du personnage
+        return allSpells.filter(s => domainSpellIds.includes(s.id));
       },
       
       getNonDomainPreparedSpells: () => {
-        const { allSpells, preparedSpellIds } = get();
+        const { allSpells, preparedSpellIds, currentDomainId } = get();
+        const domainSpellIds = getDomainSpellIds(currentDomainId);
+        
         return allSpells.filter(s => 
-          preparedSpellIds.includes(s.id) && !s.isDomainSpell && s.level > 0
+          preparedSpellIds.includes(s.id) && 
+          !domainSpellIds.includes(s.id) && 
+          s.level > 0
         );
       },
       
       canPrepareSpell: (spellId, maxNonDomain) => {
-        const spell = get().allSpells.find(s => s.id === spellId);
+        const { allSpells, preparedSpellIds, currentDomainId } = get();
+        const spell = allSpells.find(s => s.id === spellId);
         if (!spell) return false;
         
-        // Les sorts de domaine sont toujours préparables
-        if (spell.isDomainSpell) return true;
+        const domainSpellIds = getDomainSpellIds(currentDomainId);
+        
+        // Les sorts de domaine DU PERSONNAGE ACTUEL sont toujours préparables
+        if (domainSpellIds.includes(spellId)) return true;
         
         // Les tours de magie (niveau 0) sont toujours disponibles
         if (spell.level === 0) return true;
         
         // Vérifie si déjà préparé
-        if (get().preparedSpellIds.includes(spellId)) return true;
+        if (preparedSpellIds.includes(spellId)) return true;
         
         // Compte les sorts non-domaine déjà préparés (niveau > 0 uniquement)
         const nonDomainCount = get().getNonDomainPreparedSpells().length;
@@ -250,6 +285,7 @@ export const useSpellStore = create<SpellState>()(
       partialize: (state) => ({
         preparedSpellIds: state.preparedSpellIds,
         spellSlots: state.spellSlots,
+        currentDomainId: state.currentDomainId,
       }),
     }
   )

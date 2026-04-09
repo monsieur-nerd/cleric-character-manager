@@ -5,6 +5,7 @@ import type { CustomSkill } from '@/types/skills';
 import type { CustomFeat } from '@/types/feats';
 import { MAX_SPELL_SLOTS, DEITIES, CLERIC_DOMAINS } from '@/types';
 import { STORAGE_KEYS } from './storageKeys';
+import { useSpellStore } from './spellStore';
 import { 
   CHARACTER_IDENTITY, 
   CHARACTER_ABILITIES, 
@@ -237,6 +238,9 @@ export const useCharacterStore = create<CharacterState>()(
       setDomain: (domainId) => {
         const domain = CLERIC_DOMAINS.find(d => d.id === domainId);
         if (!domain) return;
+        
+        // Synchronise le domaine avec le spellStore
+        useSpellStore.getState().setCurrentDomain(domainId);
         
         set((state) => ({
           character: {
