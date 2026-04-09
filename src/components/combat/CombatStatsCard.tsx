@@ -211,7 +211,7 @@ export function CombatStatsCard() {
                     </div>
                     <div className="text-forest">
                       <span className="font-bold">Pour toucher :</span>
-                      <span> +{attack.toHit} </span>
+                      <span> 1D20+{attack.toHit} </span>
                       <span className="text-ink-muted">({attack.ability} {attack.damageMod >= 0 ? '+' : ''}{attack.damageMod} + Maîtrise +{profBonus})</span>
                     </div>
                   </div>

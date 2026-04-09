@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Package, Plus, Minus, AlertCircle, ShoppingCart, PlusCircle, Sword, CheckCircle2, Play } from 'lucide-react';
+import { Package, Plus, Minus, AlertCircle, ShoppingCart, PlusCircle, Sword, CheckCircle2 } from 'lucide-react';
 import { useInventoryStore } from '@/stores';
 import { useCharacterStore } from '@/stores';
 import { formatWeight, formatPrice } from '@/utils/formatters';
@@ -8,7 +8,7 @@ import { AddItemModal } from '@/components/inventory/AddItemModal';
 import { CombatEquipmentTab } from '@/components/inventory/CombatEquipmentTab';
 
 import { ActiveItemEffects } from '@/components/inventory/ActiveItemEffects';
-import { useItemEffects, type ItemEffect } from '@/hooks/useItemEffects';
+import { useItemEffects } from '@/hooks/useItemEffects';
 import type { EquipmentItem } from '@/types';
 
 const categories = [

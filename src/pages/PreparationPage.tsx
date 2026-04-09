@@ -205,8 +205,18 @@ export function PreparationPage() {
             {preparedCount} / {maxPrepared}
           </span>
         </div>
-        <div className="text-xs text-ink-muted mt-2 pt-2 border-t border-divine-gold/20">
-          + {domainSpells.length} sorts de domaine (toujours préparés gratuitement)
+        <div className="text-xs text-ink-muted mt-2 pt-2 border-t border-divine-gold/20 flex justify-between items-center">
+          <span>+ {domainSpells.length} sorts de domaine (toujours préparés gratuitement)</span>
+          {preparedCount > 0 && (
+            <button
+              onClick={() => resetPreparedSpells()}
+              className="text-xs text-blood-red hover:text-blood-red-dark flex items-center gap-1 px-2 py-1 rounded hover:bg-blood-red/10 transition-colors font-medium"
+              title="Efface tous les sorts préparés (garde les sorts de domaine)"
+            >
+              <RotateCcw className="w-3 h-3" />
+              Vider la sélection
+            </button>
+          )}
         </div>
       </div>
       

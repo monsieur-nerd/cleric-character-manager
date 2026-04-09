@@ -166,6 +166,7 @@ export function CombatPage() {
   
   const preparedSpells = useSpellStore((state) => state.getPreparedSpells());
   const markAsUsed = useSpellStore((state) => state.markAsUsed);
+  const resetPreparedSpells = useSpellStore((state) => state.resetPreparedSpells);
   const spellSlots = useSpellStore((state) => state.spellSlots);
   
   // Points de vie
@@ -861,9 +862,23 @@ export function CombatPage() {
           
           {/* Sorts préparés */}
           <div className="border-t border-royal-purple/20 pt-4">
-            <h4 className="text-xs font-bold text-ink-light uppercase tracking-wide mb-3">
-              Sorts préparés
-            </h4>
+            <div className="flex items-center justify-between mb-3">
+              <h4 className="text-xs font-bold text-ink-light uppercase tracking-wide">
+                Sorts préparés
+              </h4>
+              <button
+                onClick={() => {
+                  if (confirm('Réinitialiser tous les sorts préparés ? Seuls les sorts de domaine seront conservés.')) {
+                    resetPreparedSpells();
+                  }
+                }}
+                className="text-xs text-ink-muted hover:text-blood-red flex items-center gap-1 px-2 py-1 rounded hover:bg-blood-red/10 transition-colors"
+                title="Réinitialise la préparation des sorts"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                Reset
+              </button>
+            </div>
             
             <div className="space-y-4">
               {Object.entries(spellsByLevel)

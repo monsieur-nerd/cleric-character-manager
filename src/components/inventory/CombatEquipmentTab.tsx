@@ -201,7 +201,7 @@ export function CombatEquipmentTab() {
                         </div>
                         <div className="text-forest">
                           <span className="font-bold">Pour toucher :</span>
-                          <span> +{attack.toHit} </span>
+                          <span> 1D20+{attack.toHit} </span>
                           <span className="text-ink-muted">({attack.ability} {attack.damageMod >= 0 ? '+' : ''}{attack.damageMod} + Maîtrise +{profBonus})</span>
                         </div>
                       </div>
@@ -416,7 +416,7 @@ export function CombatEquipmentTab() {
               const isExpanded = expandedItems.has(armor.id);
               let dexModForArmor = dexMod;
               if (armor.armorType === 'lourde') dexModForArmor = 0;
-              if (armor.armorType === 'intermediaire') dexModForArmor = Math.min(dexMod, 2);
+              if (armor.armorType === 'intermédiaire') dexModForArmor = Math.min(dexMod, 2);
               
               return (
                 <div key={armor.id} className={`card p-3 ${armor.isEquipped ? 'border-divine-gold/50 bg-divine-gold/5' : ''}`}>
