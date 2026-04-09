@@ -21,7 +21,7 @@ export function SpellListPage() {
   // Niveau de sort maximum accessible selon le niveau du personnage
   const maxSpellLevel = getMaxSpellLevelForCharacter(character.level);
   
-  // Filtre les sorts (uniquement ceux accessibles selon le niveau)
+  // Filtre les sorts (uniquement ceux accessibles selon le niveau et le domaine)
   const filteredSpells = allSpells.filter((spell: Spell) => {
     // Filtre par niveau maximum accessible
     if (spell.level > maxSpellLevel) {
@@ -34,6 +34,12 @@ export function SpellListPage() {
     
     // Filtre niveau
     if (selectedLevel !== 'all' && spell.level !== selectedLevel) {
+      return false;
+    }
+    
+    // IMPORTANT: Filtre les sorts de domaine qui ne sont pas du domaine du personnage
+    // Les sorts avec isDomainSpell: true ne sont visibles que si ils sont dans le domaine actuel
+    if (spell.isDomainSpell && !currentDomainSpellIds.includes(spell.id)) {
       return false;
     }
     

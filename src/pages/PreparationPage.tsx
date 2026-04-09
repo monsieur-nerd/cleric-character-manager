@@ -482,7 +482,13 @@ export function PreparationPage() {
         
         <div className="space-y-2">
           {allSpells
-            .filter((s: Spell) => !currentDomainSpellIds.includes(s.id) && s.level > 0 && s.level <= maxSpellLevel)
+            .filter((s: Spell) => {
+              // Exclure les sorts de domaine (y compris ceux d'autres domaines)
+              if (s.isDomainSpell && !currentDomainSpellIds.includes(s.id)) {
+                return false;
+              }
+              return !currentDomainSpellIds.includes(s.id) && s.level > 0 && s.level <= maxSpellLevel;
+            })
             .map((spell: Spell) => (
               <SpellCard
                 key={spell.id}
@@ -663,9 +669,14 @@ function CustomPresetEditor({
   );
 
   // Sorts disponibles à ajouter (tous sauf ceux déjà dans le preset, les sorts de domaine et mineurs)
-  // Filtré par niveau maximum accessible
+  // Filtré par niveau maximum accessible et par domaine
   const availableSpells = allSpells.filter(
-    s => !preset.spellIds.includes(s.id) && !currentDomainSpellIds.includes(s.id) && s.level > 0 && s.level <= maxSpellLevel
+    s => !preset.spellIds.includes(s.id) && 
+         !currentDomainSpellIds.includes(s.id) && 
+         s.level > 0 && 
+         s.level <= maxSpellLevel &&
+         // Exclure les sorts de domaine d'autres domaines
+         !(s.isDomainSpell && !currentDomainSpellIds.includes(s.id))
   );
 
   return (
