@@ -1334,6 +1334,7 @@ export function Dashboard() {
   const _editorInitialTab = useModalStore((state) => state.editorInitialTab);
   const openCharacterEditor = useModalStore((state) => state.openCharacterEditor);
   const [showSkillsFeatsModal, setShowSkillsFeatsModal] = useState(false);
+  const [isSkillsExpanded, setIsSkillsExpanded] = useState(false);
   
   // Synchronise la divinité au chargement pour mettre à jour le symbole
   const syncDeity = useCharacterStore((state) => state.syncDeity);
@@ -1660,23 +1661,98 @@ export function Dashboard() {
         </section>
       )}
       
-      {/* Talents, traits et compétences - Détail complet */}
+      {/* Talents, traits et compétences - Mode condensé avec déploiement */}
       <section className="card">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between">
           <h3 className="font-display text-lg text-ink flex items-center gap-2">
             <GraduationCap className="w-5 h-5 text-divine-gold" />
             Talents, traits et compétences
           </h3>
-          <button 
-            onClick={() => setShowSkillsFeatsModal(true)}
-            className="p-1.5 text-ink-muted hover:text-divine-gold transition-colors"
-            title="Éditer les talents et compétences"
-          >
-            <Edit3 className="w-4 h-4" />
-          </button>
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={() => setShowSkillsFeatsModal(true)}
+              className="p-1.5 text-ink-muted hover:text-divine-gold transition-colors"
+              title="Éditer les talents et compétences"
+            >
+              <Edit3 className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => setIsSkillsExpanded(!isSkillsExpanded)}
+              className="p-1.5 text-ink-muted hover:text-divine-gold transition-colors"
+              title={isSkillsExpanded ? 'Réduire' : 'Déployer'}
+            >
+              {isSkillsExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+            </button>
+          </div>
         </div>
         
-        {/* Compétences maîtrisées - Cartes détaillées */}
+        {/* Vue condensée */}
+        {!isSkillsExpanded && (
+          <div className="mt-3 space-y-2">
+            {/* Résumé compétences */}
+            <div className="flex items-center justify-between p-2 bg-parchment-dark/30 rounded">
+              <span className="text-sm text-ink-light flex items-center gap-2">
+                <Check className="w-4 h-4 text-forest" />
+                Compétences maîtrisées
+              </span>
+              <span className="font-display text-ink">{(character.masteredSkills || []).length}</span>
+            </div>
+            
+            {/* Résumé traits */}
+            <div className="flex items-center justify-between p-2 bg-parchment-dark/30 rounded">
+              <span className="text-sm text-ink-light flex items-center gap-2">
+                <Scroll className="w-4 h-4 text-royal-purple" />
+                Traits
+              </span>
+              <span className="font-display text-ink">{BACKGROUND_TRAITS.length}</span>
+            </div>
+            
+            {/* Résumé talents */}
+            <div className="flex items-center justify-between p-2 bg-parchment-dark/30 rounded">
+              <span className="text-sm text-ink-light flex items-center gap-2">
+                <Stars className="w-4 h-4 text-divine-gold" />
+                Talents
+              </span>
+              <span className="font-display text-ink">{(character.feats || []).length}</span>
+            </div>
+            
+            {/* Aperçu des compétences maîtrisées (noms seulement) */}
+            {(character.masteredSkills || []).length > 0 && (
+              <div className="mt-3">
+                <p className="text-xs text-ink-muted mb-2">Aperçu :</p>
+                <div className="flex flex-wrap gap-1">
+                  {(character.masteredSkills || []).slice(0, 5).map(skillId => {
+                    const skill = getSkillById(skillId);
+                    if (!skill) return null;
+                    return (
+                      <span key={skillId} className="text-xs bg-forest/10 text-forest px-2 py-1 rounded">
+                        {skill.name}
+                      </span>
+                    );
+                  })}
+                  {(character.masteredSkills || []).length > 5 && (
+                    <span className="text-xs text-ink-muted px-2 py-1">
+                      +{(character.masteredSkills || []).length - 5} autres
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
+            
+            <button
+              onClick={() => setIsSkillsExpanded(true)}
+              className="w-full mt-3 py-2 text-sm text-divine-gold-dark hover:text-divine-gold border border-divine-gold/30 rounded-lg hover:bg-divine-gold/10 transition-colors flex items-center justify-center gap-2"
+            >
+              <ChevronDown className="w-4 h-4" />
+              Voir tout le détail
+            </button>
+          </div>
+        )}
+        
+        {/* Vue détaillée (déployée) */}
+        {isSkillsExpanded && (
+          <div className="mt-4 space-y-4">
+            {/* Compétences maîtrisées - Cartes détaillées */}
         <div className="mb-4">
           <h4 className="text-sm font-medium text-ink-light mb-3 flex items-center gap-2">
             <Check className="w-4 h-4 text-forest" />
@@ -1805,6 +1881,15 @@ export function Dashboard() {
             <p className="text-sm text-ink-muted italic">Aucun talent sélectionné</p>
           )}
         </div>
+        
+        {/* Bouton réduire */}
+        <button
+          onClick={() => setIsSkillsExpanded(false)}
+          className="w-full mt-4 py-2 text-sm text-ink-muted hover:text-ink border border-parchment-dark/50 rounded-lg hover:bg-parchment-dark/20 transition-colors flex items-center justify-center gap-2"
+        >
+          <ChevronUp className="w-4 h-4" />
+          Réduire
+        </button>
       </section>
       
       {/* Actions rapides */}
