@@ -166,7 +166,7 @@ export function CombatPage() {
   const shortRest = useCharacterStore((state) => state.shortRest);
   const activeConcentration = character.currentState.activeConcentration;
   
-  const preparedSpells = useSpellStore((state) => state.getPreparedSpells());
+  const preparedSpells = useSpellStore((state) => state.getPreparedSpells(character.level));
   const currentDomainSpellIds = character.domain?.spellIds || [];
   const markAsUsed = useSpellStore((state) => state.markAsUsed);
   const spellSlots = useSpellStore((state) => state.spellSlots);

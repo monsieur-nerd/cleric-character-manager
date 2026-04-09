@@ -33,7 +33,7 @@ interface SpellState {
   
   // Sélecteurs
   getSpellById: (id: string) => Spell | undefined;
-  getPreparedSpells: () => Spell[];
+  getPreparedSpells: (characterLevel?: number) => Spell[];
   getAvailableSpells: () => Spell[];
   getUsedSpells: () => Spell[];
   getSpellsByLevel: (level: number) => Spell[];
@@ -250,18 +250,21 @@ export const useSpellStore = create<SpellState>()(
         return get().allSpells.find(s => s.id === id);
       },
       
-      getPreparedSpells: () => {
+      getPreparedSpells: (characterLevelOverride?: number) => {
         const { allSpells, preparedSpellIds, currentDomainId, characterLevel } = get();
+        // Utilise le niveau passé en paramètre, sinon celui du store
+        const effectiveLevel = characterLevelOverride ?? characterLevel;
         const domainSpellIds = getDomainSpellIds(currentDomainId);
-        const maxDomainLevel = getMaxDomainSpellLevel(characterLevel);
+        const maxDomainLevel = getMaxDomainSpellLevel(effectiveLevel);
         
         // Retourne:
-        // - Les sorts préparés manuellement
+        // - Les sorts préparés manuellement (filtrés par niveau max accessible)
         // - Les tours de magie (niveau 0)
         // - Les sorts de domaine DU PERSONNAGE ACTUEL, filtrés par niveau accessible
         return allSpells.filter(s => {
-          if (preparedSpellIds.includes(s.id)) return true;
-          if (s.level === 0) return true;
+          if (s.level === 0) return true; // Tours de magie toujours disponibles
+          // Sorts préparés : uniquement ceux du niveau accessible
+          if (preparedSpellIds.includes(s.id) && s.level <= maxDomainLevel) return true;
           // Sorts de domaine : uniquement ceux du niveau accessible
           if (domainSpellIds.includes(s.id) && s.level <= maxDomainLevel) return true;
           return false;
@@ -340,7 +343,8 @@ export const useSpellStore = create<SpellState>()(
         preparedSpellIds: state.preparedSpellIds,
         spellSlots: state.spellSlots,
         currentDomainId: state.currentDomainId,
-        characterLevel: state.characterLevel,
+        // Note: characterLevel n'est PAS persisté pour éviter les problèmes de synchronisation
+        // avec le niveau du personnage. Il utilise sa valeur par défaut ou est passé en paramètre.
       }),
     }
   )
