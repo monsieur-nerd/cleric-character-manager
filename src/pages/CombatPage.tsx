@@ -921,15 +921,6 @@ export function CombatPage() {
                             <div className="min-w-0 flex-1">
                               <div className="flex items-center gap-2">
                                 <div className="font-display text-ink break-words leading-tight text-sm sm:text-base">{spell.name}</div>
-                                {isDomainSpell && (
-                                  <span 
-                                    className="badge-domain text-xs flex items-center gap-1"
-                                    title="Sort de domaine - Toujours préparé gratuitement"
-                                  >
-                                    <Shield className="w-3 h-3" />
-                                    Domaine
-                                  </span>
-                                )}
                               </div>
                               <div className="flex flex-wrap gap-x-2 gap-y-0.5 text-xs text-ink-light mt-0.5">
                                 <span className="flex items-center gap-1">
@@ -964,7 +955,16 @@ export function CombatPage() {
                               )}
                             </div>
                             
-                            <div className="flex gap-2">
+                            <div className="flex items-center gap-2">
+                              {isDomainSpell && (
+                                <span 
+                                  className="inline-flex items-center justify-center gap-1 px-3 py-1.5 rounded-full bg-gradient-to-br from-steel-blue to-blue-900 text-white text-xs font-bold shadow-md"
+                                  title="Sort de domaine - Toujours préparé gratuitement"
+                                >
+                                  <Shield className="w-3 h-3" />
+                                  Domaine
+                                </span>
+                              )}
                               <button
                                 onClick={(e) => {
                                   e.stopPropagation();
