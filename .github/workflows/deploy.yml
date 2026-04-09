@@ -31,7 +31,7 @@ jobs:
         run: npm ci --legacy-peer-deps
 
       - name: Build
-        run: npm run build
+        run: npx vite build --outDir dist
 
       - name: Copy data to dist
         run: cp -r public/data dist/
