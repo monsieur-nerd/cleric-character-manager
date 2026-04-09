@@ -171,6 +171,9 @@ export function CombatPage() {
   // Use CLERIC_DOMAINS to get fresh spell IDs (avoids stale IDs from localStorage)
   const currentDomain = CLERIC_DOMAINS.find(d => d.id === character.domain?.id);
   const currentDomainSpellIds = currentDomain?.spellIds || [];
+  
+  // DEBUG
+  console.log('Combat - Domain:', currentDomain?.name, 'spellIds:', currentDomainSpellIds.slice(0, 6));
   const markAsUsed = useSpellStore((state) => state.markAsUsed);
   const spellSlots = useSpellStore((state) => state.spellSlots);
   
@@ -906,6 +909,10 @@ export function CombatPage() {
                     <div className="space-y-2">
                       {spells.map((spell: Spell) => {
                         const isDomainSpell = currentDomainSpellIds.includes(spell.id);
+                        // DEBUG
+                        if (spell.name === 'Bouclier de foi' || spell.name === 'Faveur divine') {
+                          console.log('Combat card:', spell.name, 'id:', spell.id, 'isDomain:', isDomainSpell);
+                        }
                         const hasComponent = useInventoryStore.getState().hasComponentForSpell(spell.id);
                         const missingComponent = spell.components.material && !hasComponent;
                         
