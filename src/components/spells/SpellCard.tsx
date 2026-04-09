@@ -24,8 +24,8 @@ export function SpellCard({
   const hasComponent = useInventoryStore((state) => state.hasComponentForSpell(spell.id));
   const summary = spell.summary;
   
-  // Utilise la prop si fournie, sinon fallback sur spell.isDomainSpell
-  const isDomain = isDomainSpell ?? spell.isDomainSpell;
+  // Utilise la prop si fournie (même si false), sinon fallback sur spell.isDomainSpell
+  const isDomain = isDomainSpell !== undefined ? isDomainSpell : spell.isDomainSpell;
   const isCantrip = spell.level === 0;
   // Les tours de magie sont toujours considérés comme préparés
   const isPreparedEffective = isPrepared || isDomain || isCantrip;

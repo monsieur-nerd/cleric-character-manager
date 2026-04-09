@@ -133,7 +133,7 @@ export function SpellListPage() {
                   spell={spell}
                   isPrepared={preparedSpellIds.includes(spell.id)}
                   onTogglePrepare={() => toggleSpellPrepared(spell.id, maxPrepared)}
-                  isDomainSpell={currentDomainSpellIds.includes(spell.id)}
+                  isDomainSpell={currentDomainSpellIds.includes(spell.id) ? true : undefined}
                 />
               ))}
             </div>
