@@ -1,5 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
-import { Zap, Swords, Info, ChevronDown, ChevronUp, Heart, Shield, Plus, Minus, RotateCcw, Sparkles, Target, Flame, CloudRain } from 'lucide-react';
+import { Zap, Swords, Info, ChevronDown, ChevronUp, Heart, Shield, Plus, Minus, RotateCcw, Sparkles, Target, Flame, CloudRain, Clock, Focus, AlertCircle } from 'lucide-react';
+import { formatCastingTimeShort } from '@/utils/formatters';
+import { useInventoryStore } from '@/stores';
 import { useSpellStore, useCharacterStore } from '@/stores';
 import type { Spell, Character } from '@/types';
 import { getFeatById } from '@/types/feats';
@@ -899,47 +901,90 @@ export function CombatPage() {
                     </div>
                     
                     <div className="space-y-2">
-                      {spells.map((spell: Spell) => (
-                        <div 
-                          key={spell.id}
-                          onClick={() => setSelectedSpell(spell)}
-                          className="bg-parchment-light rounded-lg p-3 flex items-center justify-between gap-2 cursor-pointer hover:shadow-md hover:border-royal-purple/30 border border-transparent transition-all"
-                        >
-                          <div className="min-w-0 flex-1">
-                            <div className="font-display text-ink break-words leading-tight text-sm sm:text-base">{spell.name}</div>
-                            <div className="text-xs text-ink-muted break-words">
-                              {spell.castingTime} • {spell.range}
-                            </div>
-                            {spell.summary && (
-                              <div className="text-xs text-ink font-bold mt-1 line-clamp-1">
-                                {spell.summary}
+                      {spells.map((spell: Spell) => {
+                        const isDomainSpell = currentDomainSpellIds.includes(spell.id);
+                        const hasComponent = useInventoryStore.getState().hasComponentForSpell(spell.id);
+                        const missingComponent = spell.components.material && !hasComponent;
+                        
+                        return (
+                          <div 
+                            key={spell.id}
+                            onClick={() => setSelectedSpell(spell)}
+                            className={`bg-parchment-light rounded-lg p-3 flex items-center justify-between gap-2 cursor-pointer hover:shadow-md hover:border-royal-purple/30 border transition-all
+                              ${isDomainSpell ? 'border-l-4 border-l-divine-gold border-divine-gold/30' : 'border-transparent'}
+                              ${missingComponent ? 'border-blood-red' : ''}
+                            `}
+                          >
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-center gap-2">
+                                <div className="font-display text-ink break-words leading-tight text-sm sm:text-base">{spell.name}</div>
+                                {isDomainSpell && (
+                                  <span 
+                                    className="badge-domain text-xs flex items-center gap-1"
+                                    title="Sort de domaine - Toujours préparé gratuitement"
+                                  >
+                                    <Shield className="w-3 h-3" />
+                                    Domaine
+                                  </span>
+                                )}
                               </div>
-                            )}
+                              <div className="flex flex-wrap gap-x-2 gap-y-0.5 text-xs text-ink-light mt-0.5">
+                                <span className="flex items-center gap-1">
+                                  <Clock className="w-3 h-3" />
+                                  {formatCastingTimeShort(spell.castingTime)}
+                                </span>
+                                <span>•</span>
+                                <span>{spell.range}</span>
+                                {spell.ritual && (
+                                  <span className="flex items-center gap-1 text-royal-purple">
+                                    <Sparkles className="w-3 h-3" />
+                                    Rituel
+                                  </span>
+                                )}
+                                {spell.concentration && (
+                                  <span className="flex items-center gap-1 text-royal-purple">
+                                    <Focus className="w-3 h-3" />
+                                    Conc.
+                                  </span>
+                                )}
+                                {missingComponent && (
+                                  <span className="flex items-center gap-1 text-blood-red">
+                                    <AlertCircle className="w-3 h-3" />
+                                    Comp. manquante
+                                  </span>
+                                )}
+                              </div>
+                              {spell.summary && (
+                                <div className="text-xs text-ink font-bold mt-1 line-clamp-1">
+                                  {spell.summary}
+                                </div>
+                              )}
+                            </div>
+                            
+                            <div className="flex gap-2">
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleCastSpell(e, spell.id);
+                                }}
+                                onTouchStart={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  handleCastSpell(e, spell.id);
+                                }}
+                                className={`text-sm py-2 px-4 relative overflow-visible rounded-lg font-ui font-bold border-2 transition-all duration-150 select-none ${
+                                  pressedSpellIds.has(spell.id)
+                                    ? 'bg-divine-gold-dark border-divine-gold-dark text-ink scale-95'
+                                    : 'bg-divine-gold border-divine-gold-dark text-ink hover:bg-divine-gold-light shadow-md'
+                                }`}
+                                style={{ WebkitTapHighlightColor: 'transparent' }}
+                              >
+                                {pressedSpellIds.has(spell.id) ? 'Lancé !' : 'Lancer'}
+                              </button>
+                            </div>
                           </div>
-                          
-                          <div className="flex gap-2">
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleCastSpell(e, spell.id);
-                              }}
-                              onTouchStart={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                handleCastSpell(e, spell.id);
-                              }}
-                              className={`text-sm py-2 px-4 relative overflow-visible rounded-lg font-ui font-bold border-2 transition-all duration-150 select-none ${
-                                pressedSpellIds.has(spell.id)
-                                  ? 'bg-divine-gold-dark border-divine-gold-dark text-ink scale-95'
-                                  : 'bg-divine-gold border-divine-gold-dark text-ink hover:bg-divine-gold-light shadow-md'
-                              }`}
-                              style={{ WebkitTapHighlightColor: 'transparent' }}
-                            >
-                              {pressedSpellIds.has(spell.id) ? 'Lancé !' : 'Lancer'}
-                            </button>
-                          </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
                 ))}
