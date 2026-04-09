@@ -493,7 +493,7 @@ export const CLERIC_DOMAINS: ClericDomain[] = [
     nameEn: 'Life Domain',
     icon: '❤️',
     description: 'Guérisseurs et protecteurs qui préservent la vie et combattent les morts-vivants.',
-    spellIds: ['bless', 'cure-wounds', 'lesser-restoration', 'spiritual-weapon'],
+    spellIds: ['bénédiction', 'soins', 'restauration-partielle', 'arme-spirituelle', 'marche-sur-l-eau', 'mot-de-guérison-de-groupe', 'aura-de-vie', 'protection-contre-la-mort', 'restauration-suprême', 'soins-de-groupe'],
     abilities: {
       level1: { name: 'Disciple de la vie', nameEn: 'Disciple of Life', description: '+2 + niveau du sort aux soins', uses: 0 },
       level2: { name: 'Conduit divin : Préservation de la vie', nameEn: 'Preserve Life', description: 'Soigne 5×niveau PV répartis', uses: 1, shortRest: false, longRest: true },
@@ -509,7 +509,7 @@ export const CLERIC_DOMAINS: ClericDomain[] = [
     nameEn: 'Light Domain',
     icon: '☀️',
     description: 'Porteurs de lumière qui dissipent les ténèbres et brûlent les ennemis.',
-    spellIds: ['burning-hands', 'faerie-fire', 'flaming-sphere', 'scorching-ray'],
+    spellIds: ['mains-brûlantes', 'lueurs-féeriques', 'détection-de-linvisibilité', 'lumière-du-jour', 'boule-de-feu', 'œil-du-mage', 'mur-de-feu', 'colonne-de-flamme', 'scrutation'],
     abilities: {
       level1: { name: 'Flamboiement', nameEn: 'Warding Flare', description: 'Réaction pour désavantage sur attaque', uses: 3, shortRest: false, longRest: true },
       level2: { name: 'Conduit divin : Flamboiement radiance', nameEn: 'Radiance of the Dawn', description: 'Dégâts radiants 2d10 + niveau', uses: 1, shortRest: false, longRest: true },
