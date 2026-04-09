@@ -149,8 +149,14 @@ export const useSpellStore = create<SpellState>()(
       },
       
       resetDaily: (characterLevel) => {
+        // Réinitialise les emplacements de sorts
+        // ET vide les sorts préparés (garde seulement les sorts de domaine)
+        const domainSpellIds = get().allSpells
+          .filter(s => s.isDomainSpell)
+          .map(s => s.id);
         set({
           spellSlots: MAX_SPELL_SLOTS[characterLevel] || MAX_SPELL_SLOTS[5],
+          preparedSpellIds: domainSpellIds,
         });
       },
       
