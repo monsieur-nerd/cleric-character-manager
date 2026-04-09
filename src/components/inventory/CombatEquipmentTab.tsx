@@ -170,19 +170,26 @@ export function CombatEquipmentTab() {
                         {/* Case a cocher pour equiper (US-001) */}
                         <button
                           onClick={() => handleEquipToggle(weapon)}
-                          className="flex items-center gap-1 text-ink hover:text-forest transition-colors"
-                          title={weapon.isEquipped ? 'Desequiper' : 'Equiper'}
+                          className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border-2 transition-all font-medium text-sm ${
+                            weapon.isEquipped 
+                              ? 'bg-forest border-forest text-white' 
+                              : 'bg-white border-ink-light/40 text-ink hover:border-forest/60 hover:bg-forest/10'
+                          }`}
+                          title={weapon.isEquipped ? 'Cliquer pour desequiper' : 'Cliquer pour equiper'}
                         >
                           {weapon.isEquipped ? (
-                            <CheckSquare className="w-5 h-5 text-forest" />
+                            <>
+                              <CheckSquare className="w-4 h-4" />
+                              <span>Equipee</span>
+                            </>
                           ) : (
-                            <Square className="w-5 h-5 text-ink-muted" />
+                            <>
+                              <span className="text-lg leading-none">+</span>
+                              <span>Equiper</span>
+                            </>
                           )}
                         </button>
                         <span className="font-display text-ink">{weapon.name}</span>
-                        {weapon.isEquipped && (
-                          <span className="badge badge-success text-xs">Equipee</span>
-                        )}
                       </div>
                       
                       {/* Stats de base */}
@@ -420,19 +427,26 @@ export function CombatEquipmentTab() {
                         {/* Case a cocher pour equiper (US-001) */}
                         <button
                           onClick={() => handleEquipToggle(armor)}
-                          className="flex items-center gap-1 text-ink hover:text-forest transition-colors"
-                          title={armor.isEquipped ? 'Desequiper' : 'Equiper'}
+                          className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border-2 transition-all font-medium text-sm ${
+                            armor.isEquipped 
+                              ? 'bg-forest border-forest text-white' 
+                              : 'bg-white border-ink-light/40 text-ink hover:border-forest/60 hover:bg-forest/10'
+                          }`}
+                          title={armor.isEquipped ? 'Cliquer pour desequiper' : 'Cliquer pour equiper'}
                         >
                           {armor.isEquipped ? (
-                            <CheckSquare className="w-5 h-5 text-forest" />
+                            <>
+                              <CheckSquare className="w-4 h-4" />
+                              <span>Equipee</span>
+                            </>
                           ) : (
-                            <Square className="w-5 h-5 text-ink-muted" />
+                            <>
+                              <span className="text-lg leading-none">+</span>
+                              <span>Equiper</span>
+                            </>
                           )}
                         </button>
                         <span className="font-display text-ink">{armor.name}</span>
-                        {armor.isEquipped && (
-                          <span className="badge badge-success text-xs">Equipee</span>
-                        )}
                       </div>
                       
                       <div className="flex flex-wrap gap-3 mt-2 text-sm">
@@ -553,13 +567,23 @@ export function CombatEquipmentTab() {
                         {/* Case a cocher pour equiper (US-001) */}
                         <button
                           onClick={() => handleEquipToggle(shield)}
-                          className="flex items-center gap-1 text-ink hover:text-forest transition-colors"
-                          title={shield.isEquipped ? 'Desequiper' : 'Equiper'}
+                          className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border-2 transition-all font-medium text-sm ${
+                            shield.isEquipped 
+                              ? 'bg-forest border-forest text-white' 
+                              : 'bg-white border-ink-light/40 text-ink hover:border-forest/60 hover:bg-forest/10'
+                          }`}
+                          title={shield.isEquipped ? 'Cliquer pour desequiper' : 'Cliquer pour equiper'}
                         >
                           {shield.isEquipped ? (
-                            <CheckSquare className="w-5 h-5 text-forest" />
+                            <>
+                              <CheckSquare className="w-4 h-4" />
+                              <span>Equipe</span>
+                            </>
                           ) : (
-                            <Square className="w-5 h-5 text-ink-muted" />
+                            <>
+                              <span className="text-lg leading-none">+</span>
+                              <span>Equiper</span>
+                            </>
                           )}
                         </button>
                         <span className="font-display text-ink">{shield.name}</span>
