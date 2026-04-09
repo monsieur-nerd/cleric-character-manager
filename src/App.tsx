@@ -8,7 +8,8 @@ import { CombatPage } from '@/pages/CombatPage';
 import { InventoryPage } from '@/pages/InventoryPage';
 import { PreparationPage } from '@/pages/PreparationPage';
 import { Layout } from '@/components/layout/Layout';
-import { spellsData, DOMAIN_SPELLS } from '@/data/spellsData';
+import { spellsData } from '@/data/spellsData';
+import { CLERIC_DOMAINS } from '@/types';
 import { equipmentData } from '@/data/equipmentData';
 import { componentMappingData } from '@/data/componentMappingData';
 import { CHARACTER_IDENTITY, CHARACTER_ABILITIES, STARTING_EQUIPMENT } from '@/data/characterConfig';
@@ -60,11 +61,21 @@ function App() {
 
   useEffect(() => {
     try {
+      // Récupère les sorts de domaine du personnage actuel
+      const characterDomain = CLERIC_DOMAINS.find(d => d.id === CHARACTER_IDENTITY.domain);
+      const domainSpellIds = characterDomain?.spellIds || [];
+      
       // Vérifie quels sorts de domaine ne sont pas déjà dans spellsData
       const existingIds = new Set(spellsData.map(s => s.id));
-      const missingDomainSpells = DOMAIN_SPELLS.filter(ds => !existingIds.has(ds.id));
+      const missingDomainSpells = domainSpellIds
+        .filter(id => !existingIds.has(id))
+        .map(id => {
+          // Trouve les détails du sort dans CLERIC_DOMAINS
+          const spellInfo = CLERIC_DOMAINS.flatMap(d => d.spellIds).find(sid => sid === id);
+          return { id, name: id.replace(/-/g, ' '), level: 1 }; // Fallback simple
+        });
       
-      // Fusionne les sorts de base avec les sorts de domaine manquants
+      // Fusionne les sorts de base avec les sorts de domaine manquants du personnage
       const allSpells = [
         ...spellsData,
         ...missingDomainSpells.map(ds => ({
