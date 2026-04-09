@@ -12,10 +12,12 @@ interface SpellState {
   preparedSpellIds: string[];
   spellSlots: SpellSlots;
   currentDomainId: string | null; // Domaine actuel du personnage
+  characterLevel: number; // Niveau du personnage pour filtrer les sorts de domaine
   
   // Actions
   loadSpells: (spells: Spell[]) => void;
   setCurrentDomain: (domainId: string | null) => void; // Définit le domaine actuel
+  setCharacterLevel: (level: number) => void; // Définit le niveau du personnage
   prepareSpell: (spellId: string) => void;
   unprepareSpell: (spellId: string) => void;
   toggleSpellPrepared: (spellId: string, maxNonDomain?: number) => void;
@@ -48,12 +50,23 @@ const getDomainSpellIds = (domainId: string | null): string[] => {
   return domain?.spellIds || [];
 };
 
+// Helper function to get max domain spell level based on character level
+// D&D 5e: Domain spells are granted at cleric levels 1, 3, 5, 7, 9
+const getMaxDomainSpellLevel = (characterLevel: number): number => {
+  if (characterLevel >= 9) return 5;
+  if (characterLevel >= 7) return 4;
+  if (characterLevel >= 5) return 3;
+  if (characterLevel >= 3) return 2;
+  return 1;
+};
+
 export const useSpellStore = create<SpellState>()(
   persist(
     (set, get) => ({
       allSpells: [],
       preparedSpellIds: [],
       currentDomainId: null,
+      characterLevel: 5,
       spellSlots: { 1: 4, 2: 3, 3: 2, 4: 0, 5: 0 },
       
       loadSpells: (spells) => {
@@ -62,6 +75,10 @@ export const useSpellStore = create<SpellState>()(
 
       setCurrentDomain: (domainId) => {
         set({ currentDomainId: domainId });
+      },
+
+      setCharacterLevel: (level) => {
+        set({ characterLevel: level });
       },
       
       prepareSpell: (spellId) => {
@@ -212,18 +229,21 @@ export const useSpellStore = create<SpellState>()(
       },
       
       getPreparedSpells: () => {
-        const { allSpells, preparedSpellIds, currentDomainId } = get();
+        const { allSpells, preparedSpellIds, currentDomainId, characterLevel } = get();
         const domainSpellIds = getDomainSpellIds(currentDomainId);
+        const maxDomainLevel = getMaxDomainSpellLevel(characterLevel);
         
         // Retourne:
         // - Les sorts préparés manuellement
         // - Les tours de magie (niveau 0)
-        // - Les sorts de domaine DU PERSONNAGE ACTUEL uniquement
-        return allSpells.filter(s => 
-          preparedSpellIds.includes(s.id) || 
-          s.level === 0 || 
-          domainSpellIds.includes(s.id)
-        );
+        // - Les sorts de domaine DU PERSONNAGE ACTUEL, filtrés par niveau accessible
+        return allSpells.filter(s => {
+          if (preparedSpellIds.includes(s.id)) return true;
+          if (s.level === 0) return true;
+          // Sorts de domaine : uniquement ceux du niveau accessible
+          if (domainSpellIds.includes(s.id) && s.level <= maxDomainLevel) return true;
+          return false;
+        });
       },
       
       getAvailableSpells: () => {
@@ -241,11 +261,15 @@ export const useSpellStore = create<SpellState>()(
       },
       
       getDomainSpells: () => {
-        const { allSpells, currentDomainId } = get();
+        const { allSpells, currentDomainId, characterLevel } = get();
         const domainSpellIds = getDomainSpellIds(currentDomainId);
+        const maxDomainLevel = getMaxDomainSpellLevel(characterLevel);
         
-        // Retourne seulement les sorts du domaine actuel du personnage
-        return allSpells.filter(s => domainSpellIds.includes(s.id));
+        // Retourne seulement les sorts du domaine actuel du personnage,
+        // filtrés par niveau accessible selon le niveau du personnage
+        return allSpells.filter(s => 
+          domainSpellIds.includes(s.id) && s.level <= maxDomainLevel
+        );
       },
       
       getNonDomainPreparedSpells: () => {
@@ -294,6 +318,7 @@ export const useSpellStore = create<SpellState>()(
         preparedSpellIds: state.preparedSpellIds,
         spellSlots: state.spellSlots,
         currentDomainId: state.currentDomainId,
+        characterLevel: state.characterLevel,
       }),
     }
   )

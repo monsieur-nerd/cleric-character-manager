@@ -1334,7 +1334,13 @@ export function Dashboard() {
   const _editorInitialTab = useModalStore((state) => state.editorInitialTab);
   const openCharacterEditor = useModalStore((state) => state.openCharacterEditor);
   const [showSkillsFeatsModal, setShowSkillsFeatsModal] = useState(false);
-  const [isSkillsExpanded, setIsSkillsExpanded] = useState(false);
+  const [isSkillsExpanded, setIsSkillsExpanded] = useState(true);
+  const [isTraitsExpanded, setIsTraitsExpanded] = useState(true);
+  const [isFeatsExpanded, setIsFeatsExpanded] = useState(true);
+  // États individuels pour chaque sous-section
+  const [isSkillsSectionExpanded, setIsSkillsSectionExpanded] = useState(true);
+  const [isTraitsSectionExpanded, setIsTraitsSectionExpanded] = useState(true);
+  const [isFeatsSectionExpanded, setIsFeatsSectionExpanded] = useState(true);
   
   // Synchronise la divinité au chargement pour mettre à jour le symbole
   const syncDeity = useCharacterStore((state) => state.syncDeity);
@@ -1754,12 +1760,18 @@ export function Dashboard() {
           <div className="mt-4 space-y-4">
             {/* Compétences maîtrisées - Cartes détaillées */}
         <div className="mb-4">
-          <h4 className="text-sm font-medium text-ink-light mb-3 flex items-center gap-2">
-            <Check className="w-4 h-4 text-forest" />
-            Compétences maîtrisées ({(character.masteredSkills || []).length})
-          </h4>
+          <button
+            onClick={() => setIsSkillsSectionExpanded(!isSkillsSectionExpanded)}
+            className="w-full flex items-center justify-between text-sm font-medium text-ink-light mb-3 hover:text-ink transition-colors"
+          >
+            <span className="flex items-center gap-2">
+              <Check className="w-4 h-4 text-forest" />
+              Compétences maîtrisées ({(character.masteredSkills || []).length})
+            </span>
+            {isSkillsSectionExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          </button>
           
-          {(character.masteredSkills || []).length > 0 ? (
+          {isSkillsSectionExpanded && ((character.masteredSkills || []).length > 0 ? (
             <div className="space-y-3">
               {(character.masteredSkills || []).map(skillId => {
                 const skill = getSkillById(skillId);
@@ -1809,7 +1821,7 @@ export function Dashboard() {
             </div>
           ) : (
             <p className="text-sm text-ink-muted italic">Aucune compétence maîtrisée</p>
-          )}
+          ))}
         </div>
         
         {/* Séparateur */}
@@ -1817,10 +1829,18 @@ export function Dashboard() {
         
         {/* Traits - Cartes détaillées */}
         <div className="mb-4">
-          <h4 className="text-sm font-medium text-ink-light mb-3 flex items-center gap-2">
-            <Scroll className="w-4 h-4 text-royal-purple" />
-            Traits ({BACKGROUND_TRAITS.length})
-          </h4>
+          <button
+            onClick={() => setIsTraitsSectionExpanded(!isTraitsSectionExpanded)}
+            className="w-full flex items-center justify-between text-sm font-medium text-ink-light mb-3 hover:text-ink transition-colors"
+          >
+            <span className="flex items-center gap-2">
+              <Scroll className="w-4 h-4 text-royal-purple" />
+              Traits ({BACKGROUND_TRAITS.length})
+            </span>
+            {isTraitsSectionExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          </button>
+          
+          {isTraitsSectionExpanded && (
           
           <div className="space-y-3">
             {BACKGROUND_TRAITS.map(trait => (
@@ -1846,6 +1866,7 @@ export function Dashboard() {
               </div>
             ))}
           </div>
+          )}
         </div>
         
         {/* Séparateur */}
@@ -1853,12 +1874,18 @@ export function Dashboard() {
         
         {/* Talents - Cartes détaillées */}
         <div>
-          <h4 className="text-sm font-medium text-ink-light mb-3 flex items-center gap-2">
-            <Stars className="w-4 h-4 text-divine-gold" />
-            Talents ({(character.feats || []).length})
-          </h4>
+          <button
+            onClick={() => setIsFeatsSectionExpanded(!isFeatsSectionExpanded)}
+            className="w-full flex items-center justify-between text-sm font-medium text-ink-light mb-3 hover:text-ink transition-colors"
+          >
+            <span className="flex items-center gap-2">
+              <Stars className="w-4 h-4 text-divine-gold" />
+              Talents ({(character.feats || []).length})
+            </span>
+            {isFeatsSectionExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          </button>
           
-          {(character.feats || []).length > 0 ? (
+          {isFeatsSectionExpanded && ((character.feats || []).length > 0 ? (
             <div className="space-y-3">
               {(character.feats || []).map(featId => {
                 const feat = getFeatById(featId);
@@ -1879,7 +1906,7 @@ export function Dashboard() {
             </div>
           ) : (
             <p className="text-sm text-ink-muted italic">Aucun talent sélectionné</p>
-          )}
+          ))}
         </div>
         
         {/* Bouton réduire */}

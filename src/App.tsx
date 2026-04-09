@@ -58,6 +58,7 @@ function App() {
   const setAvatar = useCharacterStore((state) => state.setAvatar);
   const longRest = useCharacterStore((state) => state.longRest);
   const setCurrentDomain = useSpellStore((state) => state.setCurrentDomain);
+  const setCharacterLevel = useSpellStore((state) => state.setCharacterLevel);
 
   useEffect(() => {
     try {
@@ -81,12 +82,15 @@ function App() {
     }
   }, [loadSpells, loadItems, loadComponentMapping]);
   
-  // Synchronise le domaine du personnage avec le spellStore au démarrage
+  // Synchronise le domaine et le niveau du personnage avec le spellStore au démarrage
   useEffect(() => {
     if (character?.domain?.id) {
       setCurrentDomain(character.domain.id);
     }
-  }, [character?.domain?.id, setCurrentDomain]);
+    if (character?.level) {
+      setCharacterLevel(character.level);
+    }
+  }, [character?.domain?.id, character?.level, setCurrentDomain, setCharacterLevel]);
   
   // Vérifie la migration une fois le chargement terminé
   useEffect(() => {

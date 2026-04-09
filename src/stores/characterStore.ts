@@ -296,6 +296,9 @@ export const useCharacterStore = create<CharacterState>()(
       setLevel: (level) => {
         const { wisdomModifier } = get().character;
         
+        // Synchronise le niveau avec le spellStore
+        useSpellStore.getState().setCharacterLevel(level);
+        
         // Calcule le max de Conduit divin selon le niveau
         const channelDivinityMax = level >= 18 ? 3 : level >= 6 ? 2 : 1;
         
