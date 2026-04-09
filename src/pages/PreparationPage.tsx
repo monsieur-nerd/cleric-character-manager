@@ -139,6 +139,7 @@ export function PreparationPage() {
   const toggleSpellPrepared = useSpellStore((state) => state.toggleSpellPrepared);
   const prepareMultipleSpells = useSpellStore((state) => state.prepareMultipleSpells);
   const clearNonDomainPrepared = useSpellStore((state) => state.clearNonDomainPrepared);
+  const resetPreparedSpells = useSpellStore((state) => state.resetPreparedSpells);
   const resetDaily = useSpellStore((state) => state.resetDaily);
   
   const [showKimiTips, setShowKimiTips] = useState(false);
@@ -438,6 +439,16 @@ export function PreparationPage() {
             >
               <X className="w-3.5 h-3.5" />
               Tout désélectionner
+            </button>
+          )}
+          {preparedCount > domainSpells.length && (
+            <button
+              onClick={() => resetPreparedSpells()}
+              className="text-xs text-ink-muted hover:text-blood-red flex items-center gap-1 px-2 py-1 rounded hover:bg-blood-red/10 transition-colors"
+              title="Réinitialise complètement la préparation (corrige les données corrompues)"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              Réinitialiser tout
             </button>
           )}
         </div>

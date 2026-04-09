@@ -266,15 +266,7 @@ export function InventoryPage() {
                         <span className="text-xs text-ink-muted">
                           Total: {formatPrice(item.totalPrice)} - {formatWeight(item.totalWeight)}
                         </span>
-                        <button
-                          onClick={() => setSelectedItemForUse(item)}
-                          className="flex items-center gap-1 text-xs bg-forest/10 text-forest border border-forest/30 
-                                   rounded px-2 py-1 hover:bg-forest/20 transition-colors"
-                          title="Utiliser cet item"
-                        >
-                          <Play className="w-3 h-3" />
-                          Utiliser
-                        </button>
+
                       </div>
                     </div>
                   ))}

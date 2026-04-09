@@ -19,6 +19,7 @@ interface SpellState {
   toggleSpellPrepared: (spellId: string, maxNonDomain?: number) => void;
   markAsUsed: (spellId: string) => void;
   clearNonDomainPrepared: () => void;
+  resetPreparedSpells: () => void;
 
   useSpellSlot: (level: 1 | 2 | 3) => boolean;
   restoreSpellSlot: (level: 1 | 2 | 3, maxSlots: SpellSlots) => void;
@@ -116,6 +117,15 @@ export const useSpellStore = create<SpellState>()(
             const spell = state.allSpells.find(s => s.id === id);
             return spell?.isDomainSpell;
           }),
+        }));
+      },
+      
+      resetPreparedSpells: () => {
+        // Réinitialise complètement : garde seulement les sorts de domaine
+        set((state) => ({
+          preparedSpellIds: state.allSpells
+            .filter(s => s.isDomainSpell)
+            .map(s => s.id),
         }));
       },
       
