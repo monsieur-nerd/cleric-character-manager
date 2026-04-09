@@ -193,18 +193,17 @@ export function CombatEquipmentTab() {
                       </div>
                       
                       {/* Stats de base */}
-                      <div className="flex flex-wrap gap-3 mt-2 text-sm">
-                        <span className="text-forest font-bold">
-                          +{attack.toHit} pour toucher
-                        </span>
-                        {weapon.damage && (
-                          <span className="text-blood-red font-bold">
-                            {weapon.damage} +{attack.damageMod} dégâts
-                          </span>
-                        )}
-                        {weapon.damageType && (
-                          <span className="text-ink-light">({weapon.damageType})</span>
-                        )}
+                      <div className="space-y-1 mt-2 text-xs">
+                        <div className="text-blood-red">
+                          <span className="font-bold">Dégâts ({weapon.damageType}) :</span>
+                          <span> {weapon.damage} + {attack.damageMod} </span>
+                          <span className="text-ink-muted">({attack.ability} {attack.damageMod >= 0 ? '+' : ''}{attack.damageMod})</span>
+                        </div>
+                        <div className="text-forest">
+                          <span className="font-bold">Pour toucher :</span>
+                          <span> +{attack.toHit} </span>
+                          <span className="text-ink-muted">({attack.ability} {attack.damageMod >= 0 ? '+' : ''}{attack.damageMod} + Maîtrise +{profBonus})</span>
+                        </div>
                       </div>
                       
                       {/* Type d action */}

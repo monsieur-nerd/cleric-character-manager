@@ -54,12 +54,20 @@ export function Header() {
             )}
           </button>
 
-          <span className="text-sm text-ink font-ui hidden md:block truncate max-w-[300px]">
+          <button
+            onClick={() => openCharacterEditor('identity')}
+            className="text-sm text-ink font-ui hidden md:block truncate max-w-[300px] hover:text-divine-gold-dark transition-colors cursor-pointer"
+            title="Modifier le personnage"
+          >
             {characterInfo}
-          </span>
-          <span className="text-xs text-ink-muted font-ui hidden sm:block md:hidden">
+          </button>
+          <button
+            onClick={() => openCharacterEditor('identity')}
+            className="text-xs text-ink-muted font-ui hidden sm:block md:hidden hover:text-divine-gold-dark transition-colors cursor-pointer"
+            title="Modifier le personnage"
+          >
             {name}
-          </span>
+          </button>
           <SaveLoadButton />
         </div>
       </div>
