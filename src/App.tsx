@@ -9,7 +9,6 @@ import { InventoryPage } from '@/pages/InventoryPage';
 import { PreparationPage } from '@/pages/PreparationPage';
 import { Layout } from '@/components/layout/Layout';
 import { spellsData } from '@/data/spellsData';
-import { CLERIC_DOMAINS } from '@/types';
 import { equipmentData } from '@/data/equipmentData';
 import { componentMappingData } from '@/data/componentMappingData';
 import { CHARACTER_IDENTITY, CHARACTER_ABILITIES, STARTING_EQUIPMENT } from '@/data/characterConfig';
@@ -61,47 +60,8 @@ function App() {
 
   useEffect(() => {
     try {
-      // Récupère les sorts de domaine du personnage actuel
-      const characterDomain = CLERIC_DOMAINS.find(d => d.id === CHARACTER_IDENTITY.domain);
-      const domainSpellIds = characterDomain?.spellIds || [];
-      
-      // Vérifie quels sorts de domaine ne sont pas déjà dans spellsData
-      const existingIds = new Set(spellsData.map(s => s.id));
-      const missingDomainSpells = domainSpellIds
-        .filter(id => !existingIds.has(id))
-        .map(id => {
-          // Trouve les détails du sort dans CLERIC_DOMAINS
-          const spellInfo = CLERIC_DOMAINS.flatMap(d => d.spellIds).find(sid => sid === id);
-          return { id, name: id.replace(/-/g, ' '), level: 1 }; // Fallback simple
-        });
-      
-      // Fusionne les sorts de base avec les sorts de domaine manquants du personnage
-      const allSpells = [
-        ...spellsData,
-        ...missingDomainSpells.map(ds => ({
-          id: ds.id,
-          name: ds.name,
-          nameEn: '',
-          level: ds.level,
-          levelDisplay: ds.level === 0 ? 'Mineur' : `Niveau ${ds.level}`,
-          school: 'evocation' as const,
-          type: 'Sort de domaine',
-          isDomainSpell: true,
-          castingTime: '1 action',
-          range: 'contact',
-          components: { verbal: true, somatic: true, material: null, materialConsumed: false },
-          duration: { type: 'instantaneous' as const },
-          concentration: false,
-          ritual: false,
-          description: `Sort de domaine - ${ds.name}`,
-          descriptionShort: `Sort de domaine - ${ds.name}`,
-          higherLevels: null,
-          recommendation: null,
-          source: 'extended' as const,
-          incantation: null,
-        }))
-      ];
-      loadSpells(allSpells);
+      // Charge tous les sorts (les sorts de domaine sont déjà marqués isDomainSpell dans spellsData)
+      loadSpells(spellsData);
       // Fusionne les équipements de base avec l'équipement de départ du personnage
       const allEquipment = [
         ...equipmentData,

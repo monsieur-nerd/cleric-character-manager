@@ -477,7 +477,7 @@ export const CLERIC_DOMAINS: ClericDomain[] = [
     nameEn: 'War Domain',
     icon: '⚔️',
     description: 'Clercs de guerre qui bénissent les armes et mènent les batailles.',
-    spellIds: ['divine-favor', 'shield-of-faith', 'magic-weapon', 'spiritual-weapon'],
+    spellIds: ['faveur-divine', 'bouclier-de-la-foi', 'arme-magique', 'arme-spirituelle'],
     abilities: {
       level1: { name: 'Clerc de guerre', nameEn: 'War Priest', description: 'Attaque bonus avec arme', uses: 3, shortRest: false, longRest: true },
       level2: { name: 'Conduit divin : Frappe guidée', nameEn: 'Guided Strike', description: '+10 à un jet d\'attaque', uses: 2, shortRest: false, longRest: true },
