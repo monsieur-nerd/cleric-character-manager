@@ -146,23 +146,37 @@ export const useSpellStore = create<SpellState>()(
       },
 
       clearNonDomainPrepared: () => {
-        const { currentDomainId } = get();
+        const { currentDomainId, characterLevel, allSpells } = get();
         const domainSpellIds = getDomainSpellIds(currentDomainId);
+        const maxDomainLevel = getMaxDomainSpellLevel(characterLevel);
+        
+        // Filtrer les sorts de domaine selon le niveau du personnage
+        const filteredDomainSpellIds = domainSpellIds.filter(id => {
+          const spell = allSpells.find(s => s.id === id);
+          return spell && spell.level <= maxDomainLevel;
+        });
         
         set((state) => ({
           preparedSpellIds: state.preparedSpellIds.filter(id => 
-            domainSpellIds.includes(id)
+            filteredDomainSpellIds.includes(id)
           ),
         }));
       },
       
       resetPreparedSpells: () => {
-        const { currentDomainId } = get();
+        const { currentDomainId, characterLevel, allSpells } = get();
         const domainSpellIds = getDomainSpellIds(currentDomainId);
+        const maxDomainLevel = getMaxDomainSpellLevel(characterLevel);
+        
+        // Filtrer les sorts de domaine selon le niveau du personnage
+        const filteredDomainSpellIds = domainSpellIds.filter(id => {
+          const spell = allSpells.find(s => s.id === id);
+          return spell && spell.level <= maxDomainLevel;
+        });
         
         // Réinitialise complètement : garde seulement les sorts de domaine DU PERSONNAGE ACTUEL
         set({
-          preparedSpellIds: domainSpellIds,
+          preparedSpellIds: filteredDomainSpellIds,
         });
       },
       
@@ -189,10 +203,18 @@ export const useSpellStore = create<SpellState>()(
         // Réinitialise completement : emplacements + sorts (garde seulement domaine)
         const effectiveDomainId = domainId || get().currentDomainId;
         const domainSpellIds = getDomainSpellIds(effectiveDomainId);
+        const maxDomainLevel = getMaxDomainSpellLevel(characterLevel);
+        const { allSpells } = get();
+        
+        // Filtrer les sorts de domaine selon le niveau du personnage
+        const filteredDomainSpellIds = domainSpellIds.filter(id => {
+          const spell = allSpells.find(s => s.id === id);
+          return spell && spell.level <= maxDomainLevel;
+        });
         
         set({
           spellSlots: MAX_SPELL_SLOTS[characterLevel] || MAX_SPELL_SLOTS[5],
-          preparedSpellIds: domainSpellIds,
+          preparedSpellIds: filteredDomainSpellIds,
           currentDomainId: effectiveDomainId,
         });
       },
