@@ -6,8 +6,7 @@ import { formatWeight, formatPrice } from '@/utils/formatters';
 import { ShoppingList } from '@/components/inventory/ShoppingList';
 import { AddItemModal } from '@/components/inventory/AddItemModal';
 import { CombatEquipmentTab } from '@/components/inventory/CombatEquipmentTab';
-import { LightSourcePanel } from '@/components/inventory/LightSourcePanel';
-import { ItemUsePanel } from '@/components/inventory/ItemUsePanel';
+
 import { ActiveItemEffects } from '@/components/inventory/ActiveItemEffects';
 import { useItemEffects, type ItemEffect } from '@/hooks/useItemEffects';
 import type { EquipmentItem } from '@/types';
@@ -36,7 +35,7 @@ export function InventoryPage() {
   const [selectedCategory, setSelectedCategory] = useState('Tous');
   const [activeTab, setActiveTab] = useState<'inventory' | 'combat' | 'shopping'>('inventory');
   const [showAddModal, setShowAddModal] = useState(false);
-  const [selectedItemForUse, setSelectedItemForUse] = useState<EquipmentItem | null>(null);
+
   
   // Hook pour les effets d'items
   const { activeEffects, addEffect, removeEffect, clearAllEffects } = useItemEffects();
@@ -166,8 +165,6 @@ export function InventoryPage() {
             onRemoveEffect={removeEffect}
             onClearAll={clearAllEffects}
           />
-          
-          <LightSourcePanel compact />
           
           <div className="flex flex-wrap gap-1">
             {categories.map((cat) => (
@@ -313,13 +310,6 @@ export function InventoryPage() {
         onClose={() => setShowAddModal(false)}
       />
       
-      {selectedItemForUse && (
-        <ItemUsePanel
-          item={selectedItemForUse}
-          onUseItem={(effect) => addEffect({ ...effect, itemId: selectedItemForUse.id, itemName: selectedItemForUse.name })}
-          onClose={() => setSelectedItemForUse(null)}
-        />
-      )}
     </div>
   );
 }

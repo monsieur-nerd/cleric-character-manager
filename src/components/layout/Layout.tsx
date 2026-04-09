@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 import { TabBar } from './TabBar';
 import { Header } from './Header';
-import { CharacterEditorGlobal } from '@/components/character/CharacterEditorGlobal';
 
 interface LayoutProps {
   children: ReactNode;
@@ -17,9 +16,6 @@ export function Layout({ children }: LayoutProps) {
       </main>
       
       <TabBar />
-      
-      {/* Global Character Editor Modal */}
-      <CharacterEditorGlobal />
     </div>
   );
 }
