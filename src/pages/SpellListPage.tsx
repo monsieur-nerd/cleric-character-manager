@@ -3,6 +3,7 @@ import { Search, Filter } from 'lucide-react';
 import { useSpellStore, useCharacterStore } from '@/stores';
 import { Brain } from 'lucide-react';
 import { SpellCard } from '@/components/spells/SpellCard';
+import { getMaxSpellLevelForCharacter } from '@/types';
 import type { Spell } from '@/types';
 
 export function SpellListPage() {
@@ -17,8 +18,15 @@ export function SpellListPage() {
   const maxPrepared = character.maxPreparedSpells;
   const currentDomainSpellIds = character.domain?.spellIds || [];
   
-  // Filtre les sorts
+  // Niveau de sort maximum accessible selon le niveau du personnage
+  const maxSpellLevel = getMaxSpellLevelForCharacter(character.level);
+  
+  // Filtre les sorts (uniquement ceux accessibles selon le niveau)
   const filteredSpells = allSpells.filter((spell: Spell) => {
+    // Filtre par niveau maximum accessible
+    if (spell.level > maxSpellLevel) {
+      return false;
+    }
     // Filtre recherche
     if (searchQuery && !(spell.name || '').toLowerCase().includes(searchQuery.toLowerCase())) {
       return false;
@@ -93,15 +101,17 @@ export function SpellListPage() {
         </button>
         
         <div className="flex gap-1 flex-wrap">
-          {['all', 0, 1, 2, 3].map((level) => (
-            <button
-              key={level}
-              onClick={() => setSelectedLevel(level as number | 'all')}
-              className={`filter-chip ${selectedLevel === level ? 'active' : ''}`}
-            >
-              {level === 'all' ? 'Tous' : level === 0 ? 'Mineur' : `Niv ${level}`}
-            </button>
-          ))}
+          {['all', 0, 1, 2, 3]
+            .filter(level => level === 'all' || level === 0 || (level as number) <= maxSpellLevel)
+            .map((level) => (
+              <button
+                key={level}
+                onClick={() => setSelectedLevel(level as number | 'all')}
+                className={`filter-chip ${selectedLevel === level ? 'active' : ''}`}
+              >
+                {level === 'all' ? 'Tous' : level === 0 ? 'Mineur' : `Niv ${level}`}
+              </button>
+            ))}
         </div>
       </div>
       

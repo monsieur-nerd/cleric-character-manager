@@ -728,6 +728,18 @@ export const MAX_SPELL_SLOTS: Record<number, SpellSlots> = {
   20: { 1: 4, 2: 3, 3: 3, 4: 3, 5: 3 },
 };
 
+/**
+ * Retourne le niveau de sort maximum accessible pour un clerc selon son niveau
+ * En D&D 5e : niveau 1-2 → 1, 3-4 → 2, 5-6 → 3, 7-8 → 4, 9+ → 5
+ */
+export const getMaxSpellLevelForCharacter = (characterLevel: number): number => {
+  if (characterLevel >= 9) return 5;
+  if (characterLevel >= 7) return 4;
+  if (characterLevel >= 5) return 3;
+  if (characterLevel >= 3) return 2;
+  return 1;
+};
+
 // Sorts de domaine par niveau de clerc (D&D 2014)
 export const DOMAIN_SPELLS_BY_LEVEL: Record<number, string[]> = {
   1: [], // Pas de sorts de domaine au niveau 1

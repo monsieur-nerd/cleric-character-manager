@@ -4,7 +4,7 @@ import { ArrowLeft, Check, RotateCcw, Sword, Flame, Skull, Compass, Shield, Star
 import { useSpellStore, useCharacterStore, usePresetStore } from '@/stores';
 import { SpellCard } from '@/components/spells/SpellCard';
 import { defaultPresets, getKimiRecommendedSpells, getDomainPresets } from '@/data/presets';
-import { CLERIC_DOMAINS } from '@/types';
+import { CLERIC_DOMAINS, getMaxSpellLevelForCharacter } from '@/types';
 import type { Spell, SpellPreset } from '@/types';
 
 const presetIcons: Record<string, React.ReactNode> = {
@@ -150,7 +150,12 @@ export function PreparationPage() {
   // Get domain spell IDs for the current character's domain
   const currentDomainSpellIds = character.domain?.spellIds || [];
   
-  const domainSpells = allSpells.filter(s => currentDomainSpellIds.includes(s.id));
+  // Niveau de sort maximum accessible selon le niveau du personnage
+  const maxSpellLevel = getMaxSpellLevelForCharacter(character.level);
+  
+  const domainSpells = allSpells.filter(s => 
+    currentDomainSpellIds.includes(s.id) && s.level <= maxSpellLevel
+  );
   const nonDomainPrepared = allSpells.filter(s => 
     preparedSpellIds.includes(s.id) && !currentDomainSpellIds.includes(s.id) && s.level > 0
   );
@@ -477,7 +482,7 @@ export function PreparationPage() {
         
         <div className="space-y-2">
           {allSpells
-            .filter((s: Spell) => !currentDomainSpellIds.includes(s.id) && s.level > 0)
+            .filter((s: Spell) => !currentDomainSpellIds.includes(s.id) && s.level > 0 && s.level <= maxSpellLevel)
             .map((spell: Spell) => (
               <SpellCard
                 key={spell.id}
@@ -623,6 +628,7 @@ function CustomPresetEditor({
   // Get current domain spell IDs
   const character = useCharacterStore((state) => state.character);
   const currentDomainSpellIds = character.domain?.spellIds || [];
+  const maxSpellLevel = getMaxSpellLevelForCharacter(character.level);
 
   // Sauvegarder les modifications du nom/description
   const handleSaveDetails = () => {
@@ -657,8 +663,9 @@ function CustomPresetEditor({
   );
 
   // Sorts disponibles à ajouter (tous sauf ceux déjà dans le preset, les sorts de domaine et mineurs)
+  // Filtré par niveau maximum accessible
   const availableSpells = allSpells.filter(
-    s => !preset.spellIds.includes(s.id) && !currentDomainSpellIds.includes(s.id) && s.level > 0
+    s => !preset.spellIds.includes(s.id) && !currentDomainSpellIds.includes(s.id) && s.level > 0 && s.level <= maxSpellLevel
   );
 
   return (
