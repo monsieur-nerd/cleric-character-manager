@@ -46,3 +46,8 @@ scripts/
 # Documentation (keep README.md, remove others)
 DEPLOY.md
 STRUCTURE.md
+
+
+.github/
+images/
+BMAD-METHOD/
