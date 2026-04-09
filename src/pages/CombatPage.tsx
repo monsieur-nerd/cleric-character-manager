@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { Zap, Swords, Info, ChevronDown, ChevronUp, Heart, Shield, Plus, Minus, RotateCcw, Sparkles, Target, Flame, CloudRain } from 'lucide-react';
 import { useSpellStore, useCharacterStore } from '@/stores';
 import type { Spell, Character } from '@/types';
@@ -178,7 +178,13 @@ export function CombatPage() {
   const setTempHp = useCharacterStore((state) => state.setTempHp);
   const [damageInput, setDamageInput] = useState('');
   const [healInput, setHealInput] = useState('');
+  const [tempHpInput, setTempHpInput] = useState('');
   const [showHpRules, setShowHpRules] = useState(false);
+  
+  // Synchronise l'input des PV temporaires avec le store
+  useEffect(() => {
+    setTempHpInput(tempHp > 0 ? tempHp.toString() : '');
+  }, [tempHp]);
   
   // Animations de lancement de sort
   const [castAnimations, setCastAnimations] = useState<{ id: number; x: number; y: number }[]>([]);
@@ -383,7 +389,7 @@ export function CombatPage() {
         
         {/* PV temporaires */}
         <div className="mt-3 pt-3 border-t border-blood-red/20">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 text-divine-gold">
               <Shield className="w-4 h-4" />
               <span className="text-sm font-bold">PV temporaires</span>
@@ -391,11 +397,22 @@ export function CombatPage() {
             <div className="flex gap-2">
               <input
                 type="number"
-                value={tempHp}
-                onChange={(e) => setTempHp(parseInt(e.target.value) || 0)}
+                value={tempHpInput}
+                onChange={(e) => setTempHpInput(e.target.value)}
+                placeholder="0"
                 className="w-16 input-field text-center text-sm"
                 min="0"
               />
+              <button
+                onClick={() => {
+                  const val = parseInt(tempHpInput) || 0;
+                  setTempHp(val);
+                  if (val === 0) setTempHpInput('');
+                }}
+                className="btn-primary text-sm py-2 px-3 bg-divine-gold border-divine-gold hover:bg-divine-gold/80 text-white"
+              >
+                ✓
+              </button>
             </div>
           </div>
         </div>

@@ -179,7 +179,7 @@ const createDefaultCharacter = (): Character => {
     currentState: {
       date: new Date().toISOString().split('T')[0],
       preparedSpellIds: INITIAL_DAILY_STATE.preparedSpellIds,
-      usedSpellSlots: { 1: 0, 2: 0, 3: 0 },
+      usedSpellSlots: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
       usedAbilities: { warCleric: 0, channelDivinity: 0 },
       activeConcentration: null,
       tempHp: 0,
@@ -597,7 +597,7 @@ export const useCharacterStore = create<CharacterState>()(
                 date: new Date().toISOString().split('T')[0],
                 // Garde les sorts préparés (pas de réinitialisation)
                 preparedSpellIds: character.currentState.preparedSpellIds,
-                usedSpellSlots: { 1: 0, 2: 0, 3: 0 },
+                usedSpellSlots: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
                 usedAbilities: { warCleric: 0, channelDivinity: 0 },
                 activeConcentration: null,
                 tempHp: 0,
