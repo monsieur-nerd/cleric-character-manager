@@ -903,6 +903,10 @@ export function CombatPage() {
                     <div className="space-y-2">
                       {spells.map((spell: Spell) => {
                         const isDomainSpell = currentDomainSpellIds.includes(spell.id);
+                        // DEBUG: Log pour vérifier les IDs
+                        if (spell.name === 'Faveur divine' || spell.name === 'Bouclier de foi') {
+                          console.log('Combat spell:', spell.name, 'id:', spell.id, 'isDomain:', isDomainSpell, 'domainIds:', currentDomainSpellIds);
+                        }
                         const hasComponent = useInventoryStore.getState().hasComponentForSpell(spell.id);
                         const missingComponent = spell.components.material && !hasComponent;
                         
