@@ -1890,6 +1890,8 @@ export function Dashboard() {
           <ChevronUp className="w-4 h-4" />
           Réduire
         </button>
+          </div>
+        )}
       </section>
       
       {/* Actions rapides */}
