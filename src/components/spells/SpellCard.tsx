@@ -10,6 +10,7 @@ interface SpellCardProps {
   isPrepared: boolean;
   onTogglePrepare: () => void;
   showActions?: boolean;
+  isDomainSpell?: boolean; // Override pour le calcul du domaine actuel
 }
 
 export function SpellCard({ 
@@ -17,12 +18,14 @@ export function SpellCard({
   isPrepared, 
   onTogglePrepare,
   showActions = true,
+  isDomainSpell,
 }: SpellCardProps) {
   const [showDetail, setShowDetail] = useState(false);
   const hasComponent = useInventoryStore((state) => state.hasComponentForSpell(spell.id));
   const summary = spell.summary;
   
-  const isDomain = spell.isDomainSpell;
+  // Utilise la prop si fournie, sinon fallback sur spell.isDomainSpell
+  const isDomain = isDomainSpell ?? spell.isDomainSpell;
   const isCantrip = spell.level === 0;
   // Les tours de magie sont toujours considérés comme préparés
   const isPreparedEffective = isPrepared || isDomain || isCantrip;
@@ -174,6 +177,7 @@ export function SpellCard({
         onClose={() => setShowDetail(false)}
         isPrepared={isPrepared}
         onTogglePrepare={showActions ? onTogglePrepare : undefined}
+        isDomainSpell={isDomain}
       />
     </>
   );

@@ -165,6 +165,7 @@ export function CombatPage() {
   const activeConcentration = character.currentState.activeConcentration;
   
   const preparedSpells = useSpellStore((state) => state.getPreparedSpells());
+  const currentDomainSpellIds = character.domain?.spellIds || [];
   const markAsUsed = useSpellStore((state) => state.markAsUsed);
   const spellSlots = useSpellStore((state) => state.spellSlots);
   
@@ -952,6 +953,7 @@ export function CombatPage() {
         spell={selectedSpell || ({} as Spell)}
         isOpen={!!selectedSpell}
         onClose={() => setSelectedSpell(null)}
+        isDomainSpell={selectedSpell ? currentDomainSpellIds.includes(selectedSpell.id) : false}
       />
     </div>
   );

@@ -13,7 +13,9 @@ export function SpellListPage() {
   const allSpells = useSpellStore((state) => state.allSpells);
   const preparedSpellIds = useSpellStore((state) => state.preparedSpellIds);
   const toggleSpellPrepared = useSpellStore((state) => state.toggleSpellPrepared);
-  const maxPrepared = useCharacterStore((state) => state.character.maxPreparedSpells);
+  const character = useCharacterStore((state) => state.character);
+  const maxPrepared = character.maxPreparedSpells;
+  const currentDomainSpellIds = character.domain?.spellIds || [];
   
   // Filtre les sorts
   const filteredSpells = allSpells.filter((spell: Spell) => {
@@ -42,7 +44,7 @@ export function SpellListPage() {
   
   // Compte les sorts préparés (excluant tours de magie et sorts de domaine)
   const preparedNonDomain = allSpells.filter(s => 
-    preparedSpellIds.includes(s.id) && !s.isDomainSpell && s.level > 0
+    preparedSpellIds.includes(s.id) && !currentDomainSpellIds.includes(s.id) && s.level > 0
   );
   const remainingSlots = maxPrepared - preparedNonDomain.length;
 
@@ -121,6 +123,7 @@ export function SpellListPage() {
                   spell={spell}
                   isPrepared={preparedSpellIds.includes(spell.id)}
                   onTogglePrepare={() => toggleSpellPrepared(spell.id, maxPrepared)}
+                  isDomainSpell={currentDomainSpellIds.includes(spell.id)}
                 />
               ))}
             </div>

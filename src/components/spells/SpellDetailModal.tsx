@@ -9,6 +9,7 @@ interface SpellDetailModalProps {
   onClose: () => void;
   isPrepared?: boolean;
   onTogglePrepare?: () => void;
+  isDomainSpell?: boolean; // Override pour le calcul du domaine actuel
 }
 
 export function SpellDetailModal({ 
@@ -16,7 +17,8 @@ export function SpellDetailModal({
   isOpen, 
   onClose, 
   isPrepared = false,
-  onTogglePrepare 
+  onTogglePrepare,
+  isDomainSpell,
 }: SpellDetailModalProps) {
   const hasComponent = useInventoryStore((state) => state.hasComponentForSpell(spell.id));
   const componentData = useInventoryStore((state) => state.getComponentForSpell(spell.id));
@@ -25,7 +27,8 @@ export function SpellDetailModal({
   
   // Les tours de magie et sorts de domaine sont toujours préparés
   const isCantrip = spell.level === 0;
-  const isAlwaysPrepared = spell.isDomainSpell || isCantrip;
+  const isDomain = isDomainSpell ?? spell.isDomainSpell;
+  const isAlwaysPrepared = isDomain || isCantrip;
   const isPreparedEffective = isPrepared || isAlwaysPrepared;
 
   if (!isOpen) return null;
@@ -100,7 +103,7 @@ export function SpellDetailModal({
             <span className="badge bg-steel-blue/20 text-steel-blue border border-steel-blue">
               {getSchoolName(spell.school)}
             </span>
-            {spell.isDomainSpell && (
+            {isDomain && (
               <span className="badge-domain">Sort de domaine</span>
             )}
             {spell.ritual && (

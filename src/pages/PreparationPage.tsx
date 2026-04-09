@@ -4,6 +4,7 @@ import { ArrowLeft, Check, RotateCcw, Sword, Flame, Skull, Compass, Shield, Star
 import { useSpellStore, useCharacterStore, usePresetStore } from '@/stores';
 import { SpellCard } from '@/components/spells/SpellCard';
 import { defaultPresets, getKimiRecommendedSpells, getDomainPresets } from '@/data/presets';
+import { CLERIC_DOMAINS } from '@/types';
 import type { Spell, SpellPreset } from '@/types';
 
 const presetIcons: Record<string, React.ReactNode> = {
@@ -86,12 +87,12 @@ const presetColors: Record<string, string> = {
  * Compte combien de sorts d'un preset seront réellement sélectionnés
  * en fonction du maxPrepared du personnage
  */
-function getPresetSelectionCount(presetSpellIds: string[], maxPrepared: number, allSpells: Spell[]): number {
+function getPresetSelectionCount(presetSpellIds: string[], maxPrepared: number, allSpells: Spell[], domainSpellIds: string[]): number {
   // Filtre les sorts de domaine ET les sorts mineurs (niveau 0)
   // Ces sorts ne comptent pas dans la limite de préparation
   const nonDomainNonCantripSpells = presetSpellIds.filter(id => {
     const spell = allSpells.find(s => s.id === id);
-    return spell && !spell.isDomainSpell && spell.level > 0;
+    return spell && !domainSpellIds.includes(id) && spell.level > 0;
   });
   
   // Retourne le minimum entre les sorts disponibles et la limite
@@ -101,10 +102,10 @@ function getPresetSelectionCount(presetSpellIds: string[], maxPrepared: number, 
 /**
  * Obtient la liste des sorts qui seront réellement sélectionnés
  */
-function getSelectedSpellNames(presetSpellIds: string[], maxPrepared: number, allSpells: Spell[]): string[] {
+function getSelectedSpellNames(presetSpellIds: string[], maxPrepared: number, allSpells: Spell[], domainSpellIds: string[]): string[] {
   const nonDomainNonCantripSpells = presetSpellIds
     .map(id => allSpells.find(s => s.id === id))
-    .filter((s): s is Spell => !!s && !s.isDomainSpell && s.level > 0)
+    .filter((s): s is Spell => !!s && !domainSpellIds.includes(s.id) && s.level > 0)
     .slice(0, maxPrepared);
   
   return nonDomainNonCantripSpells.map(s => s.name);
@@ -146,9 +147,12 @@ export function PreparationPage() {
   const [activePresetId, setActivePresetId] = useState<string | null>(null);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   
-  const domainSpells = allSpells.filter(s => s.isDomainSpell);
+  // Get domain spell IDs for the current character's domain
+  const currentDomainSpellIds = character.domain?.spellIds || [];
+  
+  const domainSpells = allSpells.filter(s => currentDomainSpellIds.includes(s.id));
   const nonDomainPrepared = allSpells.filter(s => 
-    preparedSpellIds.includes(s.id) && !s.isDomainSpell && s.level > 0
+    preparedSpellIds.includes(s.id) && !currentDomainSpellIds.includes(s.id) && s.level > 0
   );
   
   const preparedCount = nonDomainPrepared.length;
@@ -235,7 +239,7 @@ export function PreparationPage() {
         
         <div className="grid grid-cols-1 gap-2">
           {allPresets.map((preset) => {
-            const selectionCount = getPresetSelectionCount(preset.spellIds, maxPrepared, allSpells);
+            const selectionCount = getPresetSelectionCount(preset.spellIds, maxPrepared, allSpells, currentDomainSpellIds);
             const isExpanded = showPresetDetails === preset.id;
             const isActive = activePresetId === preset.id;
             
@@ -306,7 +310,7 @@ export function PreparationPage() {
                           Sorts qui seront sélectionnés ({selectionCount} sur {maxPrepared}):
                         </p>
                         <div className="flex flex-wrap gap-1 mb-3">
-                          {getSelectedSpellNames(preset.spellIds, maxPrepared, allSpells).map((name, i) => (
+                          {getSelectedSpellNames(preset.spellIds, maxPrepared, allSpells, currentDomainSpellIds).map((name, i) => (
                             <span 
                               key={i} 
                               className="text-xs bg-parchment-dark px-2 py-1 rounded text-ink"
@@ -389,6 +393,7 @@ export function PreparationPage() {
               isPrepared={true}
               onTogglePrepare={() => {}}
               showActions={false}
+              isDomainSpell={true}
             />
           ))}
         </div>
@@ -413,6 +418,7 @@ export function PreparationPage() {
                 isPrepared={true}
                 onTogglePrepare={() => {}}
                 showActions={false}
+                isDomainSpell={false}
               />
             ))}
         </div>
@@ -444,13 +450,14 @@ export function PreparationPage() {
         
         <div className="space-y-2">
           {allSpells
-            .filter((s: Spell) => !s.isDomainSpell && s.level > 0)
+            .filter((s: Spell) => !currentDomainSpellIds.includes(s.id) && s.level > 0)
             .map((spell: Spell) => (
               <SpellCard
                 key={spell.id}
                 spell={spell}
                 isPrepared={preparedSpellIds.includes(spell.id)}
                 onTogglePrepare={() => toggleSpellPrepared(spell.id, maxPrepared)}
+                isDomainSpell={false}
               />
             ))}
         </div>
@@ -558,6 +565,10 @@ function CustomPresetEditor({
   const [editDesc, setEditDesc] = useState(preset.description);
   const [showAddSpells, setShowAddSpells] = useState(false);
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
+  
+  // Get current domain spell IDs
+  const character = useCharacterStore((state) => state.character);
+  const currentDomainSpellIds = character.domain?.spellIds || [];
 
   // Sauvegarder les modifications du nom/description
   const handleSaveDetails = () => {
@@ -587,13 +598,13 @@ function CustomPresetEditor({
 
   // Nombre de sorts qui seront sélectionnés
   const selectionCount = Math.min(
-    presetSpells.filter(s => !s.isDomainSpell && s.level > 0).length,
+    presetSpells.filter(s => !currentDomainSpellIds.includes(s.id) && s.level > 0).length,
     maxPrepared
   );
 
   // Sorts disponibles à ajouter (tous sauf ceux déjà dans le preset, les sorts de domaine et mineurs)
   const availableSpells = allSpells.filter(
-    s => !preset.spellIds.includes(s.id) && !s.isDomainSpell && s.level > 0
+    s => !preset.spellIds.includes(s.id) && !currentDomainSpellIds.includes(s.id) && s.level > 0
   );
 
   return (
@@ -680,7 +691,7 @@ function CustomPresetEditor({
                   }
                 }}
                 className={`flex items-center gap-2 p-2 rounded text-sm ${
-                  spell.isDomainSpell || spell.level === 0
+                  currentDomainSpellIds.includes(spell.id) || spell.level === 0
                     ? 'bg-parchment-dark/30 text-ink-muted'
                     : index < maxPrepared
                     ? 'bg-forest/10 text-forest-dark'

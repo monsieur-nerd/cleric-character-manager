@@ -570,30 +570,39 @@ export const useCharacterStore = create<CharacterState>()(
       },
       
       longRest: () => {
-        set((state) => ({
-          character: {
-            ...state.character,
-            currentHp: state.character.maxHp,
-            abilities: {
-              warCleric: {
-                ...state.character.abilities.warCleric,
-                currentUses: state.character.abilities.warCleric.maxUses,
+        set((state) => {
+          const character = state.character;
+          
+          // Réinitialise aussi les sorts dans le spellStore
+          // Ne garde que les sorts de domaine du personnage actuel
+          const domainId = character.domain?.id;
+          useSpellStore.getState().resetDaily(character.level, domainId);
+          
+          return {
+            character: {
+              ...character,
+              currentHp: character.maxHp,
+              abilities: {
+                warCleric: {
+                  ...character.abilities.warCleric,
+                  currentUses: character.abilities.warCleric.maxUses,
+                },
+                channelDivinity: {
+                  ...character.abilities.channelDivinity,
+                  currentUses: character.abilities.channelDivinity.maxUses,
+                },
               },
-              channelDivinity: {
-                ...state.character.abilities.channelDivinity,
-                currentUses: state.character.abilities.channelDivinity.maxUses,
+              currentState: {
+                date: new Date().toISOString().split('T')[0],
+                preparedSpellIds: [],
+                usedSpellSlots: { 1: 0, 2: 0, 3: 0 },
+                usedAbilities: { warCleric: 0, channelDivinity: 0 },
+                activeConcentration: null,
+                tempHp: 0,
               },
             },
-            currentState: {
-              date: new Date().toISOString().split('T')[0],
-              preparedSpellIds: [],
-              usedSpellSlots: { 1: 0, 2: 0, 3: 0 },
-              usedAbilities: { warCleric: 0, channelDivinity: 0 },
-              activeConcentration: null,
-              tempHp: 0,
-            },
-          },
-        }));
+          };
+        });
       },
       
       shortRest: () => {
