@@ -509,7 +509,7 @@ export const CLERIC_DOMAINS: ClericDomain[] = [
     nameEn: 'Light Domain',
     icon: '☀️',
     description: 'Porteurs de lumière qui dissipent les ténèbres et brûlent les ennemis.',
-    spellIds: ['mains-brûlantes', 'lueurs-féeriques', 'détection-de-linvisibilité', 'lumière-du-jour', 'boule-de-feu', 'œil-du-mage', 'mur-de-feu', 'colonne-de-flamme', 'scrutation'],
+    spellIds: ['mains-brûlantes', 'lueurs-féeriques', 'sphère-de-feu', 'rayon-ardent', 'lumière-du-jour', 'boule-de-feu', 'œil-du-mage', 'mur-de-feu', 'colonne-de-flammes', 'scrutation'],
     abilities: {
       level1: { name: 'Flamboiement', nameEn: 'Warding Flare', description: 'Réaction pour désavantage sur attaque', uses: 3, shortRest: false, longRest: true },
       level2: { name: 'Conduit divin : Flamboiement radiance', nameEn: 'Radiance of the Dawn', description: 'Dégâts radiants 2d10 + niveau', uses: 1, shortRest: false, longRest: true },
@@ -525,7 +525,7 @@ export const CLERIC_DOMAINS: ClericDomain[] = [
     nameEn: 'Nature Domain',
     icon: '🌿',
     description: 'Gardiens de la nature qui maîtrisent les éléments et communiquent avec les bêtes.',
-    spellIds: ['amitié-avec-les-animaux', 'communication-avec-les-animaux', 'peau-décorce', 'croissance-dépines', 'invocation-danimaux', 'croissance-végétale', 'maîtrise-des-eaux', 'insecte-géant', 'communion-avec-la-nature', 'invocation-délémentaire'],
+    spellIds: ['amitié-avec-les-animaux', 'communication-avec-les-animaux', 'peau-d-écorce', 'croissance-d-épines', 'invocation-d-animaux', 'croissance-végétale', 'maîtrise-des-eaux', 'insecte-géant', 'communion-avec-la-nature', 'invocation-d-élémentaire'],
     abilities: {
       level1: { name: 'Acolyte de la nature', nameEn: 'Acolyte of Nature', description: 'Maîtrise d\'une compétence de nature', uses: 0 },
       level2: { name: 'Conduit divin : Charme animal/plante', nameEn: 'Charm Animals and Plants', description: 'Charme créatures dans 9m', uses: 1, shortRest: false, longRest: true },
@@ -541,7 +541,7 @@ export const CLERIC_DOMAINS: ClericDomain[] = [
     nameEn: 'Tempest Domain',
     icon: '⛈️',
     description: 'Maîtres des tempêtes qui invoquent la foudre et contrôlent les vents.',
-    spellIds: ['nuage-de-brouillard', 'onde-de-tonnerre', 'rafale-de-vent', 'fracassement', 'foudre', 'appel-de-la-foudre', 'contrôle-de-leau', 'tempête-de-glace', 'invocation-délémentaire-destructeur', 'contrôle-des-vents'],
+    spellIds: ['nuage-de-brouillard', 'onde-de-tonnerre', 'rafale-de-vent', 'fracassement', 'foudre', 'appel-de-la-foudre', 'contrôle-de-l-eau', 'tempête-de-glace', 'invocation-d-élémentaire-destructeur', 'contrôle-des-vents'],
     abilities: {
       level1: { name: 'Frappe de la tempête', nameEn: 'Wrath of the Storm', description: 'Réaction : dégâts de foudre ou tonnerre 2d8', uses: 3, shortRest: false, longRest: true },
       level2: { name: 'Conduit divin : Destructive Wrath', nameEn: 'Destructive Wrath', description: 'Dés de dégâts maximaux (foudre/tonnerre)', uses: 1, shortRest: false, longRest: true },
@@ -605,7 +605,7 @@ export const CLERIC_DOMAINS: ClericDomain[] = [
     nameEn: 'Grave Domain',
     icon: '⚰️',
     description: 'Gardiens des frontières entre vie et mort.',
-    spellIds: ['fléau', 'fausse-vie', 'repose-en-paix', 'rayon-daffaiblissement', 'animation-des-morts', 'vampire', 'flétrissement', 'invisibilité-suprême', 'antipathie-sympathie', 'nuage-mortel'],
+    spellIds: ['fléau', 'fausse-vie', 'repose-en-paix', 'rayon-d-affaiblissement', 'animation-des-morts', 'vampire', 'flétrissement', 'invisibilité-suprême', 'antipathie-sympathie', 'nuage-mortel'],
     abilities: {
       level1: { name: 'Sentinelle du cercueil', nameEn: 'Circle of Mortality', description: 'Soins max à 0 PV, rayon de lumière', uses: 0 },
       level2: { name: 'Conduit divin : Sentinelle des âmes', nameEn: 'Path to the Grave', description: 'Prochaine attaque = vulnérabilité', uses: 1, shortRest: false, longRest: true },

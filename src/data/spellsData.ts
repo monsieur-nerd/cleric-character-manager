@@ -469,7 +469,7 @@ export const spellsData: Spell[] = [
     "levelDisplay": "Niveau 1",
     "school": "enchantment",
     "type": "Affaiblissement",
-    "isDomainSpell": false,
+    "isDomainSpell": true,
     "castingTime": "1 action",
     "range": "9 mètres",
     "components": {
@@ -1268,7 +1268,7 @@ export const spellsData: Spell[] = [
     "levelDisplay": "Niveau 3",
     "school": "necromancy",
     "type": "Nécromancie / Invocation",
-    "isDomainSpell": false,
+    "isDomainSpell": true,
     "castingTime": "1 minute",
     "range": "3 mètres",
     "components": {
@@ -1790,7 +1790,7 @@ export const spellsData: Spell[] = [
     "levelDisplay": "Niveau 3",
     "school": "abjuration",
     "type": "Abjuration / Défense",
-    "isDomainSpell": false,
+    "isDomainSpell": true,
     "castingTime": "1 action",
     "range": "contact",
     "components": {
@@ -1997,6 +1997,7 @@ export const spellsData: Spell[] = [
     "source": "extended",
     "summary": "Paralyse créature"
   },
+  // DOMAINES - Sorts de la Vie (Life)
   {
     "id": "aura-de-vie",
     "name": "Aura de vie",
@@ -2007,10 +2008,10 @@ export const spellsData: Spell[] = [
     "type": "Abjuration / Protection",
     "isDomainSpell": true,
     "castingTime": "1 action",
-    "range": "personnelle (rayon de 9 m)",
+    "range": "personnelle (rayon 9m)",
     "components": {
       "verbal": true,
-      "somatic": false,
+      "somatic": true,
       "material": null,
       "materialConsumed": false
     },
@@ -2020,13 +2021,13 @@ export const spellsData: Spell[] = [
     },
     "concentration": true,
     "ritual": false,
-    "description": "Une aura de vitalité protectrice rayonne de vous dans un rayon de 9 mètres. Jusqu'à ce que le sort se termine, chaque créature non hostile dans l'aura (y compris vous) a une résistance aux dégâts nécrotiques et ne peut pas avoir ses points de vie maximums réduits. De plus, une créature non hostile qui commence son tour dans l'aura regagne 1 point de vie si elle est à 0 point de vie.",
-    "descriptionShort": "Une aura de vitalité protectrice rayonne de vous dans un rayon de 9 mètres. Jusqu'à ce que le sort se termine, chaque créature non hostile dans l'aura a une résistance aux dégâts nécrotiques...",
+    "description": "Une aura de protection s'écoule depuis vous dans un rayon de 9 mètres. Jusqu'à ce que le sort se termine, l'aura se déplace avec vous, centrée sur vous. Chaque créature non hostile dans l'aura (y compris vous) a la résistance aux dégâts nécrotiques et ne peut pas être réduite à 0 point de vie par ces dégâts. De plus, une cible qui commence son tour dans l'aura avec 0 point de vie récupère 1 point de vie.",
+    "descriptionShort": "Une aura de protection s'écoule depuis vous dans un rayon de 9 mètres. Chaque créature non hostile dans l'aura a la résistance aux dégâts nécrotiques et ne peut pas être réduite à 0 PV par ces dégâts...",
     "higherLevels": null,
-    "incantation": "Aura vitae, que la vie rayonne autour de moi par la grâce divine !",
-    "recommendation": "ESSENTIEL - Domaine Vie",
+    "incantation": "Aura vitalis, que la vie de Torm protège ceux qui me sont chers !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "Aura soin 9m"
+    "summary": "Résistance nécrotique + stabilisation"
   },
   {
     "id": "protection-contre-la-mort",
@@ -2051,13 +2052,13 @@ export const spellsData: Spell[] = [
     },
     "concentration": false,
     "ritual": false,
-    "description": "Vous touchez une créature et lui accordez une protection contre la mort. La première fois que la cible devrait tomber à 0 point de vie à cause de dégâts, elle tombe à 1 point de vie à la place. Si le sort est encore actif lorsque la cible est soumise à un effet qui la tuerait instantanément sans infliger de dégâts, cet effet est annulé contre la cible et le sort se termine.",
-    "descriptionShort": "Vous touchez une créature et lui accordez une protection contre la mort. La première fois que la cible devrait tomber à 0 point de vie, elle tombe à 1 point de vie à la place...",
+    "description": "Vous touchez une créature et lui accordez une certaine protection contre la mort. La première fois que la cible devrait tomber à 0 point de vie suite à des dégâts, elle tombe à 1 point de vie à la place. De plus, si la cible est soumise à un effet qui la tuerait instantanément sans infliger de dégâts, cet effet est annulé au lieu de tuer la cible.",
+    "descriptionShort": "Vous touchez une créature et lui accordez une certaine protection contre la mort. La première fois que la cible devrait tomber à 0 point de vie suite à des dégâts, elle tombe à 1 point de vie à la place...",
     "higherLevels": null,
-    "incantation": "Protectio mortis, que la mort soit repoussée loin de cette créature !",
-    "recommendation": "ESSENTIEL - Domaine Vie",
+    "incantation": "Mortis protectio, que Torm préserve cette âme de la mort !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "Protège mort"
+    "summary": "Évite 1 fois la mort"
   },
   {
     "id": "restauration-suprême",
@@ -2081,13 +2082,13 @@ export const spellsData: Spell[] = [
     },
     "concentration": false,
     "ritual": false,
-    "description": "Vous imprégnez une créature que vous touchez d'énergie positive pour annuler un effet débilitant. Vous pouvez réduire le niveau d'épuisement de la cible d'un niveau, ou mettre fin à l'un des effets suivants : un charme, une pétrification, une malédiction (y compris l'attunement à un objet maudit), une réduction des caractéristiques maximums, ou une réduction des points de vie maximums.",
-    "descriptionShort": "Vous imprégnez une créature d'énergie positive pour annuler un effet débilitant : épuisement, charme, pétrification, malédiction, réduction de caractéristiques ou de PV max...",
+    "description": "Vous imprégnez une créature que vous touchez d'énergie positive pour annuler un effet débilitant. Vous pouvez réduire le niveau d'épuisement de la cible d'un niveau, ou terminer l'un des effets suivants sur elle : un effet qui charme ou pétrifie la cible ; une malédiction, y compris l'attunement à un objet maudit ; une réduction de caractéristique ; un effet qui réduit son maximum de points de vie.",
+    "descriptionShort": "Vous imprégnez une créature que vous touchez d'énergie positive pour annuler un effet débilitant. Vous pouvez réduire le niveau d'épuisement, terminer un charme, pétrification, malédiction, réduction de caractéristique ou réduction de PV max.",
     "higherLevels": null,
-    "incantation": "Restauratio maxima, que toutes les afflictions soient purifiées !",
-    "recommendation": "ESSENTIEL - Domaine Vie",
+    "incantation": "Restauratio maxima, par la grâce de Torm, sois guéri de tout mal !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "Soigne tout"
+    "summary": "Guérison complète"
   },
   {
     "id": "soins-de-groupe",
@@ -2111,14 +2112,15 @@ export const spellsData: Spell[] = [
     },
     "concentration": false,
     "ritual": false,
-    "description": "Une vague d'énergie curative irradie d'un point de votre choix à portée. Choisissez jusqu'à six créatures dans une sphère de 9 mètres de rayon centrée sur ce point. Chaque cible récupère un nombre de points de vie égal à 3d8 + votre modificateur de caractéristique d'incantation. Ce sort n'a aucun effet sur les morts-vivants ou les créatures artificielles.",
-    "descriptionShort": "Une vague d'énergie curative irradie d'un point à portée. Jusqu'à six créatures dans une sphère de 9 mètres récupèrent 3d8 + modificateur de PV...",
-    "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 6 ou supérieur, les soins augmentent de 1d8 pour chaque niveau d'emplacement au-dessus du niveau 5.",
-    "incantation": "Sanatio magna, que la vague de guérison divine touche tous mes alliés !",
-    "recommendation": "ESSENTIEL - Domaine Vie",
+    "description": "Une vague d'énergie curative émane d'un point de votre choix à portée. Choisissez jusqu'à six créatures dans une sphère de 9 mètres de rayon centrée sur ce point. Chaque cible récupère un nombre de points de vie égal à 3d8 + le modificateur de votre caractéristique d'incantation. Ce sort n'a aucun effet sur les morts-vivants ou les créatures artificielles.",
+    "descriptionShort": "Une vague d'énergie curative émane d'un point de votre choix à portée. Choisissez jusqu'à six créatures dans une sphère de 9 mètres de rayon. Chaque cible récupère 3d8 + SAG points de vie.",
+    "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 6 ou supérieur, les points de vie récupérés augmentent de 1d8 pour chaque niveau d'emplacement au-dessus du niveau 5.",
+    "incantation": "Sanatio massiva, que la grâce de Torm guérisse vos blessures !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "3d8+SAG PV (6)"
+    "summary": "3d8+SAG PV (6 cibles)"
   },
+  // DOMAINES - Sorts de la Lumière (Light)
   {
     "id": "mains-brûlantes",
     "name": "Mains brûlantes",
@@ -2141,13 +2143,13 @@ export const spellsData: Spell[] = [
     },
     "concentration": false,
     "ritual": false,
-    "description": "Des flammes surgissent de vos doigts ouverts et s'étendent en cône de 4,50 mètres devant vous. Chaque créature dans le cône doit effectuer un jet de sauvegarde de Dextérité. Une créature subit 3d6 dégâts de feu en cas d'échec, ou la moitié en cas de réussite. Le feu enflamme tous les objets inflammables dans la zone qui ne sont ni portés ni tenus.",
-    "descriptionShort": "Des flammes surgissent de vos doigts en cône de 4,50 m. Chaque créature subit 3d6 dégâts de feu, moitié en cas de réussite du JS de Dextérité...",
+    "description": "Alors que vous tendez vos mains avec les pouces joints et les doigts écartés, une fine couche de flammes jaillit de vos doigts écartés. Chaque créature dans un cône de 4,50 mètres doit effectuer un jet de sauvegarde de Dextérité. Une créature subit 3d6 dégâts de feu en cas d'échec, ou la moitié de ces dégâts en cas de réussite. Le feu embrase tous les objets inflammables dans la zone qui ne sont ni portés ni transportés.",
+    "descriptionShort": "Une fine couche de flammes jaillit de vos doigts. Chaque créature dans un cône de 4,50 mètres subit 3d6 dégâts de feu (Jd DEX pour demi-dégâts).",
     "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 2 ou supérieur, les dégâts augmentent de 1d6 pour chaque niveau d'emplacement au-dessus du niveau 1.",
-    "incantation": "Manus igneus, que mes mains crachent les flammes sacrées !",
-    "recommendation": "ESSENTIEL - Domaine Lumière",
+    "incantation": "Manus ardens, que le feu sacré de Torm consume mes ennemis !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "3d6 feu cône"
+    "summary": "3d6 feu (cône)"
   },
   {
     "id": "lueurs-féeriques",
@@ -2156,13 +2158,13 @@ export const spellsData: Spell[] = [
     "level": 1,
     "levelDisplay": "Niveau 1",
     "school": "evocation",
-    "type": "Évocation / Lumière",
+    "type": "Évocation / Révélation",
     "isDomainSpell": true,
     "castingTime": "1 action",
     "range": "18 mètres",
     "components": {
       "verbal": true,
-      "somatic": false,
+      "somatic": true,
       "material": null,
       "materialConsumed": false
     },
@@ -2172,13 +2174,13 @@ export const spellsData: Spell[] = [
     },
     "concentration": true,
     "ritual": false,
-    "description": "Chaque objet dans un cube de 6 mètres d'arête à portée est mis en évidence par une lumière bleue, verte ou violette (à votre choix). Toute créature dans la zone lorsque le sort est lancé est également mise en évidence si elle échoue à un jet de sauvegarde de Dextérité. Pour la durée du sort, les objets et les créatures affectées émettent une lumière faible dans un rayon de 3 mètres. Tout jet d'attaque contre une créature affectée a l'avantage si l'attaquant peut la voir, et la créature affectée ne peut pas bénéficier d'une invisibilité.",
-    "descriptionShort": "Des lueurs colorées mettent en évidence les créatures et objets dans un cube de 6 m. Avantage aux attaques, invisibilité annulée...",
+    "description": "Chaque objet dans un cube de 6 mètres d'arête à portée est enveloppé de lumières colorées (de la couleur de votre choix). Toute créature dans la zone lors de l'incantation du sort est également enveloppée de lumières si elle échoue à un jet de sauvegarde de Dextérité. Pour la durée du sort, les objets et les créatures affectées émettent une lumière faible sur un rayon de 3 mètres. Tout jet d'attaque contre une créature affectée ou un objet affecté est avantagé si l'attaquant peut la voir. Les créatures ou objets affectés ne bénéficient d'aucun avantage dus à l'invisibilité.",
+    "descriptionShort": "Chaque objet et créature dans un cube de 6 mètres est enveloppé de lumières colorées. Les attaques contre les cibles affectées sont avantagées et elles ne bénéficient pas de l'invisibilité.",
     "higherLevels": null,
-    "incantation": "Faerie lux, que les lueurs féeriques révèlent tout !",
-    "recommendation": "ESSENTIEL - Domaine Lumière",
+    "incantation": "Faerie lux, que la lumière révèle la vérité cachée !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "Lumière révèle"
+    "summary": "Révèle invisibles + avantage"
   },
   {
     "id": "détection-de-linvisibilité",
@@ -2194,7 +2196,7 @@ export const spellsData: Spell[] = [
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": "une pincée de talc et une poudre d'argent",
+      "material": "une pincée de talc et une petite poudre d'argent",
       "materialConsumed": false
     },
     "duration": {
@@ -2203,13 +2205,13 @@ export const spellsData: Spell[] = [
     },
     "concentration": false,
     "ritual": false,
-    "description": "Pour la durée du sort, vous voyez les créatures et objets invisibles comme s'ils étaient visibles. Vous voyez également les créatures et objets éthérés.",
-    "descriptionShort": "Pour la durée du sort, vous voyez les créatures et objets invisibles comme s'ils étaient visibles. Vous voyez également les créatures éthérées...",
+    "description": "Pour la durée du sort, vous voyez les créatures et les objets invisibles comme si ils étaient parfaitement visibles. Vous voyez également dans le plan Éthéré sur un rayon de 18 mètres.",
+    "descriptionShort": "Pour la durée du sort, vous voyez les créatures et les objets invisibles comme si ils étaient parfaitement visibles. Vous voyez également dans le plan Éthéré sur un rayon de 18 mètres.",
     "higherLevels": null,
-    "incantation": "Visio invisibilis, que mes yeux perçent le voile de l'invisible !",
-    "recommendation": "ESSENTIEL - Domaine Lumière",
+    "incantation": "Invisibilitas revelare, que l'œil de Torm perce les voiles de l'invisible !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "Voit invisible"
+    "summary": "Voir invisible + Éthéré"
   },
   {
     "id": "boule-de-feu",
@@ -2225,7 +2227,7 @@ export const spellsData: Spell[] = [
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": "une petite boule de guano de chauve-souris et du soufre",
+      "material": "une petite boule de guano de chauve-souris et de soufre",
       "materialConsumed": false
     },
     "duration": {
@@ -2233,13 +2235,13 @@ export const spellsData: Spell[] = [
     },
     "concentration": false,
     "ritual": false,
-    "description": "Un éclair de lumière jaillit de votre doigt pointé vers un point de votre choix à portée, où il explose en une sphère de 6 mètres de rayon de feu. Chaque créature dans la sphère doit effectuer un jet de sauvegarde de Dextérité. Une cible subit 8d6 dégâts de feu en cas d'échec, ou la moitié en cas de réussite. Le feu se propage aux coins et enflamme tous les objets inflammables dans la zone qui ne sont ni portés ni tenus.",
-    "descriptionShort": "Un éclair explose en sphère de 6 m de rayon. 8d6 dégâts de feu, moitié si JS Dextérité réussi. Enflamme les objets inflammables...",
+    "description": "Un éclat de lumière jaillit de votre doigt tendu vers un point de votre choix à portée, puis se transforme en une explosion de flammes. Chaque créature dans une sphère de 6 mètres de rayon centrée sur ce point doit effectuer un jet de sauvegarde de Dextérité. Une cible subit 8d6 dégâts de feu en cas d'échec, ou la moitié de ces dégâts en cas de réussite. Le feu s'étend en contournant les coins et embrase les objets inflammables de la zone qui ne sont ni portés ni transportés.",
+    "descriptionShort": "Une explosion de flammes dans une sphère de 6 mètres. Chaque créature subit 8d6 dégâts de feu (Jd DEX pour demi-dégâts).",
     "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 4 ou supérieur, les dégâts augmentent de 1d6 pour chaque niveau d'emplacement au-dessus du niveau 3.",
-    "incantation": "Globus ignis, que le feu divin consume mes ennemis !",
-    "recommendation": "ESSENTIEL - Domaine Lumière",
+    "incantation": "Globus ignis, que le feu du jugement de Torm consume tout !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "8d6 feu sphere"
+    "summary": "8d6 feu (6m rayon)"
   },
   {
     "id": "œil-du-mage",
@@ -2264,13 +2266,13 @@ export const spellsData: Spell[] = [
     },
     "concentration": true,
     "ritual": false,
-    "description": "Vous créez un œil magique flottant et intangible dans l'air à un point de votre choix à portée. L'œil reste là pour la durée du sort et ne peut pas être attaqué ou autrement interagi avec. Vous voyez à travers l'œil comme si vous étiez à sa position. En tant qu'action, vous pouvez déplacer l'œil de jusqu'à 9 mètres dans n'importe quelle direction. L'œil peut voir dans toutes les directions et sa vision dans le noir fonctionne dans un rayon de 9 mètres.",
-    "descriptionShort": "Un œil magique flottant intangible vous permet de voir à distance. Vision dans le noir 9m. Action pour déplacer de 9m...",
+    "description": "Vous créez un œil magique invisible qui flotte dans les airs pendant toute la durée du sort. Vous percevez mentalement ce que voit l'œil, qui a une vision normale et une vision dans le noir sur 9 mètres. L'œil peut regarder dans toutes les directions. Par une action, vous pouvez déplacer l'œil de jusqu'à 9 mètres dans n'importe quelle direction. Il peut traverser les espaces étroits d'un diamètre de 2,5 centimètres, mais il ne peut pas pénétrer les zones d'obscurité magique.",
+    "descriptionShort": "Vous créez un œil magique invisible qui flotte dans les airs. Vous percevez mentalement ce que voit l'œil, qui a une vision normale et une vision dans le noir sur 9 mètres.",
     "higherLevels": null,
-    "incantation": "Oculus magus, que mon œil voyage là où je ne peux aller !",
-    "recommendation": "ESSENTIEL - Domaine Lumière",
+    "incantation": "Oculus arcanus, que l'œil de Torm me montre ce qui est caché !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "Œil espion"
+    "summary": "Espion magique"
   },
   {
     "id": "mur-de-feu",
@@ -2295,43 +2297,13 @@ export const spellsData: Spell[] = [
     },
     "concentration": true,
     "ritual": false,
-    "description": "Vous créez un mur de feu sur une surface solide à portée. Le mur mesure jusqu'à 18 mètres de long, 6 mètres de haut et 1,50 mètre d'épaisseur. Le mur est opaque et dure pour la durée du sort. Lorsque le mur apparaît, chaque créature dans sa zone doit effectuer un jet de sauvegarde de Dextérité. Une créature subit 5d8 dégâts de feu en cas d'échec, ou la moitié en cas de réussite. Une créature qui se termine son tour à moins de 3 mètres du mur ou qui traverse le mur subit 5d8 dégâts de feu.",
-    "descriptionShort": "Mur de feu opaque de 18m x 6m. 5d8 dégâts lors de l'apparition, 5d8 si à 3m ou traversée. JS Dextérité pour moitié...",
+    "description": "Vous créez un mur de feu sur une surface solide à portée. Vous pouvez créer un mur de jusqu'à 18 mètres de long, 6 mètres de haut et 1,50 mètre d'épaisseur, ou un anneau de mur d'un diamètre de 6 mètres, 6 mètres de haut et 1,50 mètre d'épaisseur. Le mur est opaque et dure pendant toute la durée du sort. Lorsque le mur apparaît, chaque créature dans sa zone doit effectuer un jet de sauvegarde de Dextérité. Une créature subit 5d8 dégâts de feu en cas d'échec, ou la moitié en cas de réussite. Une créature qui se termine son tour dans un rayon de 3 mètres du côté choisi du mur subit également ces dégâts.",
+    "descriptionShort": "Vous créez un mur de feu de 18m x 6m. Les créatures dans la zone ou proches subissent 5d8 dégâts de feu (Jd DEX pour demi-dégâts).",
     "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 5 ou supérieur, les dégâts augmentent de 1d8 pour chaque niveau d'emplacement au-dessus du niveau 4.",
-    "incantation": "Murus ignis, que le mur de flammes divines protège et brûle !",
-    "recommendation": "ESSENTIEL - Domaine Lumière",
+    "incantation": "Murus ignis, que le mur de feu de Torm protège ou consume !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "Mur feu 5d8"
-  },
-  {
-    "id": "colonne-de-flamme",
-    "name": "Colonne de flamme",
-    "nameEn": "Flame Strike",
-    "level": 5,
-    "levelDisplay": "Niveau 5",
-    "school": "evocation",
-    "type": "Évocation / Attaque",
-    "isDomainSpell": true,
-    "castingTime": "1 action",
-    "range": "18 mètres",
-    "components": {
-      "verbal": true,
-      "somatic": true,
-      "material": "un peu de soufre",
-      "materialConsumed": false
-    },
-    "duration": {
-      "type": "instantaneous"
-    },
-    "concentration": false,
-    "ritual": false,
-    "description": "Un pilier vertical de feu divin s'abat du ciel sur un point que vous choisissez à portée. Chaque créature dans un cylindre de 3 mètres de rayon et 12 mètres de haut centrée sur ce point doit effectuer un jet de sauvegarde de Dextérité. Une créature subit 4d6 dégâts de feu et 4d6 dégâts radiants en cas d'échec, ou la moitié de ces dégâts en cas de réussite.",
-    "descriptionShort": "Pilier de feu divin cylindre 3m x 12m. 4d6 feu + 4d6 radiants, moitié si JS Dextérité réussi...",
-    "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 6 ou supérieur, les dégâts de feu ou radiants (au choix) augmentent de 1d6 pour chaque niveau d'emplacement au-dessus du niveau 5.",
-    "incantation": "Columna flammae, que le feu céleste consume l'impie !",
-    "recommendation": "ESSENTIEL - Domaine Lumière",
-    "source": "extended",
-    "summary": "4d6+4d6 radiants"
+    "summary": "5d8 feu (mur)"
   },
   {
     "id": "scrutation",
@@ -2347,7 +2319,7 @@ export const spellsData: Spell[] = [
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": "un focus valant au moins 1000 po, comme un miroir d'argent, un crâne ou une fontaine de cristal",
+      "material": "un miroir ou un récipient d'eau d'une valeur d'au moins 1000 po",
       "materialConsumed": false
     },
     "duration": {
@@ -2356,14 +2328,15 @@ export const spellsData: Spell[] = [
     },
     "concentration": true,
     "ritual": false,
-    "description": "Vous pouvez voir et entendre une créature spécifique que vous choisissez et qui se trouve sur le même plan d'existence que vous. La cible doit effectuer un jet de sauvegarde de Sagesse. En cas d'échec, vous créez un capteur sensoriel invisible dans un espace de 3 mètres de la cible, et vous voyez à travers ce capteur comme si vous y étiez. Le capteur se déplace avec la cible. La cible connaît l'existence du capteur si elle réussit son jet de sauvegarde.",
-    "descriptionShort": "Voyez et entendez une créature spécifique à distance. Capteur invisible près de la cible. JS Sagesse pour résister...",
+    "description": "Vous pouvez voir et entendre une créature particulière que vous choisissez et qui se trouve sur le même plan d'existence que vous. La cible doit effectuer un jet de sauvegarde de Sagesse. En cas d'échec, vous créez une connexion sensorielle avec elle. Si la cible est consciente de cette connexion, elle peut volontairement rater son jet de sauvegarde. Tant que la connexion persiste, vous pouvez voir et entendre comme si vous étiez à la place de la cible.",
+    "descriptionShort": "Vous pouvez voir et entendre une créature particulière que vous choisissez sur le même plan d'existence. La cible doit réussir un jet de sauvegarde de Sagesse pour résister.",
     "higherLevels": null,
-    "incantation": "Scrutatio, que mes sens atteignent les lointains par la puissance divine !",
-    "recommendation": "ESSENTIEL - Domaine Lumière",
+    "incantation": "Scrytio divinus, que le regard de Torm pénètre les mystères lointains !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "Espion à distance"
+    "summary": "Espionner à distance"
   },
+  // DOMAINES - Sorts de la Nature (Nature)
   {
     "id": "amitié-avec-les-animaux",
     "name": "Amitié avec les animaux",
@@ -2379,7 +2352,7 @@ export const spellsData: Spell[] = [
       "verbal": true,
       "somatic": true,
       "material": "un morceau de nourriture",
-      "materialConsumed": true
+      "materialConsumed": false
     },
     "duration": {
       "type": "timed",
@@ -2387,13 +2360,13 @@ export const spellsData: Spell[] = [
     },
     "concentration": false,
     "ritual": false,
-    "description": "Ce sort vous permet de convaincre une bête que vous ne voulez pas lui faire de mal. Choisissez une bête visible à portée. Elle doit effectuer un jet de sauvegarde de Sagesse. En cas d'échec, la cible est charmée par vous pour la durée du sort. Si vous ou l'un de vos compagnons blesse la cible, le sort se termine.",
-    "descriptionShort": "Charme une bête. JS Sagesse. Si blessée, le sort se termine. Dure 24 heures...",
-    "higherLevels": null,
-    "incantation": "Amicitia bestiarum, que cette créature devienne mon amie !",
-    "recommendation": "ESSENTIEL - Domaine Nature",
+    "description": "Ce sort vous permet de convaincre une bête que vous ne lui voulez pas de mal. Choisissez une bête visible à portée. Elle doit réussir un jet de sauvegarde de Sagesse ou être charmée par vous pendant toute la durée du sort. Si vous ou l'un de vos compagnons lui nuisent, le sort se termine.",
+    "descriptionShort": "Convainquez une bête que vous ne lui voulez pas de mal. Elle doit réussir un jet de sauvegarde de Sagesse ou être charmée pendant 24 heures.",
+    "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 2 ou supérieur, vous pouvez affecter une bête supplémentaire pour chaque niveau d'emplacement au-dessus du niveau 1.",
+    "incantation": "Amicitia animalis, que la nature reconnaisse mon amitié !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "Charme bête"
+    "summary": "Charme une bête"
   },
   {
     "id": "communication-avec-les-animaux",
@@ -2408,7 +2381,7 @@ export const spellsData: Spell[] = [
     "range": "personnelle",
     "components": {
       "verbal": true,
-      "somatic": false,
+      "somatic": true,
       "material": null,
       "materialConsumed": false
     },
@@ -2418,16 +2391,16 @@ export const spellsData: Spell[] = [
     },
     "concentration": false,
     "ritual": true,
-    "description": "Vous obtenez la capacité de comprendre les bêtes et de communiquer verbalement avec elles pour la durée du sort. Les connaissances et la conscience de nombreuses bêtes sont limitées par leur intelligence, mais au minimum, les bêtes peuvent vous donner des informations sur les endroits et les monstres proches, y compris ce qu'elles peuvent percevoir ou avoir perçu au cours de la dernière journée.",
-    "descriptionShort": "Comprenez et parlez aux bêtes pendant 10 minutes. Rituel. Les bêtes peuvent partager des informations sur les environs...",
+    "description": "Vous obtenez la capacité de comprendre les bêtes et de communiquer verbalement avec elles pendant toute la durée du sort. Le savoir et la conscience de nombreuses bêtes sont limités, mais elles peuvent vous donner des informations sur les lieux et monstres voisins, y compris ce qu'elles ont perçu dans la dernière journée.",
+    "descriptionShort": "Vous obtenez la capacité de comprendre les bêtes et de communiquer verbalement avec elles pendant 10 minutes.",
     "higherLevels": null,
-    "incantation": "Loquela bestiarum, que je comprenne le langage des créatures de la nature !",
-    "recommendation": "ESSENTIEL - Domaine Nature",
+    "incantation": "Lingua animalis, que les voix de la nature me parlent clairement !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "Parle bêtes"
+    "summary": "Parler aux bêtes"
   },
   {
-    "id": "peau-décorce",
+    "id": "peau-d-écorce",
     "name": "Peau d'écorce",
     "nameEn": "Barkskin",
     "level": 2,
@@ -2440,7 +2413,7 @@ export const spellsData: Spell[] = [
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": "des écorces de chêne",
+      "material": "un éclat d'écorce de chêne",
       "materialConsumed": false
     },
     "duration": {
@@ -2449,16 +2422,16 @@ export const spellsData: Spell[] = [
     },
     "concentration": true,
     "ritual": false,
-    "description": "Vous touchez une créature consentante. Jusqu'à ce que le sort se termine, la peau de la cible devient aussi résistante que l'écorce. La CA de la cible ne peut pas être inférieure à 16 pour la durée du sort. Le sort se termine si la cible fait une attaque ou lance un sort.",
-    "descriptionShort": "CA minimum 16. Concentration jusqu'à 1 heure. Se termine si attaque ou sort lancé...",
+    "description": "Vous touchez une créature consentante. Jusqu'à ce que le sort se termine, la peau de la cible devient aussi épaisse et résistante que de l'écorce. La CA de la cible ne peut pas être inférieure à 16, quelle que soit l'armure qu'elle porte.",
+    "descriptionShort": "Vous touchez une créature. Sa peau devient aussi épaisse que de l'écorce. Sa CA ne peut pas être inférieure à 16.",
     "higherLevels": null,
-    "incantation": "Cutis corticis, que ma peau devienne aussi dure que l'écorce du chêne !",
-    "recommendation": "ESSENTIEL - Domaine Nature",
+    "incantation": "Cutis corticis, que la nature m'entoure de sa protection !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "CA min 16"
+    "summary": "CA minimale 16"
   },
   {
-    "id": "croissance-dépines",
+    "id": "croissance-d-épines",
     "name": "Croissance d'épines",
     "nameEn": "Spike Growth",
     "level": 2,
@@ -2471,7 +2444,7 @@ export const spellsData: Spell[] = [
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": "sept épines dures",
+      "material": "sept épines pointues ou sept brindilles pointues",
       "materialConsumed": false
     },
     "duration": {
@@ -2480,22 +2453,22 @@ export const spellsData: Spell[] = [
     },
     "concentration": true,
     "ritual": false,
-    "description": "Le sol dans un rayon de 6 mètres autour d'un point de votre choix à portée se tord et se couvre d'épines. La zone devient un terrain difficile pour la durée du sort. Lorsqu'une créature se déplace dans la zone ou y commence son tour, elle doit effectuer un jet de sauvegarde de Dextérité ou subir 2d4 dégâts perforants.",
-    "descriptionShort": "Zone 6m terrain difficile. 2d4 dégâts perforants si déplacement ou début de tour. JS Dextérité pour éviter...",
+    "description": "Le terrain dans un rayon de 6 mètres autour d'un point de votre choix à portée devient épineux et surchargé. La zone devient un terrain difficile pour la durée du sort. Lorsqu'une créature se déplace dans la zone ou y débute son tour, elle doit réussir un jet de sauvegarde de Dextérité ou subir 2d4 dégâts perforants.",
+    "descriptionShort": "Le terrain dans un rayon de 6 mètres devient épineux. Terrain difficile. Les créatures subissent 2d4 dégâts perforants en se déplaçant ou en commençant leur tour dans la zone.",
     "higherLevels": null,
-    "incantation": "Spina crescens, que le sol s'emplisse d'épines protectrices !",
-    "recommendation": "ESSENTIEL - Domaine Nature",
+    "incantation": "Spinae crescentes, que la nature se défende contre les intrus !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "Zone épines 2d4"
+    "summary": "Terrain difficile + 2d4"
   },
   {
-    "id": "invocation-danimaux",
+    "id": "invocation-d-animaux",
     "name": "Invocation d'animaux",
     "nameEn": "Conjure Animals",
     "level": 3,
     "levelDisplay": "Niveau 3",
     "school": "conjuration",
-    "type": "Invocation / Appel",
+    "type": "Invocation",
     "isDomainSpell": true,
     "castingTime": "1 action",
     "range": "18 mètres",
@@ -2511,11 +2484,11 @@ export const spellsData: Spell[] = [
     },
     "concentration": true,
     "ritual": false,
-    "description": "Vous invoquez des bêtes féeriques qui apparaissent dans un espace inoccupé visible à portée. Choisissez l'une des options suivantes : une bête de FP 2 ou moins, deux bêtes de FP 1 ou moins, quatre bêtes de FP 1/2 ou moins, ou huit bêtes de FP 1/4 ou moins. Les bêtes invoquées sont amicales envers vous et vos compagnons. Agissez comme un groupe pour déterminer les actions des bêtes. Elles disparaissent si leurs points de vie tombent à 0 ou si le sort se termine.",
-    "descriptionShort": "Invoque bêtes féeriques : 1x FP2, 2x FP1, 4x FP1/2 ou 8x FP1/4. Contrôle mental. Disparaissent à 0 PV...",
+    "description": "Vous invoquez des bêtes féeriques qui apparaissent dans des espaces inoccupés de votre choix à portée. Choisissez l'une des options suivantes : une bête de FP 2 ou inférieur ; deux bêtes de FP 1 ou inférieur ; quatre bêtes de FP 1/2 ou inférieur ; ou huit bêtes de FP 1/4 ou inférieur. Les bêtes obéissent à vos ordres verbaux et sont amicales envers vous et vos compagnons.",
+    "descriptionShort": "Vous invoquez des bêtes féeriques (une FP 2, deux FP 1, quatre FP 1/2, ou huit FP 1/4). Elles obéissent à vos ordres.",
     "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 5 ou supérieur, vous doublez le nombre de bêtes invoquées.",
-    "incantation": "Bestiae convocatio, que les créatures de la nature me viennent en aide !",
-    "recommendation": "ESSENTIEL - Domaine Nature",
+    "incantation": "Animalia invocata, que les créatures de la nature me viennent en aide !",
+    "recommendation": null,
     "source": "extended",
     "summary": "Invoque bêtes"
   },
@@ -2526,7 +2499,7 @@ export const spellsData: Spell[] = [
     "level": 3,
     "levelDisplay": "Niveau 3",
     "school": "transmutation",
-    "type": "Transmutation / Terrain",
+    "type": "Transmutation",
     "isDomainSpell": true,
     "castingTime": "1 action ou 8 heures",
     "range": "45 mètres",
@@ -2541,13 +2514,13 @@ export const spellsData: Spell[] = [
     },
     "concentration": false,
     "ritual": false,
-    "description": "Ce sort canalise la vitalité dans les plantes à portée. Vous pouvez soit faire pousser la végétation de manière concentrée (rendant le terrain difficile dans un rayon de 30 mètres), soit faire pousser les plantes sur une année entière dans un rayon de 1,5 km (augmentant les récoltes).",
-    "descriptionShort": "Rend terrain difficile 30m OU augmente récoltes 1,5km pendant 1 an. 2 modes : 1 action ou 8 heures...",
+    "description": "Ce sort canalise la vitalité dans les plantes à portée. Vous pouvez soit : faire pousser la végétation dans un rayon de 30 mètres, créant un terrain difficile ; ou doubler la production agricole d'un terrain de 1,5 kilomètre carré pendant une année.",
+    "descriptionShort": "Fait pousser la végétation (terrain difficile 30m) ou double la production agricole d'une zone de 1,5 km² pendant un an.",
     "higherLevels": null,
-    "incantation": "Plantae crescens, que la nature prospère sous ma bénédiction !",
-    "recommendation": "ESSENTIEL - Domaine Nature",
+    "incantation": "Vegetatio crescens, que la nature prospère sous ma main !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "Terrain difficile OU récoltes"
+    "summary": "Terrain difficile ou fertilité"
   },
   {
     "id": "maîtrise-des-eaux",
@@ -2572,13 +2545,13 @@ export const spellsData: Spell[] = [
     },
     "concentration": true,
     "ritual": false,
-    "description": "Vous contrôlez une étendue d'eau visible à portée qui tient dans un cube de 30 mètres d'arête. Vous pouvez : créer une inondation (monte de 6m), partager les eaux (crée un chemin de 6m de large), rediriger le flux, ou créer un tourbillon (piège les créatures).",
-    "descriptionShort": "Contrôle eau dans cube 30m : inondation, partage, redirection ou tourbillon. Effets variés...",
+    "description": "Jusqu'à ce que le sort se termine, vous contrôlez toute étendue d'eau dans un cube de 30 mètres d'arête à portée. Vous pouvez : créer une inondation qui augmente le niveau de l'eau de 6 mètres ; diviser les eaux pour créer un chemin à sec ; créer un tourbillon dans une étendue d'eau de 15 mètres sur 15 mètres ; ou modifier le courant pour diriger la surface de l'eau.",
+    "descriptionShort": "Vous contrôlez une étendue d'eau dans un cube de 30 mètres. Inondation, séparation des eaux, tourbillon ou modification du courant.",
     "higherLevels": null,
-    "incantation": "Aqua imperium, que les eaux m'obéissent !",
-    "recommendation": "ESSENTIEL - Domaine Nature",
+    "incantation": "Aqua dominatus, que les eaux obéissent à ma volonté !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "Contrôle eau"
+    "summary": "Contrôle l'eau"
   },
   {
     "id": "insecte-géant",
@@ -2587,7 +2560,7 @@ export const spellsData: Spell[] = [
     "level": 4,
     "levelDisplay": "Niveau 4",
     "school": "transmutation",
-    "type": "Transmutation / Invocation",
+    "type": "Transmutation",
     "isDomainSpell": true,
     "castingTime": "1 action",
     "range": "9 mètres",
@@ -2603,13 +2576,13 @@ export const spellsData: Spell[] = [
     },
     "concentration": true,
     "ritual": false,
-    "description": "Vous transformez jusqu'à dix mille-pattes, trois araignées, cinq guêpes ou un scorpion normal en versions géantes pendant la durée du sort. Une créature géante suit vos ordres verbaux. Si vous ne donnez pas d'ordres, elle se défend mais n'attaque pas.",
-    "descriptionShort": "Transforme insectes normaux en versions géantes (10 mille-pattes, 3 araignées, 5 guêpes ou 1 scorpion)...",
+    "description": "Vous transformez jusqu'à dix mille-pattes, trois araignées, cinq guêpes ou un scorpion au choix, situés à portée, en versions géantes de leur forme naturelle. Chaque créature obéit à vos ordres verbaux et est amicale envers vous et vos compagnons. Une créature reste dans sa forme géante pendant toute la durée du sort, jusqu'à ce qu'elle tombe à 0 point de vie, ou jusqu'à ce que vous utilisiez une action pour la renvoyer à sa forme normale.",
+    "descriptionShort": "Transformez des insectes (10 mille-pattes, 3 araignées, 5 guêpes ou 1 scorpion) en versions géantes qui vous obéissent.",
     "higherLevels": null,
-    "incantation": "Insectum gigans, que ces petites créatures deviennent gigantesques !",
-    "recommendation": "ESSENTIEL - Domaine Nature",
+    "incantation": "Insectum gigantis, que les petites créatures grandissent pour me servir !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "Insectes géants"
+    "summary": "Transforme insectes"
   },
   {
     "id": "communion-avec-la-nature",
@@ -2618,7 +2591,7 @@ export const spellsData: Spell[] = [
     "level": 5,
     "levelDisplay": "Niveau 5",
     "school": "divination",
-    "type": "Divination / Rituel",
+    "type": "Divination",
     "isDomainSpell": true,
     "castingTime": "1 minute",
     "range": "personnelle",
@@ -2633,22 +2606,22 @@ export const spellsData: Spell[] = [
     },
     "concentration": false,
     "ritual": true,
-    "description": "Vous devenez un avec la nature dans la région environnante, acquérant connaissance du terrain dans un rayon de 5 kilomètres. Vous obtenez instantanément des connaissances sur trois faits de votre choix parmi : terrain, plantes, minéraux, corps d'eau, créatures, présence de personnes, météo, ou cycle naturel. En extérieur, ce sort vous donne également accès à la présence de bâtiments artificiels ou du plan correspondant.",
-    "descriptionShort": "Rituel. Connaissance de la région 5km : terrain, plantes, eaux, créatures, personnes, météo...",
+    "description": "Vous obtenez brièvement un aperçu des plans de la nature environnante. Vous apprenez trois faits de votre choix sur les éléments suivants dans un rayon de 5 kilomètres : terrain et corps d'eau ; plantes, minéraux, animaux ou peuples ; bâtiments d'origine artificielle ; influence d'énergies surnaturelles ; ou créatures présentes (aberrations, célestes, fées, fiélons, élémentaires, morts-vivants).",
+    "descriptionShort": "Vous apprenez trois faits sur le terrain, la faune, la flore, les bâtiments ou les créatures dans un rayon de 5 kilomètres.",
     "higherLevels": null,
-    "incantation": "Communio naturae, que la nature me révèle ses secrets !",
-    "recommendation": "ESSENTIEL - Domaine Nature",
+    "incantation": "Communio naturae, que la nature révèle ses secrets à son serviteur !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "Connaissance 5km"
+    "summary": "3 infos sur la région"
   },
   {
-    "id": "invocation-délémentaire",
+    "id": "invocation-d-élémentaire",
     "name": "Invocation d'élémentaire",
     "nameEn": "Conjure Elemental",
     "level": 5,
     "levelDisplay": "Niveau 5",
     "school": "conjuration",
-    "type": "Invocation / Appel",
+    "type": "Invocation",
     "isDomainSpell": true,
     "castingTime": "1 minute",
     "range": "18 mètres",
@@ -2664,13 +2637,136 @@ export const spellsData: Spell[] = [
     },
     "concentration": true,
     "ritual": false,
-    "description": "Vous invoquez un élémentaire de l'air, de la terre, du feu ou de l'eau. L'élémentaire apparaît dans un espace inoccupé à portée, est amical envers vous et suit vos ordres. Si vous perdez la concentration, l'élémentaire devient hostile et attaque. Il se dissipe après 1 heure ou si ses PV tombent à 0.",
-    "descriptionShort": "Invoque élémentaire (air, terre, feu ou eau). Amical et obéissant. Hostile si concentration perdue...",
+    "description": "Vous invoquez un esprit élémentaire qui prend la forme d'un élémentaire de l'air, de la terre, du feu ou de l'eau. L'élémentaire apparaît dans un espace inoccupé à portée. Il obéit à vos ordres verbaux et est amical envers vous et vos compagnons. Si votre concentration est interrompue, l'élémentaire devient hostile envers vous et vos compagnons.",
+    "descriptionShort": "Vous invoquez un élémentaire d'air, terre, feu ou eau qui vous obéit. Attention : si la concentration est brisée, il devient hostile.",
     "higherLevels": null,
-    "incantation": "Elementalis convocatio, que l'élémentaire réponde à mon appel !",
-    "recommendation": "ESSENTIEL - Domaine Nature",
+    "incantation": "Elementalis invocatus, que l'esprit des éléments me serve !",
+    "recommendation": null,
     "source": "extended",
     "summary": "Invoque élémentaire"
+  },
+  // DOMAINES - Sorts de la Tempête (Tempest)
+  {
+    "id": "nuage-de-brouillard",
+    "name": "Nuage de brouillard",
+    "nameEn": "Fog Cloud",
+    "level": 1,
+    "levelDisplay": "Niveau 1",
+    "school": "conjuration",
+    "type": "Invocation / Contrôle",
+    "isDomainSpell": true,
+    "castingTime": "1 action",
+    "range": "36 mètres",
+    "components": {
+      "verbal": true,
+      "somatic": true,
+      "material": null,
+      "materialConsumed": false
+    },
+    "duration": {
+      "type": "concentration",
+      "value": "concentration, jusqu'à 1 heure"
+    },
+    "concentration": true,
+    "ritual": false,
+    "description": "Vous créez une sphère de brouillard de 6 mètres de rayon centrée sur un point à portée. La sphère s'étend autour des coins, et son espace est considéré comme un terrain lourdement obscurci. Elle persiste pendant toute la durée du sort ou jusqu'à ce qu'un vent modéré ou plus fort la disperse.",
+    "descriptionShort": "Vous créez une sphère de brouillard de 6 mètres de rayon. Terrain lourdement obscurci.",
+    "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 2 ou supérieur, le rayon de la sphère augmente de 6 mètres pour chaque niveau d'emplacement au-dessus du niveau 1.",
+    "incantation": "Nebula caligo, que le brouillard obscurcisse le champ de bataille !",
+    "recommendation": null,
+    "source": "extended",
+    "summary": "Brouillard 6m"
+  },
+  {
+    "id": "onde-de-tonnerre",
+    "name": "Onde de tonnerre",
+    "nameEn": "Thunderwave",
+    "level": 1,
+    "levelDisplay": "Niveau 1",
+    "school": "evocation",
+    "type": "Évocation / Attaque",
+    "isDomainSpell": true,
+    "castingTime": "1 action",
+    "range": "personnelle (cube 4,50 m)",
+    "components": {
+      "verbal": true,
+      "somatic": true,
+      "material": null,
+      "materialConsumed": false
+    },
+    "duration": {
+      "type": "instantaneous"
+    },
+    "concentration": false,
+    "ritual": false,
+    "description": "Une onde de force tonitruante part de vous. Chaque créature dans un cube de 4,50 mètres d'arête prenant origine de vous doit effectuer un jet de sauvegarde de Constitution. En cas d'échec, une créature subit 2d8 dégâts de tonnerre et est repoussée de 3 mètres. En cas de réussite, la créature subit la moitié des dégâts et n'est pas repoussée.",
+    "descriptionShort": "Une onde de force tonitruante part de vous. Les créatures subissent 2d8 dégâts de tonnerre et sont repoussées (Jd CON pour demi-dégâts).",
+    "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 2 ou supérieur, les dégâts augmentent de 1d8 pour chaque niveau d'emplacement au-dessus du niveau 1.",
+    "incantation": "Tonitrus unda, que le tonnerre de la tempête m'accompagne !",
+    "recommendation": null,
+    "source": "extended",
+    "summary": "2d8 tonnerre + repousse"
+  },
+  {
+    "id": "rafale-de-vent",
+    "name": "Rafale de vent",
+    "nameEn": "Gust of Wind",
+    "level": 2,
+    "levelDisplay": "Niveau 2",
+    "school": "evocation",
+    "type": "Évocation / Contrôle",
+    "isDomainSpell": true,
+    "castingTime": "1 action",
+    "range": "personnelle (ligne 18m x 3m)",
+    "components": {
+      "verbal": true,
+      "somatic": true,
+      "material": "une graine de légumineuse",
+      "materialConsumed": false
+    },
+    "duration": {
+      "type": "concentration",
+      "value": "concentration, jusqu'à 1 minute"
+    },
+    "concentration": true,
+    "ritual": false,
+    "description": "Une ligne de vent fort de 18 mètres de long et 3 mètres de large souffle depuis vous pendant toute la durée du sort. Chaque créature qui commence son tour dans la ligne doit réussir un jet de sauvegarde de Force ou être repoussée de 4,50 mètres dans la direction du vent. Toute créature dans la ligne doit dépenser 2 mètres de déplacement pour chaque mètre parcouru en se déplaçant contre le vent.",
+    "descriptionShort": "Une ligne de vent fort de 18m x 3m repousse les créatures et ralentit le mouvement contre le vent.",
+    "higherLevels": null,
+    "incantation": "Ventus flatus, que les vents me répondent !",
+    "recommendation": null,
+    "source": "extended",
+    "summary": "Vent repousse"
+  },
+  {
+    "id": "fracassement",
+    "name": "Fracassement",
+    "nameEn": "Shatter",
+    "level": 2,
+    "levelDisplay": "Niveau 2",
+    "school": "evocation",
+    "type": "Évocation / Attaque",
+    "isDomainSpell": true,
+    "castingTime": "1 action",
+    "range": "18 mètres",
+    "components": {
+      "verbal": true,
+      "somatic": true,
+      "material": "une pincée de poussière de mica",
+      "materialConsumed": false
+    },
+    "duration": {
+      "type": "instantaneous"
+    },
+    "concentration": false,
+    "ritual": false,
+    "description": "Un bruit violent et retentissant éclate à partir d'un point de votre choix à portée. Chaque créature dans une sphère de 3 mètres de rayon centrée sur ce point doit effectuer un jet de sauvegarde de Constitution. Une créature subit 3d8 dégâts de tonnerre en cas d'échec, ou la moitié en cas de réussite. Les créatures artificielles et les objets non magiques ont un désavantage à ce jet.",
+    "descriptionShort": "Un bruit violent éclate. Les créatures dans une sphère de 3 mètres subissent 3d8 dégâts de tonnerre (Jd CON pour demi-dégâts).",
+    "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 3 ou supérieur, les dégâts augmentent de 1d8 pour chaque niveau d'emplacement au-dessus du niveau 2.",
+    "incantation": "Fragmentum sonitus, que le tonnerre brise mes ennemis !",
+    "recommendation": null,
+    "source": "extended",
+    "summary": "3d8 tonnerre"
   },
   {
     "id": "foudre",
@@ -2682,11 +2778,11 @@ export const spellsData: Spell[] = [
     "type": "Évocation / Attaque",
     "isDomainSpell": true,
     "castingTime": "1 action",
-    "range": "personnelle (ligne de 30 m)",
+    "range": "personnelle (ligne 30m x 1,50m)",
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": "un peu de fourrure et un bâton d'ambar de la taille d'un doigt",
+      "material": "un peu de fourrure et un bâton d'ambre, de cristal ou de verre",
       "materialConsumed": false
     },
     "duration": {
@@ -2694,13 +2790,13 @@ export const spellsData: Spell[] = [
     },
     "concentration": false,
     "ritual": false,
-    "description": "Un éclair de lumière jaillit de vos doigts en une ligne de 30 mètres de long et 1,50 mètre de large. Chaque créature dans la ligne doit effectuer un jet de sauvegarde de Dextérité. Une créature subit 8d6 dégâts de foudre en cas d'échec, ou la moitié en cas de réussite. Le foudre embrase les objets inflammables dans la zone qui ne sont ni portés ni tenus.",
-    "descriptionShort": "Éclair ligne 30m x 1,5m. 8d6 foudre, moitié si JS Dextérité. Enflamme objets inflammables...",
+    "description": "Un trait d'énergie électrique jaillit de vous sous la forme d'un éclair de 9 mètres de large et 30 mètres de long. Chaque créature dans la ligne doit effectuer un jet de sauvegarde de Dextérité. Une créature subit 8d6 dégâts de foudre en cas d'échec, ou la moitié en cas de réussite. L'éclair embrase les objets inflammables dans la zone qui ne sont ni portés ni transportés.",
+    "descriptionShort": "Un éclair de 30m x 1,50m. Les créatures subissent 8d6 dégâts de foudre (Jd DEX pour demi-dégâts).",
     "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 4 ou supérieur, les dégâts augmentent de 1d6 pour chaque niveau d'emplacement au-dessus du niveau 3.",
-    "incantation": "Fulgaris, que la foudre divine frappe mes ennemis !",
-    "recommendation": "ESSENTIEL - Domaine Tempête",
+    "incantation": "Fulmen iactus, que la foudre de la tempête frappe mes ennemis !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "8d6 foudre ligne"
+    "summary": "8d6 foudre (ligne)"
   },
   {
     "id": "appel-de-la-foudre",
@@ -2725,18 +2821,18 @@ export const spellsData: Spell[] = [
     },
     "concentration": true,
     "ritual": false,
-    "description": "Un nuage d'orage apparaît en hauteur à portée. Tant que vous vous concentrez, vous pouvez utiliser une action pour invoquer un éclair du nuage vers un point que vous voyez à portée. Chaque créature dans un rayon de 1,50 mètre doit effectuer un jet de sauvegarde de Dextérité. En cas d'échec, 3d10 dégâts de foudre, moitié si réussite.",
-    "descriptionShort": "Nuage orage apparaît. Action pour invoquer éclair : 3d10 foudre zone 1,5m. Répétable...",
+    "description": "Un nuage d'orage apparaît à portée. Tant que vous vous trouvez à l'extérieur, vous pouvez utiliser une action pour invoquer un éclair depuis le nuage vers un point que vous pouvez voir à 18 mètres ou moins de vous. Chaque créature dans un rayon de 1,50 mètre de ce point doit effectuer un jet de sauvegarde de Dextérité. Une créature subit 3d10 dégâts de foudre en cas d'échec, ou la moitié en cas de réussite. S'il pleut, les dégâts augmentent de 1d10.",
+    "descriptionShort": "Un nuage d'orage apparaît. Par une action, invoquez un éclair (3d10 foudre, Jd DEX pour demi-dégâts).",
     "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 4 ou supérieur, les dégâts augmentent de 1d10 pour chaque niveau d'emplacement au-dessus du niveau 3.",
-    "incantation": "Tonitrus voco, que les éclairs tombent à ma demande !",
-    "recommendation": "ESSENTIEL - Domaine Tempête",
+    "incantation": "Fulmen invocatus, que les cieux déversent leur fureur !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "3d10 foudre/rnd"
+    "summary": "3d10 foudre (à volonté)"
   },
   {
-    "id": "contrôle-de-leau",
+    "id": "contrôle-de-l-eau",
     "name": "Contrôle de l'eau",
-    "nameEn": "Water Control",
+    "nameEn": "Control Water",
     "level": 4,
     "levelDisplay": "Niveau 4",
     "school": "transmutation",
@@ -2747,7 +2843,7 @@ export const spellsData: Spell[] = [
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": null,
+      "material": "une goutte d'eau et une pincée de poussière",
       "materialConsumed": false
     },
     "duration": {
@@ -2756,13 +2852,13 @@ export const spellsData: Spell[] = [
     },
     "concentration": true,
     "ritual": false,
-    "description": "Ce sort est une version améliorée de Maîtrise des eaux. Vous contrôlez l'eau dans un cube de 30 mètres, créant des effets dramatiques : inondation massive, vagues dévastatrices, redirection complète des courants, ou tourbillons piégeant les créatures (3d8 dégâts contondants et entraînement).",
-    "descriptionShort": "Contrôle eau cube 30m : inondation, vagues, redirection, tourbillon (3d8 + entraînement)...",
+    "description": "Jusqu'à ce que le sort se termine, vous contrôlez toute étendue d'eau dans un cube de 30 mètres d'arête à portée. Vous pouvez : créer une inondation qui augmente le niveau de l'eau de 6 mètres ; diviser les eaux pour créer un chemin à sec ; créer un tourbillon dans une étendue d'eau de 15 mètres sur 15 mètres ; ou modifier le courant pour diriger la surface de l'eau.",
+    "descriptionShort": "Vous contrôlez une étendue d'eau dans un cube de 30 mètres. Inondation, séparation des eaux, tourbillon ou modification du courant.",
     "higherLevels": null,
-    "incantation": "Aqua imperium magnus, que les eaux obéissent à ma volonté absolue !",
-    "recommendation": "ESSENTIEL - Domaine Tempête",
+    "incantation": "Aqua imperium, que les eaux obéissent à mon commandement !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "Contrôle eau avancé"
+    "summary": "Contrôle l'eau"
   },
   {
     "id": "tempête-de-glace",
@@ -2786,22 +2882,22 @@ export const spellsData: Spell[] = [
     },
     "concentration": false,
     "ritual": false,
-    "description": "Une grêle de pierres de glace s'abat sur un cylindre de 6 mètres de rayon et 12 mètres de haut à portée. Chaque créature dans le cylindre doit effectuer un jet de sauvegarde de Dextérité. 2d8 dégâts contondants et 4d6 dégâts de froid en cas d'échec, moitié si réussite. Le sol devient terrain difficile jusqu'à la fin de votre prochain tour.",
-    "descriptionShort": "Grêle glace cylindre 6m x 12m. 2d8 contondants + 4d6 froid. Terrain difficile après...",
+    "description": "Une grêle de pierre de glace frappe le sol dans un cylindre de 6 mètres de rayon et 12 mètres de haut, centré sur un point à portée. Chaque créature dans le cylindre doit effectuer un jet de sauvegarde de Dextérité. En cas d'échec, une créature subit 2d8 dégâts contondants et 4d6 dégâts de froid, ou la moitié en cas de réussite. La grêle transforme la zone en terrain difficile jusqu'à la fin de votre prochain tour.",
+    "descriptionShort": "Une grêle de pierre de glace frappe le sol dans un cylindre de 6m x 12m. 2d8 contondants + 4d6 froids (Jd DEX pour demi-dégâts).",
     "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 5 ou supérieur, les dégâts contondants augmentent de 1d8 pour chaque niveau d'emplacement au-dessus du niveau 4.",
-    "incantation": "Tempestas glacialis, que la tempête de glace s'abatte sur mes ennemis !",
-    "recommendation": "ESSENTIEL - Domaine Tempête",
+    "incantation": "Tempestas glacialis, que la fureur de l'hiver s'abatte sur mes ennemis !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "2d8+4d6 froid"
+    "summary": "2d8+4d6 + terrain difficile"
   },
   {
-    "id": "invocation-délémentaire-destructeur",
+    "id": "invocation-d-élémentaire-destructeur",
     "name": "Invocation d'élémentaire destructeur",
-    "nameEn": "Conjure Elemental Destruction",
+    "nameEn": "Conjure Elemental",
     "level": 5,
     "levelDisplay": "Niveau 5",
     "school": "conjuration",
-    "type": "Invocation / Appel",
+    "type": "Invocation",
     "isDomainSpell": true,
     "castingTime": "1 minute",
     "range": "18 mètres",
@@ -2817,13 +2913,13 @@ export const spellsData: Spell[] = [
     },
     "concentration": true,
     "ritual": false,
-    "description": "Vous invoquez un élémentaire puissant (myrmidon) d'air, terre, feu ou eau. L'élémentaire est plus puissant qu'un élémentaire normal et possède des capacités de combat améliorées. Il suit vos ordres verbaux et se bat pour vous. Si la concentration est perdue, il devient hostile.",
-    "descriptionShort": "Invoque élémentaire puissant (myrmidon) air/terre/feu/eau. Plus fort qu'élémentaire normal...",
+    "description": "Vous invoquez un esprit élémentaire qui prend la forme d'un élémentaire de l'air, de la terre, du feu ou de l'eau. L'élémentaire apparaît dans un espace inoccupé à portée. Il obéit à vos ordres verbaux et est amical envers vous et vos compagnons. Si votre concentration est interrompue, l'élémentaire devient hostile envers vous et vos compagnons.",
+    "descriptionShort": "Vous invoquez un élémentaire d'air, terre, feu ou eau qui vous obéit. Attention : si la concentration est brisée, il devient hostile.",
     "higherLevels": null,
-    "incantation": "Elementalis destructor, que l'élémentaire destructeur apparaisse !",
-    "recommendation": "ESSENTIEL - Domaine Tempête",
+    "incantation": "Elementalis destructor, que l'élémentaire de la tempête réponde à mon appel !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "Invoque élémentaire+"
+    "summary": "Invoque élémentaire"
   },
   {
     "id": "contrôle-des-vents",
@@ -2848,13 +2944,138 @@ export const spellsData: Spell[] = [
     },
     "concentration": true,
     "ritual": false,
-    "description": "Vous prenez le contrôle de l'air dans un cube de 30 mètres à portée. Choisissez l'un des effets : vent sourd (désavantage à l'audition et à distance), vent violent (zone terrain difficile, vol impossible), ou rafale ascendante (créatures projetées vers le haut de 6m par round).",
-    "descriptionShort": "Contrôle air cube 30m : vent sourd (désavantage perception), vent violent (terrain difficile, vol impossible), ou rafale (projection 6m)...",
+    "description": "Vous prenez le contrôle de l'air dans un cube de 30 mètres d'arête à portée. Choisissez l'un des effets suivants : vent faible (désavantage aux jets d'attaque à distance), vent fort (créatures volantes au sol, vitesse réduite de moitié contre le vent), ou bourrasque (créatures doivent réussir un jet de Force ou tomber à terre).",
+    "descriptionShort": "Vous contrôlez l'air dans un cube de 30 mètres. Choisissez : vent faible, vent fort ou bourrasque.",
     "higherLevels": null,
-    "incantation": "Ventus imperium, que les vents obéissent à ma volonté !",
-    "recommendation": "ESSENTIEL - Domaine Tempête",
+    "incantation": "Ventus imperium, que les vents du monde obéissent à ma volonté !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "Contrôle vent"
+    "summary": "Contrôle vents"
+  },
+  // DOMAINES - Sorts de la Tromperie (Trickery)
+  {
+    "id": "charme-personne",
+    "name": "Charme-personne",
+    "nameEn": "Charm Person",
+    "level": 1,
+    "levelDisplay": "Niveau 1",
+    "school": "enchantment",
+    "type": "Enchantement / Charme",
+    "isDomainSpell": true,
+    "castingTime": "1 action",
+    "range": "9 mètres",
+    "components": {
+      "verbal": true,
+      "somatic": true,
+      "material": null,
+      "materialConsumed": false
+    },
+    "duration": {
+      "type": "timed",
+      "value": "1 heure"
+    },
+    "concentration": false,
+    "ritual": false,
+    "description": "Vous tentez de charmer un humanoïde visible à portée. Il doit effectuer un jet de sauvegarde de Sagesse. En cas d'échec, il est charmé par vous pendant toute la durée du sort ou jusqu'à ce que vous ou vos compagnons lui fassiez du mal. La créature charmée vous considère comme un ami.",
+    "descriptionShort": "Vous tentez de charmer un humanoïde. Il doit réussir un jet de sauvegarde de Sagesse ou être charmé pendant 1 heure.",
+    "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 2 ou supérieur, vous pouvez cibler une créature supplémentaire pour chaque niveau d'emplacement au-dessus du niveau 1.",
+    "incantation": "Charme personae, que mon discours séduise et apaise !",
+    "recommendation": null,
+    "source": "extended",
+    "summary": "Charme humanoïde"
+  },
+  {
+    "id": "déguisement",
+    "name": "Déguisement",
+    "nameEn": "Disguise Self",
+    "level": 1,
+    "levelDisplay": "Niveau 1",
+    "school": "illusion",
+    "type": "Illusion",
+    "isDomainSpell": true,
+    "castingTime": "1 action",
+    "range": "personnelle",
+    "components": {
+      "verbal": true,
+      "somatic": true,
+      "material": null,
+      "materialConsumed": false
+    },
+    "duration": {
+      "type": "timed",
+      "value": "1 heure"
+    },
+    "concentration": false,
+    "ritual": false,
+    "description": "Vous vous faites apparaître, y compris vos vêtements, armure, armes et autres objets, différent jusqu'à 30 centimètres plus grand ou petit. L'illusion dure pendant toute la durée du sort. Une créature peut utiliser son action pour examiner votre apparence et faire un test d'Investigation contre votre DD de sauvegarde de sort. En cas de réussite, elle réalise que vous êtes déguisé.",
+    "descriptionShort": "Vous vous déguisez, apparaissant différent jusqu'à 30 cm plus grand ou petit. Une inspection réussie révèle la supercherie.",
+    "higherLevels": null,
+    "incantation": "Disguisio personae, que les apparences me servent !",
+    "recommendation": null,
+    "source": "extended",
+    "summary": "Déguisement"
+  },
+  {
+    "id": "invisibilité",
+    "name": "Invisibilité",
+    "nameEn": "Invisibility",
+    "level": 2,
+    "levelDisplay": "Niveau 2",
+    "school": "illusion",
+    "type": "Illusion",
+    "isDomainSpell": true,
+    "castingTime": "1 action",
+    "range": "contact",
+    "components": {
+      "verbal": true,
+      "somatic": true,
+      "material": "une cils encastré dans de la gomme arabique",
+      "materialConsumed": false
+    },
+    "duration": {
+      "type": "concentration",
+      "value": "concentration, jusqu'à 1 heure"
+    },
+    "concentration": true,
+    "ritual": false,
+    "description": "Une créature que vous touchez devient invisible jusqu'à ce que le sort se termine. Tout ce que porte ou transporte la cible est invisible tant qu'il reste sur sa personne. Le sort se termine pour une cible qui attaque ou lance un sort.",
+    "descriptionShort": "Une créature devient invisible jusqu'à ce qu'elle attaque ou lance un sort. Ses objets sont aussi invisibles.",
+    "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 3 ou supérieur, vous pouvez cibler une créature supplémentaire pour chaque niveau d'emplacement au-dessus du niveau 2.",
+    "incantation": "Invisibilitas, que le voile de la discrétion m'enveloppe !",
+    "recommendation": null,
+    "source": "extended",
+    "summary": "Invisibilité"
+  },
+  {
+    "id": "passage-sans-trace",
+    "name": "Passage sans trace",
+    "nameEn": "Pass without Trace",
+    "level": 2,
+    "levelDisplay": "Niveau 2",
+    "school": "abjuration",
+    "type": "Abjuration / Furtivité",
+    "isDomainSpell": true,
+    "castingTime": "1 action",
+    "range": "personnelle",
+    "components": {
+      "verbal": true,
+      "somatic": true,
+      "material": "des cendres provenant d'un feu de camp brûlé et un brin de mousse",
+      "materialConsumed": false
+    },
+    "duration": {
+      "type": "concentration",
+      "value": "concentration, jusqu'à 1 heure"
+    },
+    "concentration": true,
+    "ritual": false,
+    "description": "Un voile d'ombres et de silence rayonne de vous, couvrant vos alliés à 9 mètres ou moins. Pendant toute la durée du sort, chaque créature affectée a un bonus de +10 aux jets de Dextérité (Discrétion) et ne peut pas être suivie, sauf par des moyens magiques. Une créature qui reçoit ce bonus ne laisse pas de traces derrière elle.",
+    "descriptionShort": "Les créatures dans un rayon de 9 mètres ont +10 en Discrétion et ne laissent pas de traces.",
+    "higherLevels": null,
+    "incantation": "Passus sine vestigio, que nos pas restent secrets !",
+    "recommendation": null,
+    "source": "extended",
+    "summary": "+10 Discrétion"
   },
   {
     "id": "motif-hypnotique",
@@ -2863,14 +3084,14 @@ export const spellsData: Spell[] = [
     "level": 3,
     "levelDisplay": "Niveau 3",
     "school": "illusion",
-    "type": "Illusion / Charme",
+    "type": "Illusion / Contrôle",
     "isDomainSpell": true,
     "castingTime": "1 action",
     "range": "36 mètres",
     "components": {
       "verbal": false,
       "somatic": true,
-      "material": "un bâtonnet d'encens luminescent ou une baguette de cristal",
+      "material": "un bâtonnet d'encens luminescent ou un cristal de phosphore",
       "materialConsumed": false
     },
     "duration": {
@@ -2879,11 +3100,11 @@ export const spellsData: Spell[] = [
     },
     "concentration": true,
     "ritual": false,
-    "description": "Vous créez un motif ondulant de couleurs dans un cube de 9 mètres à portée. Chaque créature qui voit le motif doit effectuer un jet de sauvegarde de Sagesse. En cas d'échec, la créature est charmée et incapable d'agir. Le sort se termine si elle subit des dégâts ou si quelqu'un secoue pour la réveiller.",
-    "descriptionShort": "Motif couleurs cube 9m. Créatures charmées et incapables d'agir si échec JS Sagesse. Réveil par dégâts...",
+    "description": "Vous créez un motif tournoyant de couleurs dans un cube de 9 mètres d'arête à portée. Chaque créature dans la zone qui voit le motif doit réussir un jet de sauvegarde de Sagesse ou être charmée pendant toute la durée du sort. Une créature charmée est incapable d'agir et se déplace au ralenti.",
+    "descriptionShort": "Chaque créature qui voit le motif dans un cube de 9 mètres doit réussir un jet de Sagesse ou être charmée et incapable d'agir.",
     "higherLevels": null,
-    "incantation": "Hypnoticus patternus, que ce motif envoûte mes ennemis !",
-    "recommendation": "ESSENTIEL - Domaine Tromperie",
+    "incantation": "Hypnoticus patternus, que les regards se perdent dans les couleurs !",
+    "recommendation": null,
     "source": "extended",
     "summary": "Charme zone"
   },
@@ -2901,7 +3122,7 @@ export const spellsData: Spell[] = [
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": "une pincée de poussière de diamant d'une valeur de 25 po, que le sort consomme",
+      "material": "une pincée de poussière de diamant d'une valeur d'au moins 25 po, que le sort consomme",
       "materialConsumed": true
     },
     "duration": {
@@ -2910,13 +3131,13 @@ export const spellsData: Spell[] = [
     },
     "concentration": false,
     "ritual": false,
-    "description": "Pour la durée du sort, vous cachez une cible touchée de la divination magique. La cible ne peut pas être ciblée par une magie de divination ni perçue par des capteurs magiques (comme Clairvoyance).",
-    "descriptionShort": "Cache cible de la divination magique pendant 8 heures. Composante 25 po consommée...",
+    "description": "Pour toute la durée du sort, vous cachez une cible que vous touchez des sorts de divination. La cible peut être une créature consentante, un lieu ou un objet. Elle ne peut pas être ciblée par les sorts de divination ni perçue par des capteurs de scrutation magiques.",
+    "descriptionShort": "Une cible (créature, lieu ou objet) est protégée des sorts de divination et de la scrutation pendant 8 heures.",
     "higherLevels": null,
-    "incantation": "Nondetectio, que cette créature soit cachée de tous les yeux magiques !",
-    "recommendation": "ESSENTIEL - Domaine Tromperie",
+    "incantation": "Nondetectio, que mes secrets soient à l'abri des regards indiscrets !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "Anti-divination"
+    "summary": "Immunisé divination"
   },
   {
     "id": "confusion",
@@ -2941,11 +3162,11 @@ export const spellsData: Spell[] = [
     },
     "concentration": true,
     "ritual": false,
-    "description": "Cette sphère de rayonnement de 3 mètres de rayon centrée sur un point à portée rend les créatures confuses. Chaque créature dans la zone doit effectuer un jet de sauvegarde de Sagesse. En cas d'échec, la créature est incapable de distinguer alliés et ennemis et doit lancer un d10 pour déterminer son action : 1 se déplace aléatoirement, 2-6 ne fait rien, 7-8 attaque créature proche, 9-10 agit normalement.",
-    "descriptionShort": "Sphère 3m : créatures confuses. JS Sagesse. d10 pour action aléatoire chaque tour...",
-    "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 5 ou supérieur, le rayon augmente de 1,50 mètre pour chaque niveau d'emplacement au-dessus du niveau 4.",
-    "incantation": "Confusio mentalis, que l'esprit de mes ennemis soit embrouillé !",
-    "recommendation": "ESSENTIEL - Domaine Tromperie",
+    "description": "Cette zone affecte une sphère de 3 mètres de rayon centrée sur un point de votre choix à portée. Chaque créature dans la sphère doit réussir un jet de sauvegarde de Sagesse ou être affectée par la confusion. Une créature affectée ne peut pas réagir et doit lancer un d10 au début de chacun de ses tours pour déterminer son comportement : 1-2 déplacement aléatoire, 3-4 pas d'action, 5-6 attaque créature aléatoire, 7-8 action normale, 9-10 peut agir normalement.",
+    "descriptionShort": "Les créatures dans une sphère de 3 mètres doivent réussir un jet de Sagesse ou être confuses et agir de manière aléatoire.",
+    "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 5 ou supérieur, le rayon de la sphère augmente de 1,50 mètre pour chaque niveau d'emplacement au-dessus du niveau 4.",
+    "incantation": "Confusio mentalis, que l'esprit de mes ennemies se perde !",
+    "recommendation": null,
     "source": "extended",
     "summary": "Confusion zone"
   },
@@ -2971,13 +3192,13 @@ export const spellsData: Spell[] = [
     },
     "concentration": false,
     "ritual": false,
-    "description": "Vous vous téléportez instantanément d'un endroit à un autre, transportant tout votre équipement. Vous pouvez amener une créature consentante de votre taille ou plus petite et son équipement. Vous arrivez à un point précis que vous pouvez visualiser ou décrire. Si vous arriveriez dans un objet solide, vous subissez 4d6 dégâts de force et le sort échoue.",
-    "descriptionShort": "Téléportation jusqu'à 150m. Peut amener 1 créature consentante. 4d6 dégâts si arrivée dans solide...",
+    "description": "Vous vous téléportez de votre emplacement actuel vers n'importe quel autre emplacement à portée. Vous arrivez exactement à l'endroit désiré. Vous pouvez également amener un objet consentant de votre taille ou plus petit, ou une créature consentante de votre taille ou plus petite. Si vous arriveriez dans un objet solide, vous subissez 4d6 dégâts de force et le sort échoue.",
+    "descriptionShort": "Vous vous téléportez jusqu'à 150 mètres. Vous pouvez amener une créature consentante ou un objet de votre taille.",
     "higherLevels": null,
-    "incantation": "Porta dimensionalis, que je traverse les dimensions !",
-    "recommendation": "ESSENTIEL - Domaine Tromperie",
+    "incantation": "Porta dimensionalis, que l'espace se plie à ma volonté !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "Téléportation 150m"
+    "summary": "Téléportation"
   },
   {
     "id": "domination-de-personne",
@@ -3002,11 +3223,11 @@ export const spellsData: Spell[] = [
     },
     "concentration": true,
     "ritual": false,
-    "description": "Vous tentez de charmer un humanoïde visible à portée. Il doit effectuer un jet de sauvegarde de Sagesse. En cas d'échec, vous charmez la cible pour la durée du sort. Vous avez un lien télépathique et pouvez commander la cible (action pour contrôle total). À la fin de chaque tour de la cible, elle refait son JS si elle subit des dégâts.",
-    "descriptionShort": "Charne humanoïde. JS Sagesse. Contrôle télépathique. Nouveau JS si dégâts subis chaque tour...",
-    "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 6, la durée est de 10 minutes. Niveau 7 : 1 heure. Niveau 8 : 8 heures. Niveau 9 : jusqu'à 24 heures.",
-    "incantation": "Dominius personae, que cette âme m'appartienne !",
-    "recommendation": "ESSENTIEL - Domaine Tromperie",
+    "description": "Vous tentez de contrôler mentalement un humanoïde visible à portée. La cible doit réussir un jet de sauvegarde de Sagesse ou être charmée. Pendant toute la durée du sort, vous avez un lien télépathique avec la cible. Chaque fois que la cible subit des dégâts, elle peut refaire le jet de sauvegarde.",
+    "descriptionShort": "Un humanoïde doit réussir un jet de Sagesse ou être charmé et sous votre contrôle télépathique.",
+    "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 6, la durée devient 'jusqu'à 10 minutes'. Au niveau 7, 'jusqu'à 1 heure'. Au niveau 8+, 'jusqu'à 8 heures'.",
+    "incantation": "Dominatio personae, que mon esprit domine le sien !",
+    "recommendation": null,
     "source": "extended",
     "summary": "Contrôle humanoïde"
   },
@@ -3017,7 +3238,7 @@ export const spellsData: Spell[] = [
     "level": 5,
     "levelDisplay": "Niveau 5",
     "school": "enchantment",
-    "type": "Enchantement / Mental",
+    "type": "Enchantement",
     "isDomainSpell": true,
     "castingTime": "1 action",
     "range": "9 mètres",
@@ -3033,14 +3254,15 @@ export const spellsData: Spell[] = [
     },
     "concentration": true,
     "ritual": false,
-    "description": "Vous tentez de modifier les souvenirs d'une créature charmée. La cible doit effectuer un jet de sauvegarde de Sagesse. En cas d'échec, vous pouvez modifier un souvenir de moins de 24 heures (absent, modifié, ou nouveau). La modification est permanente et la cible peut devenir instable si le souvenir est trop incohérent.",
-    "descriptionShort": "Modifie souvenir < 24h créature charmée. JS Sagesse. Changement permanent...",
+    "description": "Vous tentez de remodeler les souvenirs d'une créature. La cible doit réussir un jet de sauvegarde de Sagesse ou être charmée. Pendant que la cible est charmée de cette façon, vous pouvez affecter sa mémoire d'un événement s'étant produit au cours des dernières 24 heures et durant moins de 10 minutes. Vous pouvez supprimer toute mémoire de l'événement, permettre à la cible de se souvenir avec parfaite clarté, changer sa mémoire de détails, ou créer une mémoire d'un autre événement.",
+    "descriptionShort": "Vous modifiez les souvenirs d'une créature des dernières 24 heures. La cible doit réussir un jet de Sagesse ou être charmée.",
     "higherLevels": null,
-    "incantation": "Memoria mutatio, que les souvenirs soient altérés selon ma volonté !",
-    "recommendation": "ESSENTIEL - Domaine Tromperie",
+    "incantation": "Memoria modificata, que les souvenirs obéissent à ma volonté !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "Modifie souvenir"
+    "summary": "Modifie mémoire"
   },
+  // DOMAINES - Sorts de la Connaissance (Knowledge)
   {
     "id": "identification",
     "name": "Identification",
@@ -3048,7 +3270,7 @@ export const spellsData: Spell[] = [
     "level": 1,
     "levelDisplay": "Niveau 1",
     "school": "divination",
-    "type": "Divination / Rituel",
+    "type": "Divination",
     "isDomainSpell": true,
     "castingTime": "1 minute",
     "range": "contact",
@@ -3063,13 +3285,13 @@ export const spellsData: Spell[] = [
     },
     "concentration": false,
     "ritual": true,
-    "description": "Vous choisissez un objet que vous devez toucher pendant l'incantation. S'il s'agit d'un objet magique ou d'un objet imprégné de magie, vous découvrez ses propriétés, comment les utiliser, s'il nécessite une harmonisation, et combien de charges il lui reste. Vous découvrez si des sorts affectent l'objet et ce que sont ces sorts. Si l'objet a été créé par un sort, vous découvrez quel sort.",
-    "descriptionShort": "Rituel. Révèle propriétés objet magique : usage, harmonisation, charges, sorts affectant...",
+    "description": "Vous choisissez un objet que vous devez toucher pendant l'incantation. Si c'est un objet magique ou un objet imprégné de magie, vous apprenez ses propriétés et comment les utiliser, s'il nécessite une attunement et combien de charges il possède. Si l'objet a été créé par un sort, vous apprenez quel sort l'a créé.",
+    "descriptionShort": "Vous identifiez les propriétés magiques d'un objet que vous touchez.",
     "higherLevels": null,
-    "incantation": "Identificatio, que les secrets de cet objet me soient révélés !",
-    "recommendation": "ESSENTIEL - Domaine Connaissance",
+    "incantation": "Identificatio, que les mystères de cet objet soient révélés !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "Identifie magie"
+    "summary": "Identifie objet"
   },
   {
     "id": "suggestion",
@@ -3078,14 +3300,14 @@ export const spellsData: Spell[] = [
     "level": 2,
     "levelDisplay": "Niveau 2",
     "school": "enchantment",
-    "type": "Enchantement / Charme",
+    "type": "Enchantement",
     "isDomainSpell": true,
     "castingTime": "1 action",
     "range": "9 mètres",
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": "la langue d'un serpent et un rayon de miel",
+      "material": "la langue d'un serpent et un rayon de miel ou d'eau douce",
       "materialConsumed": false
     },
     "duration": {
@@ -3094,11 +3316,11 @@ export const spellsData: Spell[] = [
     },
     "concentration": true,
     "ritual": false,
-    "description": "Vous suggérez un cours d'activité à une créature visible à portée. La cible doit effectuer un jet de sauvegarde de Sagesse. En cas d'échec, elle suit la suggestion à sa meilleure capacité. La suggestion doit être formulée pour sembler raisonnable (pas suicidaire). Si vous ou un compagnon blessez la cible, le sort se termine.",
-    "descriptionShort": "Cible suit suggestion raisonnable. JS Sagesse. Sort se termine si cible blessée...",
+    "description": "Vous suggérez une activité à une créature visible à portée. La cible doit réussir un jet de sauvegarde de Sagesse ou être charmée. L'activité doit être formulée de manière à sembler raisonnable. Se demander à une créature de se poignarder ou de se jeter sur une lance se terminera automatiquement le sort. La cible poursuit l'activité suggérée jusqu'à ce qu'elle se termine ou que le sort se termine.",
+    "descriptionShort": "Vous suggérez une activité raisonnable à une créature. Elle doit réussir un jet de Sagesse ou être charmée et obéir.",
     "higherLevels": null,
-    "incantation": "Suggestio, qu'il suive ma suggestion comme si c'était sa propre idée !",
-    "recommendation": "ESSENTIEL - Domaine Connaissance",
+    "incantation": "Suggestio, que ma voix guide ses actions !",
+    "recommendation": null,
     "source": "extended",
     "summary": "Suggestion"
   },
@@ -3120,16 +3342,15 @@ export const spellsData: Spell[] = [
       "materialConsumed": false
     },
     "duration": {
-      "type": "timed",
-      "value": "1 round"
+      "type": "instantaneous"
     },
     "concentration": false,
     "ritual": false,
-    "description": "Vous envoyez un court message de vingt-cinq mots maximum à une créature dont vous connaissez l'identité. La créature entend le message dans son esprit, reconnaît votre identité, et peut répondre immédiatement de la même manière. Le sort traverse n'importe quelle barrière, mais pas d'autre plan (5% échec si autre plan).",
-    "descriptionShort": "Message 25 mots à créature connue. Réponse possible. Illimitée, traverse barrières...",
+    "description": "Vous envoyez un court message de vingt-cinq mots maximum à une créature dont vous avez déjà rencontré. La créature entend le message dans son esprit, et peut répondre immédiatement de la même manière. Le sort permet aux créatures d'Intelligence 1 de comprendre le sens du message.",
+    "descriptionShort": "Vous envoyez un message de 25 mots à une créature connue, partout. Elle peut répondre.",
     "higherLevels": null,
-    "incantation": "Missagium, que mes paroles portent jusqu'à l'oreille de la cible !",
-    "recommendation": "ESSENTIEL - Domaine Connaissance",
+    "incantation": "Mensagium, que mes paroles voyagent jusqu'à l'oreille de ma cible !",
+    "recommendation": null,
     "source": "extended",
     "summary": "Message 25 mots"
   },
@@ -3140,14 +3361,14 @@ export const spellsData: Spell[] = [
     "level": 4,
     "levelDisplay": "Niveau 4",
     "school": "divination",
-    "type": "Divination / Rituel",
+    "type": "Divination",
     "isDomainSpell": true,
     "castingTime": "1 action",
     "range": "personnelle",
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": "encens et une offrande appropriée à votre religion d'une valeur d'au moins 25 po",
+      "material": "de l'encens et une offrande sacrificationnelle appropriée à votre religion d'une valeur d'au moins 25 po, que le sort consomme",
       "materialConsumed": true
     },
     "duration": {
@@ -3155,22 +3376,22 @@ export const spellsData: Spell[] = [
     },
     "concentration": false,
     "ritual": true,
-    "description": "Votre divinité vous fournit une information utile concernant un but, un événement ou une activité spécifique qui se produira dans les 7 prochains jours. Le MD répond avec une phrase courte, parfois cryptique. Si vous lancez ce sort plus d'une fois avant un repos long, 25% de chance cumulative d'obtenir une réponse aléatoire.",
-    "descriptionShort": "Rituel. Réponse divine à question sur 7 jours. 25 po consommée. 25% échec si spam...",
+    "description": "Votre divinité vous fournit un présage concernant les résultats d'une action spécifique que vous envisagez de poser dans les 30 prochaines minutes. Le MD choisit parmi : Bon, Mauvais, Bon et Mauvais, ou Rien. Le sort ne tient pas compte des changements de circonstances qui pourraient modifier l'issue.",
+    "descriptionShort": "Votre divinité donne un présage (Bon, Mauvais, Bon et Mauvais, ou Rien) sur une action prévue dans les 30 minutes.",
     "higherLevels": null,
-    "incantation": "Divinatio, que les dieux me révèlent ce qui est caché !",
-    "recommendation": "ESSENTIEL - Domaine Connaissance",
+    "incantation": "Divinatio, que le savoir divin éclaire mon chemin !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "Divination"
+    "summary": "Présage"
   },
   {
     "id": "vol",
     "name": "Vol",
-    "nameEn": "Flight",
+    "nameEn": "Fly",
     "level": 4,
     "levelDisplay": "Niveau 4",
     "school": "transmutation",
-    "type": "Transmutation / Déplacement",
+    "type": "Transmutation",
     "isDomainSpell": true,
     "castingTime": "1 action",
     "range": "contact",
@@ -3186,11 +3407,11 @@ export const spellsData: Spell[] = [
     },
     "concentration": true,
     "ritual": false,
-    "description": "Vous touchez une créature consentante. La cible gagne une vitesse de vol de 18 mètres pour la durée du sort. Quand le sort se termine, la cible descend en flottant si elle est encore en l'air, sans subir de dégâts de chute.",
-    "descriptionShort": "Vol 18m pendant 10 minutes. Chute flottante si sort se termine en l'air...",
+    "description": "Vous touchez une créature consentante. La cible gagne une vitesse de vol de 18 mètres pendant toute la durée du sort. Lorsque le sort se termine, la cible tombe si elle est encore en l'air.",
+    "descriptionShort": "Une créature consentante gagne une vitesse de vol de 18 mètres pendant 10 minutes.",
     "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 5 ou supérieur, vous pouvez cibler une créature supplémentaire pour chaque niveau d'emplacement au-dessus du niveau 4.",
-    "incantation": "Volatus, que cette créature s'élève dans les airs !",
-    "recommendation": "ESSENTIEL - Domaine Connaissance",
+    "incantation": "Volatus, que les vents me portent vers les cieux !",
+    "recommendation": null,
     "source": "extended",
     "summary": "Vol 18m"
   },
@@ -3201,14 +3422,14 @@ export const spellsData: Spell[] = [
     "level": 5,
     "levelDisplay": "Niveau 5",
     "school": "divination",
-    "type": "Divination / Rituel",
+    "type": "Divination",
     "isDomainSpell": true,
     "castingTime": "10 minutes",
     "range": "personnelle",
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": "encens d'une valeur d'au moins 250 po, que le sort consomme, et quatre objets d'ivoire",
+      "material": "de l'encens valant au moins 250 po, et quatre lingots d'ivoire d'une valeur d'au moins 50 po chacun, que le sort consomme",
       "materialConsumed": true
     },
     "duration": {
@@ -3216,13 +3437,13 @@ export const spellsData: Spell[] = [
     },
     "concentration": false,
     "ritual": false,
-    "description": "Nommez ou décrivez une personne, un lieu ou un objet. Le sort révèle un récit sommaire des informations significatives sur ce sujet (histoire, propriétaires, événements importants, etc.). Le sort peut donner des informations sur des créatures légendaires, des artefacts magiques, des lieux anciens, etc.",
-    "descriptionShort": "Informations sur personne, lieu ou objet célèbre. 250 po consommée. Histoire et secrets...",
+    "description": "Nommez ou décrivez une personne, un lieu ou un objet. Le sort révèle un résumé de l'information importante sur ce sujet. Des informations sur un puissant artefact, par exemple, peuvent inclure son histoire, son origine, et des légendes connexes.",
+    "descriptionShort": "Nommez une personne, un lieu ou un objet. Le sort révèle des informations importantes et légendaires à son sujet.",
     "higherLevels": null,
-    "incantation": "Legenda lore, que les secrets des légendes me soient révélés !",
-    "recommendation": "ESSENTIEL - Domaine Connaissance",
+    "incantation": "Legenda, que les secrets antiques soient révélés !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "Info légende"
+    "summary": "Infos légendaires"
   },
   {
     "id": "quête",
@@ -3231,7 +3452,7 @@ export const spellsData: Spell[] = [
     "level": 5,
     "levelDisplay": "Niveau 5",
     "school": "enchantment",
-    "type": "Enchantement / Obligation",
+    "type": "Enchantement",
     "isDomainSpell": true,
     "castingTime": "1 minute",
     "range": "18 mètres",
@@ -3247,14 +3468,15 @@ export const spellsData: Spell[] = [
     },
     "concentration": false,
     "ritual": false,
-    "description": "Vous imposez une quête magique à une créature visible à portée. La cible doit effectuer un jet de sauvegarde de Sagesse. En cas d'échec, elle est charmée et doit suivre votre instruction comme une quête/sacrifice. Si la cible désobéit, elle subit 5d10 dégâts psychiques (réduit à moitié au round suivant). Vous pouvez révoquer la quête à tout moment.",
-    "descriptionShort": "Impose quête/sacrifice. JS Sagesse. 5d10 dégâts psychiques si désobéissance. Dure 30 jours...",
-    "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 7 ou 8, la durée est de 1 an. Niveau 9 : jusqu'à révoqué.",
-    "incantation": "Geas imperium, que cette quête lie l'âme de la cible !",
-    "recommendation": "ESSENTIEL - Domaine Connaissance",
+    "description": "Vous imposez une quête magique à une créature. La cible doit réussir un jet de sauvegarde de Sagesse ou être affectée. Tant qu'elle n'accomplit pas la quête, elle subit 5d10 dégâts psychiques chaque jour. Vous pouvez spécifier des conditions pour accomplir la quête ou la lever. Si vous infligez des dégâts à la cible, le sort se termine.",
+    "descriptionShort": "Vous imposez une quête à une créature. Elle subit 5d10 dégâts psychiques par jour jusqu'à l'accomplir.",
+    "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 7 ou 8, la durée est d'un an et un jour. Au niveau 9, la quête dure jusqu'à ce qu'elle soit accomplie.",
+    "incantation": "Geas imperatus, que cette quête soit gravée dans l'âme !",
+    "recommendation": null,
     "source": "extended",
     "summary": "Quête magique"
   },
+  // DOMAINES - Sorts de la Forge (Forge)
   {
     "id": "châtiment-brûlant",
     "name": "Châtiment brûlant",
@@ -3278,13 +3500,13 @@ export const spellsData: Spell[] = [
     },
     "concentration": true,
     "ritual": false,
-    "description": "La prochaine fois que vous touchez une créature avec une attaque d'arme au corps à corps pendant la durée du sort, votre arme s'enflamme et inflige 1d6 dégâts de feu supplémentaires. De plus, la cible doit réussir un jet de sauvegarde de Constitution ou être enflammée. La cible enflammée subit 1d6 dégâts de feu au début de chacun de ses tours jusqu'à ce que le sort se termine ou qu'elle utilise une action pour éteindre les flammes.",
-    "descriptionShort": "Prochaine attaque +1d6 feu. Cible enflammée : 1d6 feu/début tour jusqu'à extinction...",
+    "description": "La prochaine fois que vous touchez une créature avec une attaque au corps à corps pendant la durée du sort, votre arme flamboie et l'attaque inflige 1d6 dégâts de feu supplémentaires à la cible et la met le feu. Au début de chacun de ses tours, la cible doit faire un jet de sauvegarde de Constitution. En cas d'échec, elle subit 1d6 dégâts de feu. En cas de réussite, le sort se termine.",
+    "descriptionShort": "Votre prochaine attaque au corps à corps inflige 1d6 dégâts de feu et met le feu à la cible (1d6/tour, Jd CON pour éteindre).",
     "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 2 ou supérieur, les dégâts initiaux augmentent de 1d6 pour chaque niveau d'emplacement au-dessus du niveau 1.",
-    "incantation": "Smite ignis, que mon arme brûle de la fureur sacrée !",
-    "recommendation": "ESSENTIEL - Domaine Forge",
+    "incantation": "Punitio ardens, que le feu de la forge consume mon ennemi !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "Attaque +1d6 feu"
+    "summary": "+1d6 feu + feu"
   },
   {
     "id": "chaleur-métallique",
@@ -3309,24 +3531,24 @@ export const spellsData: Spell[] = [
     },
     "concentration": true,
     "ritual": false,
-    "description": "Choisissez une créature manufacturée en métal visible à portée. Vous la faites devenir brûlante. Une créature en contact physique avec l'objet subit 2d8 dégâts de feu quand vous lancez le sort et à chaque tour tant que vous vous concentrez. Si la créature tient ou porte l'objet, elle doit réussir un jet de sauvegarde de Constitution ou lâcher l'objet. Elle ne peut pas reprendre l'objet avant le début de votre prochain tour.",
-    "descriptionShort": "Chauffe objet métal. 2d8 feu par round si contact. JS CON ou lâche objet...",
+    "description": "Choisissez un objet métallique manufacturé visible à portée. Vous le rendez incandescent. Toute créature en contact physique avec l'objet subit 2d8 dégâts de feu lorsque vous lancez le sort. Tant que vous vous concentrez, vous pouvez utiliser une action bonus pour infliger à nouveau ces dégâts. Si une créature tient ou porte l'objet, elle doit réussir un jet de sauvegarde de Constitution ou le lâcher.",
+    "descriptionShort": "Vous rendez un objet métallique incandescent. Les créatures en contact subissent 2d8 dégâts de feu (peut être répété par action bonus).",
     "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 3 ou supérieur, les dégâts augmentent de 1d8 pour chaque niveau d'emplacement au-dessus du niveau 2.",
-    "incantation": "Metallum calor, que ce métal devienne brûlant !",
-    "recommendation": "ESSENTIEL - Domaine Forge",
+    "incantation": "Metallum calidus, que le métal brûle comme dans la forge !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "2d8 feu métal"
+    "summary": "2d8 feu (métal)"
   },
   {
     "id": "élémentaire-de-feu",
     "name": "Élémentaire de feu",
-    "nameEn": "Fire Elemental",
+    "nameEn": "Summon Lesser Demons",
     "level": 3,
     "levelDisplay": "Niveau 3",
     "school": "conjuration",
-    "type": "Invocation / Appel",
+    "type": "Invocation",
     "isDomainSpell": true,
-    "castingTime": "1 minute",
+    "castingTime": "1 action",
     "range": "18 mètres",
     "components": {
       "verbal": true,
@@ -3340,13 +3562,13 @@ export const spellsData: Spell[] = [
     },
     "concentration": true,
     "ritual": false,
-    "description": "Vous invoquez un élémentaire de feu dans un espace inoccupé visible à portée. L'élémentaire est amical envers vous et vos compagnons. Agissez comme un groupe pour déterminer ses actions. Il se dissipe après 1 heure ou si ses PV tombent à 0. Si vous perdez la concentration, l'élémentaire devient hostile.",
-    "descriptionShort": "Invoque élémentaire de feu. Amical. Groupe pour actions. Hostile si concentration perdue...",
+    "description": "Vous invoquez un esprit élémentaire de feu qui prend la forme d'un élémentaire de feu. L'élémentaire apparaît dans un espace inoccupé à portée. Il obéit à vos ordres verbaux et est amical envers vous et vos compagnons.",
+    "descriptionShort": "Vous invoquez un élémentaire de feu qui vous obéit.",
     "higherLevels": null,
-    "incantation": "Ignis elementalis, que l'élémentaire de feu apparaisse !",
-    "recommendation": "ESSENTIEL - Domaine Forge",
+    "incantation": "Elementalis ignis, que l'esprit du feu de la forge me serve !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "Invoque feu"
+    "summary": "Invoque élémentaire"
   },
   {
     "id": "fabrication",
@@ -3355,7 +3577,7 @@ export const spellsData: Spell[] = [
     "level": 4,
     "levelDisplay": "Niveau 4",
     "school": "transmutation",
-    "type": "Transmutation / Création",
+    "type": "Transmutation",
     "isDomainSpell": true,
     "castingTime": "10 minutes",
     "range": "36 mètres",
@@ -3370,13 +3592,13 @@ export const spellsData: Spell[] = [
     },
     "concentration": false,
     "ritual": false,
-    "description": "Vous convertissez des matières premières en produits de la même matière. Par exemple, vous pouvez fabriquer un pont de bois à partir d'un bouquet d'arbres, une corde à partir d'un patch de chanvre, ou des vêtements à partir de lin ou de laine. Vous ne pouvez pas créer des créatures, des objets magiques, ou des objets nécessitant un haut degré d'artisanat (joaillerie, armes de qualité, etc.).",
-    "descriptionShort": "Transforme matières premières en produits. Pas créatures, magie ou artisanat complexe. 10 min...",
+    "description": "Vous convertissez la matière première en produits de la même matière. Par exemple, vous pouvez fabriquer un pont en bois à partir d'un bosquet d'arbres. Vous pouvez fabriquer des objets de matière végétale, de pierre, de cristal, de terre cuite, de bois, de métal ou d'os. La qualité des objets dépend de votre maîtrise en artisanat.",
+    "descriptionShort": "Vous convertissez la matière première en produits (bois, pierre, métal, etc.). La qualité dépend de votre artisanat.",
     "higherLevels": null,
-    "incantation": "Fabricatio, que la matière prenne forme selon ma volonté !",
-    "recommendation": "ESSENTIEL - Domaine Forge",
+    "incantation": "Fabricatio, que la matière prenne la forme que je désire !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "Crée objets"
+    "summary": "Transforme matière"
   },
   {
     "id": "mur-de-pierre",
@@ -3385,7 +3607,7 @@ export const spellsData: Spell[] = [
     "level": 4,
     "levelDisplay": "Niveau 4",
     "school": "evocation",
-    "type": "Évocation / Création",
+    "type": "Évocation",
     "isDomainSpell": true,
     "castingTime": "1 action",
     "range": "36 mètres",
@@ -3401,13 +3623,13 @@ export const spellsData: Spell[] = [
     },
     "concentration": true,
     "ritual": false,
-    "description": "Un mur de pierre solide apparaît à portée. Le mur mesure jusqu'à 6 mètres de long, 3 mètres de haut et 15 cm d'épaisseur. Alternativement, vous pouvez former un cercle de 3 mètres de diamètre et 6 mètres de haut. Si le mur coupe l'espace d'une créature, elle est poussée d'un côté au choix. Si le mur apparaît sur une surface instable, il peut s'effondrer.",
-    "descriptionShort": "Mur pierre 6m x 3m x 15cm ou cercle. Pousse créatures si coupe espace. Peut s'effondrer...",
+    "description": "Un mur de pierre non magique apparaît à portée. Le mur mesure jusqu'à 6 mètres de long, 3 mètres de haut et 15 centimètres d'épaisseur. Vous pouvez doubler la surface du mur en réduisant son épaisseur de moitié. Si vous maintenez votre concentration pendant toute la durée du sort, le mur devient permanent.",
+    "descriptionShort": "Un mur de pierre de 6m x 3m apparaît. Devient permanent si concentration maintenue 10 minutes.",
     "higherLevels": null,
-    "incantation": "Murus lapidis, que ce mur de pierre s'élève !",
-    "recommendation": "ESSENTIEL - Domaine Forge",
+    "incantation": "Murus lapidis, que la pierre s'élève à ma commande !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "Mur pierre"
+    "summary": "Mur de pierre"
   },
   {
     "id": "animation-des-objets",
@@ -3416,7 +3638,7 @@ export const spellsData: Spell[] = [
     "level": 5,
     "levelDisplay": "Niveau 5",
     "school": "transmutation",
-    "type": "Transmutation / Invocation",
+    "type": "Transmutation",
     "isDomainSpell": true,
     "castingTime": "1 action",
     "range": "36 mètres",
@@ -3432,11 +3654,11 @@ export const spellsData: Spell[] = [
     },
     "concentration": true,
     "ritual": false,
-    "description": "Des objets non portés et non magiques à portée prennent vie et se mettent à bouger selon vos ordres. Vous animez jusqu'à 10 objets non magiques. Vous décidez quels objets animer. Un objet animé est une créature avec des statistiques basées sur sa taille (voir règles D&D). Les objets suivent vos ordres verbaux. Si vous perdez la concentration, ils redeviennent inertes.",
-    "descriptionShort": "Anime jusqu'à 10 objets non magiques. Ils deviennent créatures temporaires et obéissent...",
-    "higherLevels": null,
-    "incantation": "Objectum animatus, que ces objets prennent vie !",
-    "recommendation": "ESSENTIEL - Domaine Forge",
+    "description": "Des objets répondent à vos ordres. Vous animez jusqu'à dix objets non magiques dans une zone de 36 mètres. Les objets animés deviennent des créatures sous votre contrôle. Un objet Tiny a un CA de 18, 20 PV et attaque avec +8 pour 1d4+4 dégâts. Un objet Small a un CA de 16, 25 PV et attaque avec +6 pour 1d8+2 dégâts. Un objet Medium a un CA de 13, 40 PV et attaque avec +5 pour 2d6+1 dégâts. Un objet Large a un CA de 10, 50 PV et attaque avec +6 pour 2d10+2 dégâts. Un objet Huge a un CA de 10, 80 PV et attaque avec +8 pour 2d12+4 dégâts.",
+    "descriptionShort": "Vous animez jusqu'à dix objets non magiques qui combattent pour vous (stats selon la taille).",
+    "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 6 ou supérieur, vous pouvez animer deux objets supplémentaires pour chaque niveau d'emplacement au-dessus du niveau 5.",
+    "incantation": "Objectum animatum, que les objets se soulèvent et obéissent !",
+    "recommendation": null,
     "source": "extended",
     "summary": "Anime objets"
   },
@@ -3447,30 +3669,31 @@ export const spellsData: Spell[] = [
     "level": 5,
     "levelDisplay": "Niveau 5",
     "school": "evocation",
-    "type": "Évocation / Barrière",
+    "type": "Évocation / Protection",
     "isDomainSpell": true,
     "castingTime": "1 action",
     "range": "36 mètres",
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": "une pincée de poudre faite d'un diamant écrasé",
+      "material": "une pincée de poudre faite d'une perle réduite en poudre",
       "materialConsumed": false
     },
     "duration": {
-      "type": "timed",
+      "type": "concentration",
       "value": "concentration, jusqu'à 10 minutes"
     },
     "concentration": true,
     "ritual": false,
-    "description": "Un mur de force invisible et intangible apparaît à portée. Le mur mesure jusqu'à 10 mètres de long, 6 mètres de haut et 3 cm d'épaisseur. Le mur est immunisé contre tous les dégâts et ne peut être dissipé par Dissipation de la magie. Un sort de Désintégration détruit immédiatement le mur. Le mur s'étend dans l'Éthéré.",
-    "descriptionShort": "Mur invisible intangible. Immuni dégâts. Désintégration le détruit. Bloque tout...",
+    "description": "Un mur invisible de force apparaît à portée. Le mur est constitué de dix panneaux de 3 mètres sur 3 mètres. Chaque panneau doit être contigu à un autre. Rien ne peut physiquement traverser le mur. Il est immunisé contre la dissipation de la magie mais disparaît avec une annulation de l'invocation.",
+    "descriptionShort": "Un mur invisible de force de 10 panneaux de 3m x 3m. Rien ne peut traverser.",
     "higherLevels": null,
-    "incantation": "Murus vis, que ce mur de force infranchissable s'élève !",
-    "recommendation": "ESSENTIEL - Domaine Forge",
+    "incantation": "Murus fortis, qu'une barrière impénétrable se dresse !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "Mur infranchissable"
+    "summary": "Mur invisible"
   },
+  // DOMAINES - Sorts du Tombeau (Grave)
   {
     "id": "fausse-vie",
     "name": "Fausse vie",
@@ -3478,14 +3701,14 @@ export const spellsData: Spell[] = [
     "level": 1,
     "levelDisplay": "Niveau 1",
     "school": "necromancy",
-    "type": "Nécromancie / Temporaire",
+    "type": "Nécromancie",
     "isDomainSpell": true,
     "castingTime": "1 action",
     "range": "personnelle",
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": "une petite quantité d'alcool ou d'alcool fort",
+      "material": "un petit morceau d'alcool",
       "materialConsumed": false
     },
     "duration": {
@@ -3494,11 +3717,11 @@ export const spellsData: Spell[] = [
     },
     "concentration": false,
     "ritual": false,
-    "description": "Vous vous imprégnez d'une nécromancie fausse pour gagner des points de vie temporaires. Lancez 1d4 + 4 pour déterminer les points de vie temporaires. Si vous perdez ces points de vie temporaires, le sort se termine.",
-    "descriptionShort": "Gagne 1d4 + 4 PV temporaires pendant 1 heure. Se termine si PV temporaires perdus...",
+    "description": "Vous vous imprégnez d'une énergie nécromantique qui vous confère une résistance durable. Vous gagnez 1d4 + 4 points de vie temporaires pour toute la durée du sort.",
+    "descriptionShort": "Vous gagnez 1d4 + 4 points de vie temporaires pendant 1 heure.",
     "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 2 ou supérieur, vous gagnez 5 points de vie temporaires supplémentaires pour chaque niveau d'emplacement au-dessus du niveau 1.",
-    "incantation": "Vita falsa, que cette énergie nécromantique me fortifie !",
-    "recommendation": "ESSENTIEL - Domaine Tombeau",
+    "incantation": "Vita falsa, que l'énergie de la mort me fortifie !",
+    "recommendation": null,
     "source": "extended",
     "summary": "1d4+4 PV temp"
   },
@@ -3509,14 +3732,14 @@ export const spellsData: Spell[] = [
     "level": 2,
     "levelDisplay": "Niveau 2",
     "school": "necromancy",
-    "type": "Nécromancie / Rituel",
+    "type": "Nécromancie",
     "isDomainSpell": true,
     "castingTime": "1 action",
     "range": "contact",
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": "une pincée de sel et une pièce de cuivre pour chaque œil du corps",
+      "material": "une pincée de sel et une pièce de cuivre placée sur chaque œil du cadavre",
       "materialConsumed": false
     },
     "duration": {
@@ -3525,16 +3748,16 @@ export const spellsData: Spell[] = [
     },
     "concentration": false,
     "ritual": true,
-    "description": "Vous touchez un corps ou d'autres restes. Pour la durée du sort, la cible est protégée de la décomposition et ne peut devenir un mort-vivant. Le sort rallonge également la limite de temps pour ramener la cible à la vie. Les jours passés sous l'influence de ce sort ne comptent pas dans le délai pour les sorts comme Rappel à la vie.",
-    "descriptionShort": "Rituel. Protège corps décomposition. Empêche transformation mort-vivant. Prolonge délai résurrection...",
+    "description": "Vous touchez un cadavre ou une autre reste morte. Pour toute la durée du sort, la cible est protégée de la décomposition et ne peut devenir un mort-vivant. Le sort prolonge également la limite de temps pour ramener la cible à la vie.",
+    "descriptionShort": "Un cadavre est protégé de la décomposition et ne peut devenir mort-vivant pendant 10 jours.",
     "higherLevels": null,
-    "incantation": "Requiescat in pace, que ce défunt repose en paix !",
-    "recommendation": "ESSENTIEL - Domaine Tombeau",
+    "incantation": "Requiescat in pace, que le repos éternel préserve ce corps !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "Protège cadavre"
+    "summary": "Préserve cadavre"
   },
   {
-    "id": "rayon-daffaiblissement",
+    "id": "rayon-d-affaiblissement",
     "name": "Rayon d'affaiblissement",
     "nameEn": "Ray of Enfeeblement",
     "level": 2,
@@ -3556,13 +3779,13 @@ export const spellsData: Spell[] = [
     },
     "concentration": true,
     "ritual": false,
-    "description": "Un rayon noir ondulant jaillit de votre main vers une créature à portée. Faites un jet d'attaque avec un sort. Si vous touchez, la cible subit uniquement la moitié des dégâts avec les attaques basées sur la Force. La cible refait un jet de sauvegarde de Constitution à la fin de chacun de ses tours. En cas de réussite, le sort se termine.",
-    "descriptionShort": "Jet attaque sort. Si touche : cible fait demi-dégâts avec Force. JS CON chaque tour pour finir...",
+    "description": "Un rayon d'énergie nécromantique noir sort de votre doigt tendu vers une créature à portée. La cible doit effectuer un jet de sauvegarde de Constitution. En cas d'échec, elle subit la moitié des dégâts avec ses attaques basées sur la Force. La cible peut refaire le jet de sauvegarde à la fin de chacun de ses tours.",
+    "descriptionShort": "Un rayon noir frappe une créature. Elle subit la moitié des dégâts avec ses attaques de Force.",
     "higherLevels": null,
-    "incantation": "Radius enervans, que cette créature soit affaiblie !",
-    "recommendation": "ESSENTIEL - Domaine Tombeau",
+    "incantation": "Radius debilitatis, que la force s'échappe de ce corps !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "Dégâts Force /2"
+    "summary": "Dégâts Force / 2"
   },
   {
     "id": "vampire",
@@ -3571,68 +3794,7 @@ export const spellsData: Spell[] = [
     "level": 3,
     "levelDisplay": "Niveau 3",
     "school": "necromancy",
-    "type": "Nécromancie / Drain",
-    "isDomainSpell": true,
-    "castingTime": "1 action",
-    "range": "personnelle",
-    "components": {
-      "verbal": true,
-      "somatic": true,
-      "material": null,
-      "materialConsumed": false
-    },
-    "duration": {
-      "type": "concentration",
-      "value": "concentration, jusqu'à 1 minute"
-    },
-    "concentration": true,
-    "ritual": false,
-    "description": "Le toucher de votre main chargée d'énergie négative peut drainer la force vitale des autres. Faites une attaque au corps à corps avec un sort contre une créature à portée. En cas de réussite, la cible subit 3d6 dégâts nécrotiques et vous regagnez des points de vie égaux à la moitié des dégâts infligés. Vous pouvez refaire l'attaque chaque tour avec une action.",
-    "descriptionShort": "Attaque corps à corps sort. 3d6 nécrotiques. Vous regagnez moitié en PV. Répétable chaque tour...",
-    "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 4 ou supérieur, les dégâts augmentent de 1d6 pour chaque niveau d'emplacement au-dessus du niveau 3.",
-    "incantation": "Tactus vampiricus, que la vie de ma cible me revienne !",
-    "recommendation": "ESSENTIEL - Domaine Tombeau",
-    "source": "extended",
-    "summary": "3d6 drain PV"
-  },
-  {
-    "id": "flétrissement",
-    "name": "Flétrissement",
-    "nameEn": "Blight",
-    "level": 4,
-    "levelDisplay": "Niveau 4",
-    "school": "necromancy",
-    "type": "Nécromancie / Destruction",
-    "isDomainSpell": true,
-    "castingTime": "1 action",
-    "range": "9 mètres",
-    "components": {
-      "verbal": true,
-      "somatic": true,
-      "material": null,
-      "materialConsumed": false
-    },
-    "duration": {
-      "type": "instantaneous"
-    },
-    "concentration": false,
-    "ritual": false,
-    "description": "Une créature visible à portée doit effectuer un jet de sauvegarde de Constitution. En cas d'échec, elle subit 8d8 dégâts nécrotiques, moitié si réussite. Ce sort a un effet désavantageux sur les créatures végétales et les plantes (désavantage au JS, maximum dégâts).",
-    "descriptionShort": "JS Constitution. 8d8 nécrotiques. Désavantage et max dégâts sur plantes/créatures végétales...",
-    "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 5 ou supérieur, les dégâts augmentent de 1d8 pour chaque niveau d'emplacement au-dessus du niveau 4.",
-    "incantation": "Necrosis marcescens, que cette créature soit flétrie !",
-    "recommendation": "ESSENTIEL - Domaine Tombeau",
-    "source": "extended",
-    "summary": "8d8 nécrotiques"
-  },
-  {
-    "id": "invisibilité-suprême",
-    "name": "Invisibilité suprême",
-    "nameEn": "Greater Invisibility",
-    "level": 4,
-    "levelDisplay": "Niveau 4",
-    "school": "illusion",
-    "type": "Illusion / Furtivité",
+    "type": "Nécromancie / Attaque",
     "isDomainSpell": true,
     "castingTime": "1 action",
     "range": "contact",
@@ -3648,13 +3810,74 @@ export const spellsData: Spell[] = [
     },
     "concentration": true,
     "ritual": false,
-    "description": "Vous ou une créature consentante devenez invisible jusqu'à la fin du sort. Tout ce que la cible porte ou transporte devient invisible tant que cela reste sur sa personne. Contrairement à Invisibilité normale, la cible reste invisible même si elle attaque ou lance un sort.",
-    "descriptionShort": "Cible invisible et reste invisible si attaque ou sort. Concentration jusqu'à 1 minute...",
-    "higherLevels": null,
-    "incantation": "Invisibilitas major, que cette créature disparaisse complètement !",
-    "recommendation": "ESSENTIEL - Domaine Tombeau",
+    "description": "Votre toucher draine l'énergie vitale. Faites une attaque au corps à corps avec un sort contre une créature à portée. En cas de réussite, la cible subit 3d6 dégâts nécrotiques et vous regagnez des points de vie équivalents à la moitié des dégâts infligés. Vous pouvez refaire l'attaque à chacun de vos tours par une action.",
+    "descriptionShort": "Attaque au corps à corps qui inflige 3d6 nécrotiques. Vous regagnez la moitié en PV.",
+    "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 4 ou supérieur, les dégâts augmentent de 1d6 pour chaque niveau d'emplacement au-dessus du niveau 3.",
+    "incantation": "Vampiricus tactus, que la vie de mon ennemi me nourrisse !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "Invisible+"
+    "summary": "3d6 nécrotiques + soin"
+  },
+  {
+    "id": "flétrissement",
+    "name": "Flétrissement",
+    "nameEn": "Blight",
+    "level": 4,
+    "levelDisplay": "Niveau 4",
+    "school": "necromancy",
+    "type": "Nécromancie / Attaque",
+    "isDomainSpell": true,
+    "castingTime": "1 action",
+    "range": "9 mètres",
+    "components": {
+      "verbal": true,
+      "somatic": true,
+      "material": null,
+      "materialConsumed": false
+    },
+    "duration": {
+      "type": "instantaneous"
+    },
+    "concentration": false,
+    "ritual": false,
+    "description": "Une créature à portée doit effectuer un jet de sauvegarde de Constitution. En cas d'échec, elle subit 8d8 dégâts nécrotiques, ou la moitié en cas de réussite. Les plantes ont le désavantage à ce jet et subissent les dégâts maximum.",
+    "descriptionShort": "Une créature subit 8d8 dégâts nécrotiques (Jd CON pour demi-dégâts). Les plantes subissent max.",
+    "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 5 ou supérieur, les dégâts augmentent de 1d8 pour chaque niveau d'emplacement au-dessus du niveau 4.",
+    "incantation": "Marcescentia, que la vie se fane et meure !",
+    "recommendation": null,
+    "source": "extended",
+    "summary": "8d8 nécrotiques"
+  },
+  {
+    "id": "invisibilité-suprême",
+    "name": "Invisibilité suprême",
+    "nameEn": "Greater Invisibility",
+    "level": 4,
+    "levelDisplay": "Niveau 4",
+    "school": "illusion",
+    "type": "Illusion",
+    "isDomainSpell": true,
+    "castingTime": "1 action",
+    "range": "contact",
+    "components": {
+      "verbal": true,
+      "somatic": true,
+      "material": null,
+      "materialConsumed": false
+    },
+    "duration": {
+      "type": "concentration",
+      "value": "concentration, jusqu'à 1 minute"
+    },
+    "concentration": true,
+    "ritual": false,
+    "description": "Vous ou une créature consentante que vous touchez devenez invisible jusqu'à ce que le sort se termine. Tout ce que porte la cible est invisible tant que cela reste sur sa personne. La cible reste invisible même si elle attaque ou lance un sort.",
+    "descriptionShort": "Vous ou une cible devenez invisible. L'invisibilité persiste même en attaquant ou lançant des sorts.",
+    "higherLevels": null,
+    "incantation": "Invisibilitas maior, que le voile de l'ombre me cache complètement !",
+    "recommendation": null,
+    "source": "extended",
+    "summary": "Invisibilité complète"
   },
   {
     "id": "antipathie-sympathie",
@@ -3663,14 +3886,14 @@ export const spellsData: Spell[] = [
     "level": 5,
     "levelDisplay": "Niveau 5",
     "school": "enchantment",
-    "type": "Enchantement / Émotion",
+    "type": "Enchantement",
     "isDomainSpell": true,
     "castingTime": "1 heure",
     "range": "18 mètres",
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": "une goutte de sueur et une pincée de poussière",
+      "material": "soit une goutte de sueur d'un génie de la terre, soit un brin de poil d'un génie de l'ourson",
       "materialConsumed": false
     },
     "duration": {
@@ -3679,13 +3902,13 @@ export const spellsData: Spell[] = [
     },
     "concentration": false,
     "ritual": false,
-    "description": "Cette sécrète magique attire ou repousse certaines créatures. Antipathie : créatures repoussées et doivent réussir un JS Sagesse pour rester dans la zone. Sympathie : créatures attirées et doivent réussir un JS Sagesse pour résister à l'envie d'approcher.",
-    "descriptionShort": "Attire ou repousse créatures. Zone 60m x 60m. Durée 10 jours. JS Sagesse pour résister...",
+    "description": "Vous ciblez un lieu ou un objet. Antipathie : une espèce désignée ressent une intense envie de fuir la zone. Sympathie : une espèce désignée ressent une intense envie de s'approcher et de rester près. La cible doit réussir un jet de sauvegarde de Sagesse ou obéir à l'effet.",
+    "descriptionShort": "Antipathie : les créatures fuient. Sympathie : les créatures sont attirées. La cible doit réussir un jet de Sagesse.",
     "higherLevels": null,
-    "incantation": "Antipathia sympathia, que cette créature soit attirée ou repoussée !",
-    "recommendation": "ESSENTIEL - Domaine Tombeau",
+    "incantation": "Antipathia sympathia, que les âmes soient repoussées ou attirées !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "Attire/Repousse"
+    "summary": "Répulsion/Attraction"
   },
   {
     "id": "nuage-mortel",
@@ -3694,7 +3917,7 @@ export const spellsData: Spell[] = [
     "level": 5,
     "levelDisplay": "Niveau 5",
     "school": "conjuration",
-    "type": "Invocation / Dégâts",
+    "type": "Invocation / Attaque",
     "isDomainSpell": true,
     "castingTime": "1 action",
     "range": "36 mètres",
@@ -3710,18 +3933,327 @@ export const spellsData: Spell[] = [
     },
     "concentration": true,
     "ritual": false,
-    "description": "Vous créez une sphère de 6 mètres de rayon de gaz toxique jaune-vert à portée. Le nuage se déplace de 3 mètres dans une direction de votre choix au début de chacun de vos tours. Chaque créature qui commence son tour dans le nuage subit 5d8 dégâts de poison. Une créature qui entre dans le nuage pour la première fois doit effectuer un jet de sauvegarde de Constitution ou être empoisonnée tant qu'elle reste dans le nuage.",
-    "descriptionShort": "Nuage poison 6m rayon. Se déplace 3m/round. 5d8 poison par tour. JS CON ou empoisonné...",
-    "higherLevels": null,
-    "incantation": "Nubes mortis, que ce nuage toxique engloutisse mes ennemis !",
-    "recommendation": "ESSENTIEL - Domaine Tombeau",
+    "description": "Vous créez une sphère de gaz toxique jaune-vert de 6 mètres de rayon à portée. Le nuage se déplace loin de vous de 3 mètres au début de chacun de vos tours. Chaque créature qui commence son tour dans le nuage doit réussir un jet de sauvegarde de Constitution ou subir 5d8 dégâts de poison. En cas de réussite, elle subit la moitié des dégâts.",
+    "descriptionShort": "Un nuage toxique de 6m de rayon inflige 5d8 dégâts de poison (Jd CON pour demi-dégâts). Le nuage se déplace.",
+    "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 6 ou supérieur, les dégâts augmentent de 1d8 pour chaque niveau d'emplacement au-dessus du niveau 5.",
+    "incantation": "Nebula mortis, que le souffle de la mort empoisonne l'air !",
+    "recommendation": null,
     "source": "extended",
-    "summary": "5d8 poison zone"
+    "summary": "5d8 poison"
+  },
+  {
+    "id": "nuage-de-brouillard",
+    "name": "Nuage de brouillard",
+    "nameEn": "Fog Cloud",
+    "level": 1,
+    "levelDisplay": "Niveau 1",
+    "school": "conjuration",
+    "type": "Invocation / Obscurité",
+    "isDomainSpell": true,
+    "castingTime": "1 action",
+    "range": "36 mètres",
+    "components": {
+      "verbal": true,
+      "somatic": true,
+      "material": null,
+      "materialConsumed": false
+    },
+    "duration": {
+      "type": "concentration",
+      "value": "concentration, jusqu'à 1 heure"
+    },
+    "concentration": true,
+    "ritual": false,
+    "description": "Vous créez une sphère de brouillard de 6 mètres de rayon centrée sur un point à portée. La sphère s'étend au coin et sa zone est fortement obscurcie. Elle persiste pour la durée du sort ou jusqu'à ce qu'un vent modéré ou plus fort la disperse.",
+    "descriptionShort": "Sphère brouillard 6m rayon. Zone fortement obscurcie. Disperse par vent modéré...",
+    "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 2 ou supérieur, le rayon augmente de 6 mètres pour chaque niveau d'emplacement au-dessus du niveau 1.",
+    "incantation": "Nebula caligo, que le brouillard s'élève et obscurcisse tout !",
+    "recommendation": "ESSENTIEL - Domaine Tempête",
+    "source": "extended",
+    "summary": "Brouillard 6m"
+  },
+  {
+    "id": "onde-de-tonnerre",
+    "name": "Onde de tonnerre",
+    "nameEn": "Thunderwave",
+    "level": 1,
+    "levelDisplay": "Niveau 1",
+    "school": "evocation",
+    "type": "Évocation / Attaque",
+    "isDomainSpell": true,
+    "castingTime": "1 action",
+    "range": "personnelle (cube de 4,50 m)",
+    "components": {
+      "verbal": true,
+      "somatic": true,
+      "material": null,
+      "materialConsumed": false
+    },
+    "duration": {
+      "type": "instantaneous"
+    },
+    "concentration": false,
+    "ritual": false,
+    "description": "Une vague de force tonitruante s'échappe de vous. Chaque créature dans un cube de 4,50 mètres de côté originaire de vous doit effectuer un jet de sauvegarde de Constitution. En cas d'échec, une créature subit 2d8 dégâts de tonnerre et est repoussée de 3 mètres. En cas de réussite, la créature subit la moitié des dégâts et n'est pas repoussée.",
+    "descriptionShort": "Cube 4,5m : 2d8 tonnerre et repousse 3m, ou moitié sans repousse. Bruit audible à 90m...",
+    "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 2 ou supérieur, les dégâts augmentent de 1d8 pour chaque niveau d'emplacement au-dessus du niveau 1.",
+    "incantation": "Onda tonitrui, que l'onde de tonnerre repousse mes ennemis !",
+    "recommendation": "ESSENTIEL - Domaine Tempête",
+    "source": "extended",
+    "summary": "2d8 tonnerre"
+  },
+  {
+    "id": "rafale-de-vent",
+    "name": "Rafale de vent",
+    "nameEn": "Gust of Wind",
+    "level": 2,
+    "levelDisplay": "Niveau 2",
+    "school": "evocation",
+    "type": "Évocation / Contrôle",
+    "isDomainSpell": true,
+    "castingTime": "1 action",
+    "range": "personnelle (ligne de 18 m)",
+    "components": {
+      "verbal": true,
+      "somatic": true,
+      "material": "une graine de legume",
+      "materialConsumed": false
+    },
+    "duration": {
+      "type": "concentration",
+      "value": "concentration, jusqu'à 1 minute"
+    },
+    "concentration": true,
+    "ritual": false,
+    "description": "Une ligne de vent fort de 18 mètres de long et 3 mètres de large souffle de vous dans une direction de votre choix pour la durée du sort. Chaque créature qui commence son tour dans la ligne doit réussir un jet de sauvegarde de Force ou être repoussée de 4,50 mètres. Le vent dissipe les gaz et les vapeurs, et il éteint les flammes non protégées.",
+    "descriptionShort": "Vent fort ligne 18m x 3m. Repousse 4,5m si échec JS Force. Dissipe gaz/vapeurs, éteint flammes...",
+    "higherLevels": null,
+    "incantation": "Ventus rapidus, que la rafale de vent balaie tout sur son passage !",
+    "recommendation": "ESSENTIEL - Domaine Tempête",
+    "source": "extended",
+    "summary": "Vent repousse"
+  },
+  {
+    "id": "fracassement",
+    "name": "Fracassement",
+    "nameEn": "Shatter",
+    "level": 2,
+    "levelDisplay": "Niveau 2",
+    "school": "evocation",
+    "type": "Évocation / Attaque",
+    "isDomainSpell": true,
+    "castingTime": "1 action",
+    "range": "18 mètres",
+    "components": {
+      "verbal": true,
+      "somatic": true,
+      "material": "une pincée de mica",
+      "materialConsumed": false
+    },
+    "duration": {
+      "type": "instantaneous"
+    },
+    "concentration": false,
+    "ritual": false,
+    "description": "Un son assourdissant frappe un point de votre choix à portée. Chaque créature dans une sphère de 3 mètres de rayon centrée sur ce point doit effectuer un jet de sauvegarde de Constitution. Une créature subit 3d8 dégâts de tonnerre en cas d'échec, ou la moitié en cas de réussite. Les objets non magiques en cristal, terre cuite, pierre, métal ou verre subissent également les dégâts.",
+    "descriptionShort": "Sphère 3m : 3d8 tonnerre. Affecte objets cristal/pierre/métal/verre. Bruit audible à 90m...",
+    "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 3 ou supérieur, les dégâts augmentent de 1d8 pour chaque niveau d'emplacement au-dessus du niveau 2.",
+    "incantation": "Fragor fragmentum, que le son fracasse mes ennemis !",
+    "recommendation": "ESSENTIEL - Domaine Tempête",
+    "source": "extended",
+    "summary": "3d8 tonnerre"
+  },
+  {
+    "id": "charme-personne",
+    "name": "Charme-personne",
+    "nameEn": "Charm Person",
+    "level": 1,
+    "levelDisplay": "Niveau 1",
+    "school": "enchantment",
+    "type": "Enchantement / Charme",
+    "isDomainSpell": true,
+    "castingTime": "1 action",
+    "range": "9 mètres",
+    "components": {
+      "verbal": true,
+      "somatic": true,
+      "material": null,
+      "materialConsumed": false
+    },
+    "duration": {
+      "type": "timed",
+      "value": "1 heure"
+    },
+    "concentration": false,
+    "ritual": false,
+    "description": "Vous tentez de charmer un humanoïde visible à portée. Il doit effectuer un jet de sauvegarde de Sagesse. En cas d'échec, il est charmé par vous pour la durée du sort ou jusqu'à ce que vous ou vos compagnons fassiez quelque chose de nuisible envers lui. La créature charmée vous considère comme un ami amical.",
+    "descriptionShort": "Charme humanoïde. JS Sagesse. Dure 1 heure. Cible vous considère comme ami. Fin si hostile...",
+    "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 2 ou supérieur, vous pouvez cibler une créature supplémentaire pour chaque niveau d'emplacement au-dessus du niveau 1.",
+    "incantation": "Charme personae, que cette personne me trouve charmant !",
+    "recommendation": "ESSENTIEL - Domaine Tromperie",
+    "source": "extended",
+    "summary": "Charme humanoïde"
+  },
+  {
+    "id": "déguisement",
+    "name": "Déguisement",
+    "nameEn": "Disguise Self",
+    "level": 1,
+    "levelDisplay": "Niveau 1",
+    "school": "illusion",
+    "type": "Illusion / Déguisement",
+    "isDomainSpell": true,
+    "castingTime": "1 action",
+    "range": "personnelle",
+    "components": {
+      "verbal": true,
+      "somatic": true,
+      "material": null,
+      "materialConsumed": false
+    },
+    "duration": {
+      "type": "timed",
+      "value": "1 heure"
+    },
+    "concentration": false,
+    "ritual": false,
+    "description": "Vous vous déguisez, incluant votre apparence, vos vêtements, votre armure, vos armes et tout autre objet sur votre personne. Vous pouvez sembler 30 cm plus grand ou plus petit, mince, gros, ou autre forme corporelle. Le déguisement ne résiste pas à un examen physique attentif. Un examen visuel permet un jet d'Investigation contre votre DD de sort.",
+    "descriptionShort": "Déguisement visuel. ±30cm taille. Ne résiste pas examen physique. Jet Investigation pour détecter...",
+    "higherLevels": null,
+    "incantation": "Disguisio, que mon apparence soit transformée !",
+    "recommendation": "ESSENTIEL - Domaine Tromperie",
+    "source": "extended",
+    "summary": "Déguisement"
+  },
+  {
+    "id": "invisibilité",
+    "name": "Invisibilité",
+    "nameEn": "Invisibility",
+    "level": 2,
+    "levelDisplay": "Niveau 2",
+    "school": "illusion",
+    "type": "Illusion / Furtivité",
+    "isDomainSpell": true,
+    "castingTime": "1 action",
+    "range": "contact",
+    "components": {
+      "verbal": true,
+      "somatic": true,
+      "material": "une cils entouré de gomme arabique",
+      "materialConsumed": false
+    },
+    "duration": {
+      "type": "concentration",
+      "value": "concentration, jusqu'à 1 heure"
+    },
+    "concentration": true,
+    "ritual": false,
+    "description": "Une créature consentante que vous touchez devient invisible jusqu'à la fin du sort. Tout ce que la cible porte ou transporte devient invisible tant que cela reste sur sa personne. Le sort se termine si la cible attaque ou lance un sort.",
+    "descriptionShort": "Cible invisible. Se termine si attaque ou sort. Concentration jusqu'à 1 heure...",
+    "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 3 ou supérieur, vous pouvez cibler une créature supplémentaire pour chaque niveau d'emplacement au-dessus du niveau 2.",
+    "incantation": "Invisibilitas, que cette créature disparaisse de la vue !",
+    "recommendation": "ESSENTIEL - Domaine Tromperie",
+    "source": "extended",
+    "summary": "Invisible"
+  },
+  {
+    "id": "passage-sans-trace",
+    "name": "Passage sans trace",
+    "nameEn": "Pass without Trace",
+    "level": 2,
+    "levelDisplay": "Niveau 2",
+    "school": "abjuration",
+    "type": "Abjuration / Furtivité",
+    "isDomainSpell": true,
+    "castingTime": "1 action",
+    "range": "personnelle",
+    "components": {
+      "verbal": true,
+      "somatic": true,
+      "material": "des cendres d'une feuille de gui et d'un sapin",
+      "materialConsumed": false
+    },
+    "duration": {
+      "type": "concentration",
+      "value": "concentration, jusqu'à 1 heure"
+    },
+    "concentration": true,
+    "ritual": false,
+    "description": "Un voile d'ombre et de silence irradie de vous, vous couvrant et vos compagnons. Pour la durée du sort, chaque créature de votre choix dans un rayon de 9 mètres (y compris vous) a un bonus de +10 aux jets de Discrétion et ne peut pas être suivie sauf par des moyens magiques. Une créature qui reçoit ce bonus ne laisse pas de traces derrière elle.",
+    "descriptionShort": "Rayon 9m : +10 Discrétion, pas de traces, pas de suivi non-magique. Concentration 1 heure...",
+    "higherLevels": null,
+    "incantation": "Passus sine vestigio, que notre passage soit indétectable !",
+    "recommendation": "ESSENTIEL - Domaine Tromperie",
+    "source": "extended",
+    "summary": "+10 Discrétion"
+  },
+  // Sorts du Domaine de la Lumière (Light) - Niveau 2
+  {
+    "id": "sphère-de-feu",
+    "name": "Sphère de feu",
+    "nameEn": "Flaming Sphere",
+    "level": 2,
+    "levelDisplay": "Niveau 2",
+    "school": "conjuration",
+    "type": "Invocation / Attaque",
+    "isDomainSpell": true,
+    "castingTime": "1 action",
+    "range": "18 mètres",
+    "components": {
+      "verbal": true,
+      "somatic": true,
+      "material": "un bout de suif, une pincée de soufre et une pincée de poudre de fer",
+      "materialConsumed": false
+    },
+    "duration": {
+      "type": "concentration",
+      "value": "concentration, jusqu'à 1 minute"
+    },
+    "concentration": true,
+    "ritual": false,
+    "description": "Une sphère de feu de 1,50 mètre de diamètre apparaît dans un espace inoccupé de votre choix à portée et persiste pour la durée du sort. Toute créature qui finit son tour à 1,50 mètre ou moins de la sphère doit effectuer un jet de sauvegarde de Dextérité. La créature subit 2d6 dégâts de feu en cas d'échec, ou la moitié de ces dégâts en cas de réussite. Vous pouvez déplacer la sphère jusqu'à 9 mètres en action bonus."
+    ,
+    "descriptionShort": "Crée une sphère de feu mobile (1,50m) qui inflige 2d6 dégâts de feu aux créatures proches. Concentration 1 minute...",
+    "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 3 ou supérieur, les dégâts augmentent de 1d6 pour chaque niveau d'emplacement au-dessus du niveau 2.",
+    "incantation": "Sphaera ignis, brûle mes ennemis !",
+    "recommendation": "ESSENTIEL - Domaine Lumière",
+    "source": "extended",
+    "summary": "2d6 feu, mobile"
+  },
+  {
+    "id": "rayon-ardent",
+    "name": "Rayon ardent",
+    "nameEn": "Scorching Ray",
+    "level": 2,
+    "levelDisplay": "Niveau 2",
+    "school": "evocation",
+    "type": "Évocation / Attaque",
+    "isDomainSpell": true,
+    "castingTime": "1 action",
+    "range": "36 mètres",
+    "components": {
+      "verbal": true,
+      "somatic": true,
+      "material": null,
+      "materialConsumed": false
+    },
+    "duration": {
+      "type": "instantaneous"
+    },
+    "concentration": false,
+    "ritual": false,
+    "description": "Vous créez trois rayons de feu et les lancez sur une ou plusieurs cibles à portée. Vous pouvez les diriger sur une cible unique ou les répartir entre plusieurs. Effectuez une attaque à distance de sort pour chaque rayon. En cas de toucher, la cible subit 2d6 dégâts de feu.",
+    "descriptionShort": "3 rayons de feu, attaque à distance de sort pour chacun. 2d6 dégâts de feu par rayon touché...",
+    "higherLevels": "Effets par niveau de sort : Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 3 ou supérieur, vous créez un rayon supplémentaire pour chaque niveau d'emplacement au-dessus du niveau 2.",
+    "incantation": "Radios ardentes, que le feu de Torm consume mes ennemis !",
+    "recommendation": "ESSENTIEL - Domaine Lumière",
+    "source": "extended",
+    "summary": "3 rayons, 2d6 feu chacun"
   }
 ];
 
 // Sorts de domaine ajoutés pour l'affichage correct
-export const DOMAIN_SPELLS: { id: string; name: string; level: number; domain: string }[] = [
+export const DOMAIN_SPELLS: { id: string; name: string; level: number; domain?: string }[] = [
   // Domaine de la Guerre
   { id: 'faveur-divine', name: 'Faveur divine', level: 1, domain: 'war' },
   { id: 'bouclier-de-la-foi', name: 'Bouclier de foi', level: 1, domain: 'war' },
@@ -3747,24 +4279,25 @@ export const DOMAIN_SPELLS: { id: string; name: string; level: number; domain: s
   // Domaine de la Lumière
   { id: 'mains-brûlantes', name: 'Mains brûlantes', level: 1, domain: 'light' },
   { id: 'lueurs-féeriques', name: 'Lueurs féeriques', level: 1, domain: 'light' },
-  { id: 'détection-de-linvisibilité', name: 'Détection de l\'invisibilité', level: 2, domain: 'light' },
+  { id: 'sphère-de-feu', name: 'Sphère de feu', level: 2, domain: 'light' },
+  { id: 'rayon-ardent', name: 'Rayon ardent', level: 2, domain: 'light' },
   { id: 'lumière-du-jour', name: 'Lumière du jour', level: 3, domain: 'light' },
   { id: 'boule-de-feu', name: 'Boule de feu', level: 3, domain: 'light' },
   { id: 'œil-du-mage', name: 'Œil du mage', level: 4, domain: 'light' },
   { id: 'mur-de-feu', name: 'Mur de feu', level: 4, domain: 'light' },
-  { id: 'colonne-de-flamme', name: 'Colonne de flamme', level: 5, domain: 'light' },
+  { id: 'colonne-de-flammes', name: 'Colonne de flammes', level: 5, domain: 'light' },
   { id: 'scrutation', name: 'Scrutation', level: 5, domain: 'light' },
   // Domaine de la Nature
   { id: 'amitié-avec-les-animaux', name: 'Amitié avec les animaux', level: 1, domain: 'nature' },
   { id: 'communication-avec-les-animaux', name: 'Communication avec les animaux', level: 1, domain: 'nature' },
-  { id: 'peau-décorce', name: 'Peau d\'écorce', level: 2, domain: 'nature' },
-  { id: 'croissance-dépines', name: 'Croissance d\'épines', level: 2, domain: 'nature' },
-  { id: 'invocation-danimaux', name: 'Invocation d\'animaux', level: 3, domain: 'nature' },
+  { id: 'peau-d-écorce', name: 'Peau d\'écorce', level: 2, domain: 'nature' },
+  { id: 'croissance-d-épines', name: 'Croissance d\'épines', level: 2, domain: 'nature' },
+  { id: 'invocation-d-animaux', name: 'Invocation d\'animaux', level: 3, domain: 'nature' },
   { id: 'croissance-végétale', name: 'Croissance végétale', level: 3, domain: 'nature' },
   { id: 'maîtrise-des-eaux', name: 'Maîtrise des eaux', level: 4, domain: 'nature' },
   { id: 'insecte-géant', name: 'Insecte géant', level: 4, domain: 'nature' },
   { id: 'communion-avec-la-nature', name: 'Communion avec la nature', level: 5, domain: 'nature' },
-  { id: 'invocation-délémentaire', name: 'Invocation d\'élémentaire', level: 5, domain: 'nature' },
+  { id: 'invocation-d-élémentaire', name: 'Invocation d\'élémentaire', level: 5, domain: 'nature' },
   // Domaine de la Tempête
   { id: 'nuage-de-brouillard', name: 'Nuage de brouillard', level: 1, domain: 'tempest' },
   { id: 'onde-de-tonnerre', name: 'Onde de tonnerre', level: 1, domain: 'tempest' },
@@ -3772,9 +4305,9 @@ export const DOMAIN_SPELLS: { id: string; name: string; level: number; domain: s
   { id: 'fracassement', name: 'Fracassement', level: 2, domain: 'tempest' },
   { id: 'foudre', name: 'Foudre', level: 3, domain: 'tempest' },
   { id: 'appel-de-la-foudre', name: 'Appel de la foudre', level: 3, domain: 'tempest' },
-  { id: 'contrôle-de-leau', name: 'Contrôle de l\'eau', level: 4, domain: 'tempest' },
+  { id: 'contrôle-de-l-eau', name: 'Contrôle de l\'eau', level: 4, domain: 'tempest' },
   { id: 'tempête-de-glace', name: 'Tempête de glace', level: 4, domain: 'tempest' },
-  { id: 'invocation-délémentaire-destructeur', name: 'Invocation d\'élémentaire destructeur', level: 5, domain: 'tempest' },
+  { id: 'invocation-d-élémentaire-destructeur', name: 'Invocation d\'élémentaire destructeur', level: 5, domain: 'tempest' },
   { id: 'contrôle-des-vents', name: 'Contrôle des vents', level: 5, domain: 'tempest' },
   // Domaine de la Tromperie
   { id: 'charme-personne', name: 'Charme-personne', level: 1, domain: 'trickery' },
@@ -3799,12 +4332,12 @@ export const DOMAIN_SPELLS: { id: string; name: string; level: number; domain: s
   { id: 'légende', name: 'Légende', level: 5, domain: 'knowledge' },
   { id: 'quête', name: 'Quête', level: 5, domain: 'knowledge' },
   // Domaine de la Forge
-  { id: 'châtiment-brûlant', name: 'Châtiment brûlant', level: 1, domain: 'forge' },
   { id: 'identification', name: 'Identification', level: 1, domain: 'forge' },
-  { id: 'chaleur-métallique', name: 'Chaleur métallique', level: 2, domain: 'forge' },
+  { id: 'châtiment-brûlant', name: 'Châtiment brûlant', level: 1, domain: 'forge' },
   { id: 'arme-magique', name: 'Arme magique', level: 2, domain: 'forge' },
-  { id: 'élémentaire-de-feu', name: 'Élémentaire de feu', level: 3, domain: 'forge' },
+  { id: 'chaleur-métallique', name: 'Chaleur métallique', level: 2, domain: 'forge' },
   { id: 'protection-contre-une-énergie', name: 'Protection contre une énergie', level: 3, domain: 'forge' },
+  { id: 'élémentaire-de-feu', name: 'Élémentaire de feu', level: 3, domain: 'forge' },
   { id: 'fabrication', name: 'Fabrication', level: 4, domain: 'forge' },
   { id: 'mur-de-pierre', name: 'Mur de pierre', level: 4, domain: 'forge' },
   { id: 'animation-des-objets', name: 'Animation des objets', level: 5, domain: 'forge' },
@@ -3813,7 +4346,7 @@ export const DOMAIN_SPELLS: { id: string; name: string; level: number; domain: s
   { id: 'fléau', name: 'Fléau', level: 1, domain: 'grave' },
   { id: 'fausse-vie', name: 'Fausse vie', level: 1, domain: 'grave' },
   { id: 'repose-en-paix', name: 'Repose en paix', level: 2, domain: 'grave' },
-  { id: 'rayon-daffaiblissement', name: 'Rayon d\'affaiblissement', level: 2, domain: 'grave' },
+  { id: 'rayon-d-affaiblissement', name: 'Rayon d\'affaiblissement', level: 2, domain: 'grave' },
   { id: 'animation-des-morts', name: 'Animation des morts', level: 3, domain: 'grave' },
   { id: 'vampire', name: 'Vampire', level: 3, domain: 'grave' },
   { id: 'flétrissement', name: 'Flétrissement', level: 4, domain: 'grave' },
