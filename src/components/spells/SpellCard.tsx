@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Check, Sparkles, Clock, Focus, AlertCircle } from 'lucide-react';
+import { Check, Sparkles, Clock, Focus, AlertCircle, Shield } from 'lucide-react';
 import type { Spell } from '@/types';
 import { useInventoryStore } from '@/stores';
 import { SpellDetailModal } from './SpellDetailModal';
@@ -43,8 +43,15 @@ export function SpellCard({
           } 
           ${isUsed ? 'opacity-50' : ''} 
           ${missingComponent ? 'border-blood-red hover:border-blood-red hover:shadow-red-500/20' : ''}
+          ${isDomain ? 'border-l-4 border-l-divine-gold' : ''}
         `}
       >
+        {/* Indicateur de sort de domaine - bande dorée */}
+        {isDomain && (
+          <div className="absolute top-0 right-0 w-16 h-16 overflow-hidden">
+            <div className="absolute top-0 right-0 transform translate-x-8 -translate-y-8 rotate-45 w-16 h-16 bg-divine-gold/20"></div>
+          </div>
+        )}
         <div className="flex items-start gap-3">
           {/* Checkbox de préparation - zone de clic élargie */}
           {showActions && (
@@ -95,9 +102,10 @@ export function SpellCard({
               <div className="flex flex-wrap gap-1 justify-end flex-shrink-0">
                 {isDomain && (
                   <span 
-                    className="badge-domain overflow-hidden whitespace-nowrap"
-                    title="Sort de domaine - Toujours préparé"
+                    className="badge-domain overflow-hidden whitespace-nowrap flex items-center gap-1"
+                    title="Sort de domaine - Toujours préparé gratuitement"
                   >
+                    <Shield className="w-3 h-3" />
                     Domaine
                   </span>
                 )}
@@ -113,6 +121,15 @@ export function SpellCard({
             
             {/* Méta-informations */}
             <div className="flex flex-wrap gap-x-3 gap-y-1 mt-1 text-xs text-ink-light">
+              {isDomain && (
+                <span 
+                  className="flex items-center gap-1 text-divine-gold-dark font-bold"
+                  title="Ce sort est toujours préparé gratuitement grâce à votre domaine"
+                >
+                  <Shield className="w-3 h-3 fill-divine-gold" />
+                  Sort de domaine
+                </span>
+              )}
               <span className="flex items-center gap-1">
                 <Clock className="w-3 h-3" />
                 {formatCastingTimeShort(spell.castingTime)}
