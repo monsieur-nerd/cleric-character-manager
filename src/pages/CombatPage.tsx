@@ -408,7 +408,7 @@ export function CombatPage() {
                 value={tempHpInput}
                 onChange={(e) => setTempHpInput(e.target.value)}
                 placeholder="0"
-                className="w-16 input-field text-center text-sm"
+                className="w-16 input-field text-left pl-3 text-sm"
                 min="0"
               />
               <button
@@ -928,7 +928,7 @@ export function CombatPage() {
                             <div className="min-w-0 flex-1">
                               <div className="flex items-center gap-2">
                                 <div className="font-display text-ink break-words leading-tight text-sm sm:text-base">{spell.name}</div>
-                                {isDomainSpell && (
+                                {isDomainSpell && (() => { console.log('Rendering Domain badge for:', spell.name); return (
                                   <span 
                                     className="badge-domain text-xs flex items-center gap-1"
                                     title="Sort de domaine - Toujours préparé gratuitement"
@@ -936,7 +936,7 @@ export function CombatPage() {
                                     <Shield className="w-3 h-3" />
                                     Domaine
                                   </span>
-                                )}
+                                );})()}
                               </div>
                               <div className="flex flex-wrap gap-x-2 gap-y-0.5 text-xs text-ink-light mt-0.5">
                                 <span className="flex items-center gap-1">
