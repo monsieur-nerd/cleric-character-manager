@@ -60,10 +60,14 @@ function App() {
 
   useEffect(() => {
     try {
-      // Fusionne les sorts de base avec les sorts de domaine
+      // Vérifie quels sorts de domaine ne sont pas déjà dans spellsData
+      const existingIds = new Set(spellsData.map(s => s.id));
+      const missingDomainSpells = DOMAIN_SPELLS.filter(ds => !existingIds.has(ds.id));
+      
+      // Fusionne les sorts de base avec les sorts de domaine manquants
       const allSpells = [
         ...spellsData,
-        ...DOMAIN_SPELLS.map(ds => ({
+        ...missingDomainSpells.map(ds => ({
           id: ds.id,
           name: ds.name,
           nameEn: '',
