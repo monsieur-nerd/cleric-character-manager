@@ -662,7 +662,7 @@ function CharacterSheetMobileNav({
     { id: 'stats' as const, label: 'Caractéristiques', icon: Brain },
     { id: 'abilities' as const, label: 'Capacités', icon: Zap },
     { id: 'traits' as const, label: 'Traits', icon: Scroll },
-    { id: 'skills' as const, label: 'Talents et compétences', icon: GraduationCap },
+    { id: 'skills' as const, label: 'Talents, traits et compétences', icon: GraduationCap },
   ];
   
   const activeTabInfo = tabs.find(t => t.id === activeTab);
@@ -818,7 +818,7 @@ function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: { is
             { id: 'identity', label: 'Identité', icon: User },
             { id: 'stats', label: 'Caractéristiques', icon: Brain },
             { id: 'abilities', label: 'Capacités', icon: Zap },
-            { id: 'skills', label: 'Talents et compétences', icon: GraduationCap },
+            { id: 'skills', label: 'Talents, traits et compétences', icon: GraduationCap },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -1630,12 +1630,12 @@ export function Dashboard() {
         </section>
       )}
       
-      {/* Talents et compétences - Détail complet */}
+      {/* Talents, traits et compétences - Détail complet */}
       <section className="card">
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-display text-lg text-ink flex items-center gap-2">
             <GraduationCap className="w-5 h-5 text-divine-gold" />
-            Talents et compétences
+            Talents, traits et compétences
           </h3>
           <button 
             onClick={() => setShowSkillsFeatsModal(true)}
@@ -1748,11 +1748,11 @@ export function Dashboard() {
           className="btn-secondary text-center flex items-center justify-center gap-2"
         >
           <GraduationCap className="w-5 h-5" />
-          Talents et compétences
+          Talents, traits et compétences
         </button>
       </section>
       
-      {/* Modale Talents et compétences (avec Traits) */}
+      {/* Modale Talents, traits et compétences (avec Traits) */}
       <SkillsFeatsModal
         isOpen={showSkillsFeatsModal}
         onClose={() => setShowSkillsFeatsModal(false)}

@@ -46,7 +46,7 @@ const ABILITY_ICONS: Record<AbilityScore, typeof Swords> = {
 // ============================================
 
 export function SkillsFeatsModal({ isOpen, onClose }: SkillsFeatsModalProps) {
-  const [activeTab, setActiveTab] = useState<'skills' | 'feats' | 'traits'>('skills');
+  const [activeTab, setActiveTab] = useState<'skills' | 'feats' | 'traits'>('feats');
   const [showOnlyMastered, setShowOnlyMastered] = useState(false);
   const [showOnlyOwned, setShowOnlyOwned] = useState(false);
   const [filterAbility, setFilterAbility] = useState<AbilityScore | 'all'>('all');
@@ -95,7 +95,7 @@ export function SkillsFeatsModal({ isOpen, onClose }: SkillsFeatsModalProps) {
               <GraduationCap className="w-5 h-5 text-divine-gold" />
             </div>
             <div>
-              <h2 className="font-display text-xl text-ink">Talents et compétences</h2>
+              <h2 className="font-display text-xl text-ink">Talents, traits et compétences</h2>
               <p className="text-xs text-ink-muted">
                 Bonus de maîtrise : <span className="font-bold text-divine-gold">+{profBonus}</span>
               </p>
@@ -110,20 +110,6 @@ export function SkillsFeatsModal({ isOpen, onClose }: SkillsFeatsModalProps) {
         <div className="flex border-b border-parchment-dark bg-parchment-dark/10">
           {/* Version desktop : icône + texte horizontal */}
           <button
-            onClick={() => setActiveTab('traits')}
-            className={`hidden sm:flex flex-1 items-center justify-center gap-2 py-3 text-sm font-medium transition-colors ${
-              activeTab === 'traits'
-                ? 'text-divine-gold-dark border-b-2 border-divine-gold bg-divine-gold/5'
-                : 'text-ink-muted hover:text-ink hover:bg-parchment-dark/30'
-            }`}
-          >
-            <Scroll className="w-4 h-4" />
-            Traits
-            <span className="text-xs bg-parchment-dark px-2 py-0.5 rounded-full">
-              {BACKGROUND_TRAITS.length}
-            </span>
-          </button>
-          <button
             onClick={() => setActiveTab('feats')}
             className={`hidden sm:flex flex-1 items-center justify-center gap-2 py-3 text-sm font-medium transition-colors ${
               activeTab === 'feats'
@@ -135,6 +121,20 @@ export function SkillsFeatsModal({ isOpen, onClose }: SkillsFeatsModalProps) {
             Talents
             <span className="text-xs bg-parchment-dark px-2 py-0.5 rounded-full">
               {ownedFeats.length}
+            </span>
+          </button>
+          <button
+            onClick={() => setActiveTab('traits')}
+            className={`hidden sm:flex flex-1 items-center justify-center gap-2 py-3 text-sm font-medium transition-colors ${
+              activeTab === 'traits'
+                ? 'text-divine-gold-dark border-b-2 border-divine-gold bg-divine-gold/5'
+                : 'text-ink-muted hover:text-ink hover:bg-parchment-dark/30'
+            }`}
+          >
+            <Scroll className="w-4 h-4" />
+            Traits
+            <span className="text-xs bg-parchment-dark px-2 py-0.5 rounded-full">
+              {BACKGROUND_TRAITS.length}
             </span>
           </button>
           <button
@@ -154,20 +154,6 @@ export function SkillsFeatsModal({ isOpen, onClose }: SkillsFeatsModalProps) {
 
           {/* Version mobile : icône au-dessus du texte */}
           <button
-            onClick={() => setActiveTab('traits')}
-            className={`sm:hidden flex-1 flex flex-col items-center justify-center gap-1 py-3 text-xs font-medium transition-colors ${
-              activeTab === 'traits'
-                ? 'text-divine-gold-dark border-b-2 border-divine-gold bg-divine-gold/5'
-                : 'text-ink-muted hover:text-ink hover:bg-parchment-dark/30'
-            }`}
-          >
-            <Scroll className="w-5 h-5" />
-            <span>Traits</span>
-            <span className="text-[10px] bg-parchment-dark px-1.5 py-0.5 rounded-full">
-              {BACKGROUND_TRAITS.length}
-            </span>
-          </button>
-          <button
             onClick={() => setActiveTab('feats')}
             className={`sm:hidden flex-1 flex flex-col items-center justify-center gap-1 py-3 text-xs font-medium transition-colors ${
               activeTab === 'feats'
@@ -179,6 +165,34 @@ export function SkillsFeatsModal({ isOpen, onClose }: SkillsFeatsModalProps) {
             <span>Talents</span>
             <span className="text-[10px] bg-parchment-dark px-1.5 py-0.5 rounded-full">
               {ownedFeats.length}
+            </span>
+          </button>
+          <button
+            onClick={() => setActiveTab('traits')}
+            className={`sm:hidden flex-1 flex flex-col items-center justify-center gap-1 py-3 text-xs font-medium transition-colors ${
+              activeTab === 'traits'
+                ? 'text-divine-gold-dark border-b-2 border-divine-gold bg-divine-gold/5'
+                : 'text-ink-muted hover:text-ink hover:bg-parchment-dark/30'
+            }`}
+          >
+            <Star className="w-5 h-5" />
+            <span>Talents</span>
+            <span className="text-[10px] bg-parchment-dark px-1.5 py-0.5 rounded-full">
+              {ownedFeats.length}
+            </span>
+          </button>
+          <button
+            onClick={() => setActiveTab('traits')}
+            className={`sm:hidden flex-1 flex flex-col items-center justify-center gap-1 py-3 text-xs font-medium transition-colors ${
+              activeTab === 'traits'
+                ? 'text-divine-gold-dark border-b-2 border-divine-gold bg-divine-gold/5'
+                : 'text-ink-muted hover:text-ink hover:bg-parchment-dark/30'
+            }`}
+          >
+            <Scroll className="w-5 h-5" />
+            <span>Traits</span>
+            <span className="text-[10px] bg-parchment-dark px-1.5 py-0.5 rounded-full">
+              {BACKGROUND_TRAITS.length}
             </span>
           </button>
           <button
