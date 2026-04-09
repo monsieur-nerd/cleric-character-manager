@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Sparkles, Zap, Brain, AlertCircle, Shield, Edit3, Sword, Stars, User, Camera, Cross, Heart, X, ChevronDown, ChevronUp, GraduationCap, Menu, Check, Scroll } from 'lucide-react';
 import { useSpellStore, useCharacterStore } from '@/stores';
 import { SkillsFeatsModal } from '@/components/skills/SkillsFeatsModal';
+import { BACKGROUND_TRAITS } from '@/data/characterConfig';
 import { SpellSlotBar } from '@/components/spells/SpellSlotBar';
 import { DomainRadarChart, DomainRadarCompare } from '@/components/character/DomainRadarChart';
 
@@ -1704,6 +1705,42 @@ export function Dashboard() {
           ) : (
             <p className="text-sm text-ink-muted italic">Aucune compétence maîtrisée</p>
           )}
+        </div>
+        
+        {/* Séparateur */}
+        <div className="border-t border-parchment-dark/50 my-4"></div>
+        
+        {/* Traits - Cartes détaillées */}
+        <div className="mb-4">
+          <h4 className="text-sm font-medium text-ink-light mb-3 flex items-center gap-2">
+            <Scroll className="w-4 h-4 text-royal-purple" />
+            Traits ({BACKGROUND_TRAITS.length})
+          </h4>
+          
+          <div className="space-y-3">
+            {BACKGROUND_TRAITS.map(trait => (
+              <div key={trait.id} className={`rounded-lg p-3 border-l-4 ${
+                trait.type === 'background' 
+                  ? 'bg-royal-purple/10 border-royal-purple' 
+                  : 'bg-blood-red/10 border-blood-red'
+              }`}>
+                <div className="flex items-center gap-2 mb-1">
+                  <h5 className="font-bold text-ink">{trait.name}</h5>
+                  <span className={`text-xs px-2 py-0.5 rounded-full ${
+                    trait.type === 'background'
+                      ? 'bg-royal-purple/20 text-royal-purple'
+                      : 'bg-blood-red/20 text-blood-red'
+                  }`}>
+                    {trait.type === 'background' ? 'Background' : 'Classe'}
+                  </span>
+                </div>
+                <p className="text-xs text-ink-light">{trait.description}</p>
+                <p className="text-xs text-divine-gold-dark mt-2 font-medium">
+                  Effet: {trait.effect}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
         
         {/* Séparateur */}

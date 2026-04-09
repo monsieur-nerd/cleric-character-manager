@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Sword, Shield, Target, Zap, ChevronDown, ChevronUp, Swords, Info } from 'lucide-react';
+import { Sword, Shield, Zap, ChevronDown, ChevronUp, Swords, Info, CheckSquare, Square, Battery, BatteryWarning, RefreshCw } from 'lucide-react';
 import { useInventoryStore } from '@/stores';
 import { useCharacterStore } from '@/stores';
 import { getFeatById } from '@/types/feats';
+import { EquipmentEffectsPanel } from './EquipmentEffectsPanel';
 import type { EquipmentItem } from '@/types';
 
 interface CombatItem extends EquipmentItem {
@@ -13,7 +14,12 @@ export function CombatEquipmentTab() {
   const items = useInventoryStore((state) => state.items);
   const character = useCharacterStore((state) => state.character);
   const updateQuantity = useInventoryStore((state) => state.updateQuantity);
+  const equipItem = useInventoryStore((state) => state.equipItem);
+  const unequipItem = useInventoryStore((state) => state.unequipItem);
+  const useCharge = useInventoryStore((state) => state.useCharge);
+  const rechargeItem = useInventoryStore((state) => state.rechargeItem);
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
+  const [lastActionMessage, setLastActionMessage] = useState<string | null>(null);
   
   const toggleExpanded = (itemId: string) => {
     setExpandedItems(prev => {
@@ -27,7 +33,7 @@ export function CombatEquipmentTab() {
     });
   };
   
-  // Récupère les talents de combat du personnage
+  // Récupere les talents de combat du personnage
   const combatFeats = character.feats
     ?.map(featId => getFeatById(featId))
     .filter(feat => feat?.isCombatFeat) || [];
@@ -52,56 +58,47 @@ export function CombatEquipmentTab() {
     })
     .filter((item): item is CombatItem => item !== null);
   
-  // Regroupe par catégorie
+  // Regroupe par categorie
   const weapons = combatItems.filter(i => i.combatType === 'weapon');
   const armors = combatItems.filter(i => i.combatType === 'armor');
   const shields = combatItems.filter(i => i.combatType === 'shield');
   
-  // Calcule la CA totale
-  const calculateAC = () => {
-    let baseAC = 10;
-    let dexBonus = dexMod;
-    let shieldBonus = 0;
-    let maxDexBonus = Infinity;
-    let hasArmor = false;
-    
-    // Trouve l'armure équipée (ou la première armure possédée)
-    const equippedArmor = armors.find(a => a.isEquipped) || armors[0];
-    if (equippedArmor?.armorClass) {
-      baseAC = equippedArmor.armorClass;
-      hasArmor = true;
-      
-      // Limite le bonus de DEX selon le type d'armure
-      if (equippedArmor.armorType === 'lourde') {
-        maxDexBonus = 0;
-      } else if (equippedArmor.armorType === 'intermédiaire') {
-        maxDexBonus = 2;
+  // Gestion de l equipement avec cases a cocher
+  const handleEquipToggle = (item: CombatItem) => {
+    if (item.isEquipped) {
+      unequipItem(item.id);
+      setLastActionMessage(`${item.name} desequipe(e)`);
+    } else {
+      const result = equipItem(item.id);
+      if (result.success) {
+        setLastActionMessage(result.message || `${item.name} equipe(e)`);
       }
     }
     
-    // Bonus de bouclier
-    const equippedShield = shields.find(s => s.isEquipped) || shields[0];
-    if (equippedShield?.armorClass) {
-      shieldBonus = 2; // Bouclier standard donne +2
+    setTimeout(() => setLastActionMessage(null), 3000);
+  };
+
+  // Utiliser une charge
+  const handleUseCharge = (itemId: string) => {
+    const result = useCharge(itemId, 1);
+    if (result.success) {
+      setLastActionMessage(result.message);
+    } else {
+      setLastActionMessage(`Erreur: ${result.message}`);
     }
-    
-    // Applique la limite de DEX
-    const effectiveDexBonus = Math.min(dexBonus, maxDexBonus);
-    
-    return {
-      total: baseAC + effectiveDexBonus + shieldBonus,
-      base: baseAC,
-      dexBonus: effectiveDexBonus,
-      shieldBonus,
-      hasArmor,
-      equippedArmor: equippedArmor?.name,
-      equippedShield: equippedShield?.name,
-    };
+    setTimeout(() => setLastActionMessage(null), 3000);
   };
   
-  const ac = calculateAC();
-  
-  // Calcule le bonus d'attaque pour une arme
+  // Recharger un item
+  const handleRecharge = (itemId: string) => {
+    const result = rechargeItem(itemId);
+    if (result.success) {
+      setLastActionMessage(result.message);
+    }
+    setTimeout(() => setLastActionMessage(null), 3000);
+  };
+
+  // Calcule le bonus d attaque pour une arme
   const getAttackBonus = (weapon: CombatItem) => {
     const isFinesse = weapon.weaponProperties?.includes('Finesse');
     const isRanged = weapon.weaponProperties?.includes('Ammunition') || weapon.weaponProperties?.includes('Lancer');
@@ -122,50 +119,15 @@ export function CombatEquipmentTab() {
   
   return (
     <div className="space-y-4 animate-fade-in">
-      {/* Résumé du personnage en combat */}
-      <div className="card bg-blood-red/5 border-blood-red/20">
-        <h3 className="font-display text-lg text-ink mb-3 flex items-center gap-2">
-          <Target className="w-5 h-5 text-blood-red" />
-          Statistiques de combat
-        </h3>
-        
-        <div className="grid grid-cols-2 gap-3 mb-3">
-          <div className="bg-parchment-light rounded-lg p-3 text-center">
-            <div className="text-xs text-ink-muted">Classe d'armure</div>
-            <div className="font-display text-3xl text-ink">{ac.total}</div>
-            <div className="text-xs text-ink-light mt-1">
-              {ac.base} base {ac.dexBonus > 0 && `+ ${ac.dexBonus} DEX`} {ac.shieldBonus > 0 && `+ ${ac.shieldBonus} bouclier`}
-            </div>
-          </div>
-          <div className="bg-parchment-light rounded-lg p-3 text-center">
-            <div className="text-xs text-ink-muted">Bonus de maîtrise</div>
-            <div className="font-display text-3xl text-ink">+{profBonus}</div>
-            <div className="text-xs text-ink-light mt-1">Niveau {character.level}</div>
-          </div>
+      {/* Message de confirmation d action */}
+      {lastActionMessage && (
+        <div className="bg-divine-gold/20 border border-divine-gold/40 rounded-lg p-2 text-sm text-center animate-fade-in">
+          <span className="text-forest font-medium">{lastActionMessage}</span>
         </div>
-        
-        {/* Modificateurs */}
-        <div className="grid grid-cols-2 gap-2 text-sm">
-          <div className="flex justify-between bg-parchment/50 rounded px-2 py-1">
-            <span className="text-ink-muted">Force (FOR)</span>
-            <span className="font-bold text-ink">{strMod >= 0 ? `+${strMod}` : strMod}</span>
-          </div>
-          <div className="flex justify-between bg-parchment/50 rounded px-2 py-1">
-            <span className="text-ink-muted">Dextérité (DEX)</span>
-            <span className="font-bold text-ink">{dexMod >= 0 ? `+${dexMod}` : dexMod}</span>
-          </div>
-        </div>
-        
-        {/* Équipement actif */}
-        {(ac.equippedArmor || ac.equippedShield) && (
-          <div className="mt-3 pt-3 border-t border-parchment-dark text-xs text-ink-light">
-            <span className="text-ink-muted">Équipement actif:</span>{' '}
-            {ac.equippedArmor && <span className="font-medium">{ac.equippedArmor}</span>}
-            {ac.equippedArmor && ac.equippedShield && ' + '}
-            {ac.equippedShield && <span className="font-medium">{ac.equippedShield}</span>}
-          </div>
-        )}
-      </div>
+      )}
+      
+      {/* Panneau recapitulatif des effets (US-008) */}
+      <EquipmentEffectsPanel />
       
       {/* Talents de combat actifs */}
       {combatFeats.length > 0 && (
@@ -201,13 +163,25 @@ export function CombatEquipmentTab() {
               const isExpanded = expandedItems.has(weapon.id);
               
               return (
-                <div key={weapon.id} className="card p-3">
+                <div key={weapon.id} className={`card p-3 ${weapon.isEquipped ? 'border-divine-gold/50 bg-divine-gold/5' : ''}`}>
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
+                        {/* Case a cocher pour equiper (US-001) */}
+                        <button
+                          onClick={() => handleEquipToggle(weapon)}
+                          className="flex items-center gap-1 text-ink hover:text-forest transition-colors"
+                          title={weapon.isEquipped ? 'Desequiper' : 'Equiper'}
+                        >
+                          {weapon.isEquipped ? (
+                            <CheckSquare className="w-5 h-5 text-forest" />
+                          ) : (
+                            <Square className="w-5 h-5 text-ink-muted" />
+                          )}
+                        </button>
                         <span className="font-display text-ink">{weapon.name}</span>
                         {weapon.isEquipped && (
-                          <span className="badge badge-success text-xs">Équipée</span>
+                          <span className="badge badge-success text-xs">Equipee</span>
                         )}
                       </div>
                       
@@ -218,7 +192,7 @@ export function CombatEquipmentTab() {
                         </span>
                         {weapon.damage && (
                           <span className="text-ink">
-                            {weapon.damage} {attack.damageMod >= 0 ? '+' : ''}{attack.damageMod} dégâts
+                            {weapon.damage} {attack.damageMod >= 0 ? '+' : ''}{attack.damageMod} degats
                           </span>
                         )}
                         {weapon.damageType && (
@@ -226,20 +200,75 @@ export function CombatEquipmentTab() {
                         )}
                       </div>
                       
-                      {/* Type d'action */}
+                      {/* Type d action */}
                       <div className="mt-1">
                         <span className="badge bg-blood-red/10 text-blood-red border-blood-red/30 text-xs">
                           Action
                         </span>
                         {character.abilities.warCleric.currentUses > 0 && (
                           <span className="badge bg-divine-gold/10 text-divine-gold border-divine-gold/30 text-xs ml-1">
-                            Action bonus (Prêtre de guerre ×{character.abilities.warCleric.currentUses})
+                            Action bonus (Pretre de guerre x{character.abilities.warCleric.currentUses})
                           </span>
                         )}
                       </div>
+                      
+                      {/* Charges (US-044 a US-047) */}
+                      {weapon.charges && (
+                        <div className="mt-2 bg-parchment/50 rounded p-2">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <Battery className={`w-4 h-4 ${
+                                weapon.charges.current === 0 ? 'text-red-500' :
+                                weapon.charges.current <= weapon.charges.max * 0.25 ? 'text-orange-500' :
+                                'text-green-500'
+                              }`} />
+                              <span className="text-xs text-ink-muted">Charges:</span>
+                              <span className={`text-sm font-medium ${
+                                weapon.charges.current === 0 ? 'text-red-500' :
+                                weapon.charges.current <= weapon.charges.max * 0.25 ? 'text-orange-500' :
+                                'text-ink'
+                              }`}>
+                                {weapon.charges.current}/{weapon.charges.max}
+                              </span>
+                            </div>
+                            <div className="flex gap-1">
+                              <button
+                                onClick={() => handleUseCharge(weapon.id)}
+                                disabled={weapon.charges.current <= 0}
+                                className="px-2 py-1 text-xs bg-blood-red/10 text-blood-red rounded hover:bg-blood-red/20 disabled:opacity-30"
+                              >
+                                Utiliser
+                              </button>
+                              <button
+                                onClick={() => handleRecharge(weapon.id)}
+                                className="px-2 py-1 text-xs bg-forest/10 text-forest rounded hover:bg-forest/20"
+                                title="Recharger"
+                              >
+                                <RefreshCw className="w-3 h-3" />
+                              </button>
+                            </div>
+                          </div>
+                          <div className="h-1.5 bg-parchment-dark rounded-full overflow-hidden mt-1">
+                            <div 
+                              className={`h-full transition-all ${
+                                weapon.charges.current === 0 ? 'bg-red-500' :
+                                weapon.charges.current <= weapon.charges.max * 0.25 ? 'bg-orange-500' :
+                                'bg-green-500'
+                              }`}
+                              style={{ width: `${(weapon.charges.current / weapon.charges.max) * 100}%` }}
+                            />
+                          </div>
+                          {weapon.charges.current === 0 && (
+                            <div className="flex items-center gap-1 mt-1 text-xs text-red-500">
+                              <BatteryWarning className="w-3 h-3" />
+                              <span>Epuise !</span>
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
                     
-                    {/* Contrôle quantité */}
+                    {/* Controle quantite */}
                     <div className="flex items-center gap-1 ml-2">
                       <button
                         onClick={() => updateQuantity(weapon.id, weapon.quantity - 1)}
@@ -262,7 +291,7 @@ export function CombatEquipmentTab() {
                     </div>
                   </div>
                   
-                  {/* Propriétés de l'arme */}
+                  {/* Proprietes de l arme */}
                   {weapon.weaponProperties && weapon.weaponProperties.length > 0 && (
                     <div className="flex flex-wrap gap-1 mt-2">
                       {weapon.weaponProperties.map(prop => (
@@ -273,34 +302,34 @@ export function CombatEquipmentTab() {
                     </div>
                   )}
                   
-                  {/* Bouton détails */}
+                  {/* Bouton details */}
                   <button
                     onClick={() => toggleExpanded(weapon.id)}
                     className="w-full mt-2 text-xs text-ink-muted flex items-center justify-center gap-1
                              hover:text-ink transition-colors"
                   >
                     {isExpanded ? (
-                      <><ChevronUp className="w-3 h-3" /> Moins d'infos</>
+                      <><ChevronUp className="w-3 h-3" /> Moins d infos</>
                     ) : (
-                      <><ChevronDown className="w-3 h-3" /> Règles détaillées</>
+                      <><ChevronDown className="w-3 h-3" /> Regles detaillees</>
                     )}
                   </button>
                   
-                  {/* Détails des règles */}
+                  {/* Details des regles */}
                   {isExpanded && (
                     <div className="mt-3 pt-3 border-t border-parchment-dark space-y-2 text-sm">
-                      {/* Calcul du jet d'attaque */}
+                      {/* Calcul du jet d attaque */}
                       <div className="bg-parchment/50 p-2 rounded">
-                        <p className="font-medium text-ink mb-1">🎯 Jet d'attaque</p>
+                        <p className="font-medium text-ink mb-1">Jet d attaque</p>
                         <p className="text-ink-light">
-                          1d20 {attack.toHit >= 0 ? '+' : ''}{attack.toHit} = 1d20 {attack.damageMod >= 0 ? '+' : ''}{attack.damageMod} ({attack.ability}) {profBonus >= 0 ? '+' : ''}{profBonus} (maîtrise)
+                          1d20 {attack.toHit >= 0 ? '+' : ''}{attack.toHit} = 1d20 {attack.damageMod >= 0 ? '+' : ''}{attack.damageMod} ({attack.ability}) {profBonus >= 0 ? '+' : ''}{profBonus} (maitrise)
                         </p>
                       </div>
                       
-                      {/* Calcul des dégâts */}
+                      {/* Calcul des degats */}
                       {weapon.damage && (
                         <div className="bg-parchment/50 p-2 rounded">
-                          <p className="font-medium text-ink mb-1">⚔️ Dégâts</p>
+                          <p className="font-medium text-ink mb-1">Degats</p>
                           <p className="text-ink-light">
                             {weapon.damage} {attack.damageMod >= 0 ? '+' : ''}{attack.damageMod} ({attack.ability}) {weapon.damageType}
                           </p>
@@ -312,27 +341,43 @@ export function CombatEquipmentTab() {
                         </div>
                       )}
                       
-                      {/* Règles spéciales */}
+                      {/* Harmonisation */}
+                      {weapon.attunement?.required && (
+                        <div className={`p-2 rounded border ${
+                          weapon.attunement.isAttuned 
+                            ? 'bg-divine-gold/10 border-divine-gold/30' 
+                            : 'bg-gray-100 border-gray-300'
+                        }`}>
+                          <p className="font-medium text-ink mb-1">Harmonisation</p>
+                          <p className={`text-xs ${weapon.attunement.isAttuned ? 'text-divine-gold' : 'text-ink-muted'}`}>
+                            {weapon.attunement.isAttuned 
+                              ? '✨ Harmonise' 
+                              : 'Necessite une harmonisation pour activer les effets'}
+                          </p>
+                        </div>
+                      )}
+                      
+                      {/* Regles speciales */}
                       <div className="bg-parchment/50 p-2 rounded">
-                        <p className="font-medium text-ink mb-1">📜 Règles spéciales</p>
+                        <p className="font-medium text-ink mb-1">Regles speciales</p>
                         <ul className="text-ink-light space-y-1 text-xs">
-                          {weapon.weaponProperties?.includes('À deux mains') && (
-                            <li>• Nécessite les deux mains pour attaquer</li>
+                          {weapon.weaponProperties?.includes('A deux mains') && (
+                            <li>• Necessite les deux mains pour attaquer</li>
                           )}
                           {weapon.weaponProperties?.includes('Lancer') && (
-                            <li>• Peut être lancée (portée indiquée dans la description)</li>
+                            <li>• Peut etre lancee (portee indiquee dans la description)</li>
                           )}
                           {weapon.weaponProperties?.includes('Finesse') && (
-                            <li>• Utilise FOR ou DEX (le plus élevé)</li>
+                            <li>• Utilise FOR ou DEX (le plus eleve)</li>
                           )}
-                          {weapon.weaponProperties?.includes('Légère') && (
-                            <li>• Peut être utilisée comme arme secondaire (action bonus)</li>
+                          {weapon.weaponProperties?.includes('Legere') && (
+                            <li>• Peut etre utilisee comme arme secondaire (action bonus)</li>
                           )}
                           {weapon.weaponProperties?.includes('Polyvalente') && (
-                            <li>• Peut être utilisée à une main ou deux mains (dégâts augmentés)</li>
+                            <li>• Peut etre utilisee a une main ou deux mains (degats augmentes)</li>
                           )}
                           {hasWarCaster && (
-                            <li className="text-divine-gold">• Lanceur de Guerre : attaque d'opportunité possible avec un sort</li>
+                            <li className="text-divine-gold">• Lanceur de Guerre : attaque d opportunite possible avec un sort</li>
                           )}
                         </ul>
                       </div>
@@ -340,7 +385,7 @@ export function CombatEquipmentTab() {
                       {/* Description */}
                       {weapon.description && (
                         <div className="bg-parchment/50 p-2 rounded">
-                          <p className="font-medium text-ink mb-1">📝 Description</p>
+                          <p className="font-medium text-ink mb-1">Description</p>
                           <p className="text-ink-light text-xs">{weapon.description}</p>
                         </div>
                       )}
@@ -365,16 +410,28 @@ export function CombatEquipmentTab() {
               const isExpanded = expandedItems.has(armor.id);
               let dexModForArmor = dexMod;
               if (armor.armorType === 'lourde') dexModForArmor = 0;
-              if (armor.armorType === 'intermédiaire') dexModForArmor = Math.min(dexMod, 2);
+              if (armor.armorType === 'intermediaire') dexModForArmor = Math.min(dexMod, 2);
               
               return (
-                <div key={armor.id} className="card p-3">
+                <div key={armor.id} className={`card p-3 ${armor.isEquipped ? 'border-divine-gold/50 bg-divine-gold/5' : ''}`}>
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
+                        {/* Case a cocher pour equiper (US-001) */}
+                        <button
+                          onClick={() => handleEquipToggle(armor)}
+                          className="flex items-center gap-1 text-ink hover:text-forest transition-colors"
+                          title={armor.isEquipped ? 'Desequiper' : 'Equiper'}
+                        >
+                          {armor.isEquipped ? (
+                            <CheckSquare className="w-5 h-5 text-forest" />
+                          ) : (
+                            <Square className="w-5 h-5 text-ink-muted" />
+                          )}
+                        </button>
                         <span className="font-display text-ink">{armor.name}</span>
                         {armor.isEquipped && (
-                          <span className="badge badge-success text-xs">Équipée</span>
+                          <span className="badge badge-success text-xs">Equipee</span>
                         )}
                       </div>
                       
@@ -388,7 +445,7 @@ export function CombatEquipmentTab() {
                       </div>
                     </div>
                     
-                    {/* Contrôle quantité */}
+                    {/* Controle quantite */}
                     <div className="flex items-center gap-1 ml-2">
                       <button
                         onClick={() => updateQuantity(armor.id, armor.quantity - 1)}
@@ -417,31 +474,31 @@ export function CombatEquipmentTab() {
                              hover:text-ink transition-colors"
                   >
                     {isExpanded ? (
-                      <><ChevronUp className="w-3 h-3" /> Moins d'infos</>
+                      <><ChevronUp className="w-3 h-3" /> Moins d infos</>
                     ) : (
-                      <><ChevronDown className="w-3 h-3" /> Règles détaillées</>
+                      <><ChevronDown className="w-3 h-3" /> Regles detaillees</>
                     )}
                   </button>
                   
                   {isExpanded && (
                     <div className="mt-3 pt-3 border-t border-parchment-dark space-y-2 text-sm">
                       <div className="bg-parchment/50 p-2 rounded">
-                        <p className="font-medium text-ink mb-1">🛡️ Calcul de la CA</p>
+                        <p className="font-medium text-ink mb-1">Calcul de la CA</p>
                         <p className="text-ink-light">
                           {armor.armorClass} (base) {dexModForArmor > 0 ? `+ ${dexModForArmor} DEX` : ''} = <strong>{armor.armorClass ? armor.armorClass + dexModForArmor : '?'}</strong>
                         </p>
                         {armor.armorType === 'lourde' && (
                           <p className="text-ink-muted text-xs mt-1">Armure lourde : pas de bonus de DEX</p>
                         )}
-                        {armor.armorType === 'intermédiaire' && dexMod > 2 && (
-                          <p className="text-ink-muted text-xs mt-1">Armure intermédiaire : max +2 DEX</p>
+                        {armor.armorType === 'intermediaire' && dexMod > 2 && (
+                          <p className="text-ink-muted text-xs mt-1">Armure intermediaire : max +2 DEX</p>
                         )}
                       </div>
                       
                       {armor.stealthDisadvantage && (
                         <div className="bg-blood-red/10 p-2 rounded border border-blood-red/30">
                           <p className="text-blood-red text-xs">
-                            ⚠️ Désavantage aux tests de Discrétion
+                            Desavantage aux tests de Discretion
                           </p>
                         </div>
                       )}
@@ -449,7 +506,7 @@ export function CombatEquipmentTab() {
                       {armor.strengthRequired && character.strength < armor.strengthRequired && (
                         <div className="bg-blood-red/10 p-2 rounded border border-blood-red/30">
                           <p className="text-blood-red text-xs">
-                            ⚠️ Force {armor.strengthRequired} requise ! Vitesse réduite de 3m
+                            Force {armor.strengthRequired} requise ! Vitesse reduite de 3m
                           </p>
                         </div>
                       )}
@@ -457,14 +514,14 @@ export function CombatEquipmentTab() {
                       {hasHeavyArmorMaster && armor.armorType === 'lourde' && (
                         <div className="bg-divine-gold/10 p-2 rounded border border-divine-gold/30">
                           <p className="text-divine-gold text-xs">
-                            ✨ Maître des Armures Lourdes : -3 dégâts contondants/perforants/tranchants
+                            Maitre des Armures Lourdes : -3 degats contondants/perforants/tranchants
                           </p>
                         </div>
                       )}
                       
                       {armor.description && (
                         <div className="bg-parchment/50 p-2 rounded">
-                          <p className="font-medium text-ink mb-1">📝 Description</p>
+                          <p className="font-medium text-ink mb-1">Description</p>
                           <p className="text-ink-light text-xs">{armor.description}</p>
                         </div>
                       )}
@@ -489,13 +546,25 @@ export function CombatEquipmentTab() {
               const isExpanded = expandedItems.has(shield.id);
               
               return (
-                <div key={shield.id} className="card p-3">
+                <div key={shield.id} className={`card p-3 ${shield.isEquipped ? 'border-divine-gold/50 bg-divine-gold/5' : ''}`}>
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
+                        {/* Case a cocher pour equiper (US-001) */}
+                        <button
+                          onClick={() => handleEquipToggle(shield)}
+                          className="flex items-center gap-1 text-ink hover:text-forest transition-colors"
+                          title={shield.isEquipped ? 'Desequiper' : 'Equiper'}
+                        >
+                          {shield.isEquipped ? (
+                            <CheckSquare className="w-5 h-5 text-forest" />
+                          ) : (
+                            <Square className="w-5 h-5 text-ink-muted" />
+                          )}
+                        </button>
                         <span className="font-display text-ink">{shield.name}</span>
                         {shield.isEquipped && (
-                          <span className="badge badge-success text-xs">Équipé</span>
+                          <span className="badge badge-success text-xs">Equipe</span>
                         )}
                       </div>
                       
@@ -507,7 +576,7 @@ export function CombatEquipmentTab() {
                       </div>
                     </div>
                     
-                    {/* Contrôle quantité */}
+                    {/* Controle quantite */}
                     <div className="flex items-center gap-1 ml-2">
                       <button
                         onClick={() => updateQuantity(shield.id, shield.quantity - 1)}
@@ -536,32 +605,32 @@ export function CombatEquipmentTab() {
                              hover:text-ink transition-colors"
                   >
                     {isExpanded ? (
-                      <><ChevronUp className="w-3 h-3" /> Moins d'infos</>
+                      <><ChevronUp className="w-3 h-3" /> Moins d infos</>
                     ) : (
-                      <><ChevronDown className="w-3 h-3" /> Règles détaillées</>
+                      <><ChevronDown className="w-3 h-3" /> Regles detaillees</>
                     )}
                   </button>
                   
                   {isExpanded && (
                     <div className="mt-3 pt-3 border-t border-parchment-dark space-y-2 text-sm">
                       <div className="bg-parchment/50 p-2 rounded">
-                        <p className="font-medium text-ink mb-1">🛡️ Bonus de bouclier</p>
+                        <p className="font-medium text-ink mb-1">Bonus de bouclier</p>
                         <p className="text-ink-light">
-                          +2 à la CA tant que le bouclier est équipé
+                          +2 a la CA tant que le bouclier est equipe
                         </p>
                         <p className="text-ink-muted text-xs mt-1">
-                          Nécessite une main libre pour bénéficier du bonus
+                          Necessite une main libre pour beneficier du bonus
                         </p>
                       </div>
                       
                       {hasShieldMaster && (
                         <div className="space-y-1">
                           <div className="bg-divine-gold/10 p-2 rounded border border-divine-gold/30">
-                            <p className="text-divine-gold text-xs font-medium">Maître des Boucliers :</p>
+                            <p className="text-divine-gold text-xs font-medium">Maitre des Boucliers :</p>
                             <ul className="text-ink-light text-xs mt-1 space-y-1">
-                              <li>• Action bonus pour pousser une cible à 1,50m (FOR vs JS)</li>
+                              <li>• Action bonus pour pousser une cible a 1,50m (FOR vs JS)</li>
                               <li>• Bonus de bouclier (+2) aux JS de DEX contre effets de zone</li>
-                              <li>• Réaction pour ne prendre aucun dégât si JS de DEX réussi contre zone</li>
+                              <li>• Reaction pour ne prendre aucun degat si JS de DEX reussi contre zone</li>
                             </ul>
                           </div>
                         </div>
@@ -570,14 +639,14 @@ export function CombatEquipmentTab() {
                       {hasWarCaster && (
                         <div className="bg-divine-gold/10 p-2 rounded border border-divine-gold/30">
                           <p className="text-divine-gold text-xs">
-                            ✨ Lanceur de Guerre : gestes somatiques possibles avec bouclier en main
+                            Lanceur de Guerre : gestes somatiques possibles avec bouclier en main
                           </p>
                         </div>
                       )}
                       
                       {shield.description && (
                         <div className="bg-parchment/50 p-2 rounded">
-                          <p className="font-medium text-ink mb-1">📝 Description</p>
+                          <p className="font-medium text-ink mb-1">Description</p>
                           <p className="text-ink-light text-xs">{shield.description}</p>
                         </div>
                       )}
@@ -590,16 +659,16 @@ export function CombatEquipmentTab() {
         </section>
       )}
       
-      {/* Message si aucun équipement de combat */}
+      {/* Message si aucun equipement de combat */}
       {combatItems.length === 0 && (
         <div className="text-center py-8 text-ink-muted">
           <Swords className="w-12 h-12 mx-auto mb-2 opacity-30" />
-          <p>Aucun équipement de combat</p>
-          <p className="text-sm">Ajoutez des armes, armures ou boucliers à votre inventaire</p>
+          <p>Aucun equipement de combat</p>
+          <p className="text-sm">Ajoutez des armes, armures ou boucliers a votre inventaire</p>
         </div>
       )}
       
-      {/* Rappel des règles de combat */}
+      {/* Rappel des regles de combat */}
       <div className="card bg-parchment-dark/30">
         <h4 className="font-display text-sm text-ink mb-2 flex items-center gap-2">
           <Info className="w-4 h-4 text-steel-blue" />
@@ -612,11 +681,11 @@ export function CombatEquipmentTab() {
           </div>
           <div className="flex gap-2">
             <span className="badge bg-divine-gold/10 text-divine-gold border-divine-gold/30">Action bonus</span>
-            <span className="text-ink-light">Prêtre de guerre, Arme secondaire (légère), Sort rapide</span>
+            <span className="text-ink-light">Pretre de guerre, Arme secondaire (legere), Sort rapide</span>
           </div>
           <div className="flex gap-2">
-            <span className="badge bg-bronze/10 text-bronze border-bronze/30">Réaction</span>
-            <span className="text-ink-light">Attaque d'opportunité, Bouclier (sort), Contresort...</span>
+            <span className="badge bg-bronze/10 text-bronze border-bronze/30">Reaction</span>
+            <span className="text-ink-light">Attaque d opportunite, Bouclier (sort), Contresort...</span>
           </div>
         </div>
       </div>

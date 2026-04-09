@@ -123,6 +123,22 @@ export interface EquipmentItem {
   armorType?: 'légère' | 'intermédiaire' | 'lourde' | 'bouclier';
   stealthDisadvantage?: boolean; // Désavantage en Discrétion
   strengthRequired?: number; // Force minimum requise
+  
+  // Slots d'équipement (pour gestion des conflits)
+  slot?: EquipmentSlot;      // Slot où l'item peut être équipé
+  equippedSlot?: string;     // Pour différencier main droite/gauche ou anneau gauche/droit
+  
+  // Harmonisation (US-041 à US-043)
+  attunement?: Attunement;
+  
+  // Charges (US-044 à US-047)
+  charges?: ItemCharges;
+  
+  // Lumière (US-012 à US-014)
+  lightSource?: LightSource;
+  
+  // Vision (US-035 à US-037)
+  visionEffect?: VisionEffect;
 }
 
 export type EquipmentType =
@@ -137,6 +153,65 @@ export type EquipmentType =
   | 'Pièges'
   | 'Escalade'
   | string;
+
+// Harmonisation (Attunement)
+export interface Attunement {
+  required: boolean;
+  isAttuned: boolean;
+  attunementTime?: 'short_rest' | 'long_rest';
+  prerequisites?: {
+    alignment?: string;
+    class?: string;
+    race?: string;
+    spellcasting?: boolean;
+  };
+}
+
+// Charges
+export type RechargeType = 'dawn' | 'dusk' | 'short_rest' | 'long_rest' | 'weekly' | 'never';
+
+export interface ItemCharges {
+  current: number;
+  max: number;
+  recharge: RechargeType;
+  destroyOnDepletion?: boolean; // pour baguettes
+}
+
+// Lumière
+export interface LightSource {
+  brightLightRadius: number;  // en mètres
+  dimLightRadius: number;
+  requiresHand: boolean;
+  fuelDuration?: number;      // en heures (null = illimité)
+  fuelRemaining?: number;     // temps restant
+}
+
+// Vision
+export interface VisionEffect {
+  darkvision?: number;        // portée en mètres
+  truesight?: number;
+  blindsight?: number;
+  special?: string;
+}
+
+// Slots d'équipement pour la gestion des conflits
+export type EquipmentSlot = 
+  | 'head'           // casque, bandeau
+  | 'eyes'           // lunettes, lentilles
+  | 'neck'           // amulette
+  | 'shoulders'      // cape
+  | 'body'           // armure
+  | 'hands'          // gants, gantelets
+  | 'ring'           // anneaux (max 2)
+  | 'waist'          // ceinture
+  | 'feet'           // bottes
+  | 'main_hand'      // arme principale
+  | 'off_hand'       // bouclier, arme secondaire
+  | 'light_source'   // torche, lanterne
+  | 'focus'          // focus arcanique
+  | 'clothes'        // vêtements sous l'armure
+  | 'back'           // sac à dos
+  | 'waist_back';    // sacs sans fond, etc.
 
 export interface ComponentRequirement {
   spellId: string;
