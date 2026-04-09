@@ -450,7 +450,7 @@ export function PreparationPage() {
                 key={spell.id}
                 spell={spell}
                 isPrepared={preparedSpellIds.includes(spell.id)}
-                onTogglePrepare={() => toggleSpellPrepared(spell.id)}
+                onTogglePrepare={() => toggleSpellPrepared(spell.id, maxPrepared)}
               />
             ))}
         </div>

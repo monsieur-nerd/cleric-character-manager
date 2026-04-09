@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, Brain, TrendingUp, Info, Heart, Shield, Dumbbell, Package } from 'lucide-react';
+import { X, Brain, TrendingUp, Info, Heart, Shield, Dumbbell, Package, Zap, Sparkles, Stars } from 'lucide-react';
 import { useCharacterStore } from '@/stores';
 import { formatModifier } from '@/utils/formatters';
 
@@ -10,16 +10,22 @@ interface CharacterEditorProps {
 
 export function CharacterEditor({ isOpen, onClose }: CharacterEditorProps) {
   const character = useCharacterStore((state) => state.character);
-  const setWisdom = useCharacterStore((state) => state.setWisdom);
   const setLevel = useCharacterStore((state) => state.setLevel);
-  const setConstitution = useCharacterStore((state) => state.setConstitution);
   const setStrength = useCharacterStore((state) => state.setStrength);
+  const setDexterity = useCharacterStore((state) => state.setDexterity);
+  const setConstitution = useCharacterStore((state) => state.setConstitution);
+  const setIntelligence = useCharacterStore((state) => state.setIntelligence);
+  const setWisdom = useCharacterStore((state) => state.setWisdom);
+  const setCharisma = useCharacterStore((state) => state.setCharisma);
   const calculateMaxHp = useCharacterStore((state) => state.calculateMaxHp);
   
-  const [wisdom, setWisdomValue] = useState(character.wisdom);
   const [level, setLevelValue] = useState(character.level);
-  const [constitution, setConstitutionValue] = useState(character.constitution);
   const [strength, setStrengthValue] = useState(character.strength);
+  const [dexterity, setDexterityValue] = useState(character.dexterity || 10);
+  const [constitution, setConstitutionValue] = useState(character.constitution);
+  const [intelligence, setIntelligenceValue] = useState(character.intelligence || 10);
+  const [wisdom, setWisdomValue] = useState(character.wisdom);
+  const [charisma, setCharismaValue] = useState(character.charisma || 10);
   
   if (!isOpen) return null;
   
@@ -32,10 +38,13 @@ export function CharacterEditor({ isOpen, onClose }: CharacterEditorProps) {
   const heavyLoad = strength * 22.5;
   
   const handleSave = () => {
-    setWisdom(wisdom);
     setLevel(level);
-    setConstitution(constitution);
     setStrength(strength);
+    setDexterity(dexterity);
+    setConstitution(constitution);
+    setIntelligence(intelligence);
+    setWisdom(wisdom);
+    setCharisma(charisma);
     onClose();
   };
 
@@ -61,48 +70,6 @@ export function CharacterEditor({ isOpen, onClose }: CharacterEditorProps) {
         </div>
         
         <div className="p-4 space-y-6">
-          {/* Sagesse */}
-          <div>
-            <label className="flex items-center gap-2 text-ink font-medium mb-2">
-              <Brain className="w-5 h-5 text-divine-gold" />
-              Sagesse
-            </label>
-            
-            <div className="flex items-center gap-4">
-              <button
-                onClick={() => setWisdomValue(Math.max(1, wisdom - 1))}
-                className="w-12 h-12 rounded-lg bg-parchment-dark hover:bg-divine-gold/20 
-                         flex items-center justify-center text-xl font-bold transition-colors"
-              >
-                -
-              </button>
-              
-              <div className="flex-1 text-center">
-                <div className="text-3xl font-display text-ink">{wisdom}</div>
-                <div className="text-sm text-divine-gold-dark font-bold">
-                  Modificateur: {formatModifier(wisdom)}
-                </div>
-              </div>
-              
-              <button
-                onClick={() => setWisdomValue(Math.min(30, wisdom + 1))}
-                className="w-12 h-12 rounded-lg bg-parchment-dark hover:bg-divine-gold/20 
-                         flex items-center justify-center text-xl font-bold transition-colors"
-              >
-                +
-              </button>
-            </div>
-            
-            <input
-              type="range"
-              min="1"
-              max="30"
-              value={wisdom}
-              onChange={(e) => setWisdomValue(Number(e.target.value))}
-              className="w-full mt-4 accent-divine-gold"
-            />
-          </div>
-          
           {/* Niveau */}
           <div>
             <label className="flex items-center gap-2 text-ink font-medium mb-2">
@@ -142,6 +109,90 @@ export function CharacterEditor({ isOpen, onClose }: CharacterEditorProps) {
               value={level}
               onChange={(e) => setLevelValue(Number(e.target.value))}
               className="w-full mt-4 accent-divine-gold"
+            />
+          </div>
+          
+          {/* Force */}
+          <div>
+            <label className="flex items-center gap-2 text-ink font-medium mb-2">
+              <Dumbbell className="w-5 h-5 text-steel-blue" />
+              Force
+            </label>
+            
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setStrengthValue(Math.max(1, strength - 1))}
+                className="w-12 h-12 rounded-lg bg-parchment-dark hover:bg-steel-blue/20 
+                         flex items-center justify-center text-xl font-bold transition-colors"
+              >
+                -
+              </button>
+              
+              <div className="flex-1 text-center">
+                <div className="text-3xl font-display text-ink">{strength}</div>
+                <div className="text-sm text-steel-blue font-bold">
+                  Modificateur: {formatModifier(strength)}
+                </div>
+              </div>
+              
+              <button
+                onClick={() => setStrengthValue(Math.min(30, strength + 1))}
+                className="w-12 h-12 rounded-lg bg-parchment-dark hover:bg-steel-blue/20 
+                         flex items-center justify-center text-xl font-bold transition-colors"
+              >
+                +
+              </button>
+            </div>
+            
+            <input
+              type="range"
+              min="1"
+              max="30"
+              value={strength}
+              onChange={(e) => setStrengthValue(Number(e.target.value))}
+              className="w-full mt-4 accent-steel-blue"
+            />
+          </div>
+          
+          {/* Dextérité */}
+          <div>
+            <label className="flex items-center gap-2 text-ink font-medium mb-2">
+              <Zap className="w-5 h-5 text-forest" />
+              Dextérité
+            </label>
+            
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setDexterityValue(Math.max(1, dexterity - 1))}
+                className="w-12 h-12 rounded-lg bg-parchment-dark hover:bg-forest/20 
+                         flex items-center justify-center text-xl font-bold transition-colors"
+              >
+                -
+              </button>
+              
+              <div className="flex-1 text-center">
+                <div className="text-3xl font-display text-ink">{dexterity}</div>
+                <div className="text-sm text-forest font-bold">
+                  Modificateur: {formatModifier(dexterity)}
+                </div>
+              </div>
+              
+              <button
+                onClick={() => setDexterityValue(Math.min(30, dexterity + 1))}
+                className="w-12 h-12 rounded-lg bg-parchment-dark hover:bg-forest/20 
+                         flex items-center justify-center text-xl font-bold transition-colors"
+              >
+                +
+              </button>
+            </div>
+            
+            <input
+              type="range"
+              min="1"
+              max="30"
+              value={dexterity}
+              onChange={(e) => setDexterityValue(Number(e.target.value))}
+              className="w-full mt-4 accent-forest"
             />
           </div>
           
@@ -187,6 +238,132 @@ export function CharacterEditor({ isOpen, onClose }: CharacterEditorProps) {
             />
           </div>
           
+          {/* Intelligence */}
+          <div>
+            <label className="flex items-center gap-2 text-ink font-medium mb-2">
+              <Sparkles className="w-5 h-5 text-royal-purple" />
+              Intelligence
+            </label>
+            
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setIntelligenceValue(Math.max(1, intelligence - 1))}
+                className="w-12 h-12 rounded-lg bg-parchment-dark hover:bg-royal-purple/20 
+                         flex items-center justify-center text-xl font-bold transition-colors"
+              >
+                -
+              </button>
+              
+              <div className="flex-1 text-center">
+                <div className="text-3xl font-display text-ink">{intelligence}</div>
+                <div className="text-sm text-royal-purple font-bold">
+                  Modificateur: {formatModifier(intelligence)}
+                </div>
+              </div>
+              
+              <button
+                onClick={() => setIntelligenceValue(Math.min(30, intelligence + 1))}
+                className="w-12 h-12 rounded-lg bg-parchment-dark hover:bg-royal-purple/20 
+                         flex items-center justify-center text-xl font-bold transition-colors"
+              >
+                +
+              </button>
+            </div>
+            
+            <input
+              type="range"
+              min="1"
+              max="30"
+              value={intelligence}
+              onChange={(e) => setIntelligenceValue(Number(e.target.value))}
+              className="w-full mt-4 accent-royal-purple"
+            />
+          </div>
+          
+          {/* Sagesse */}
+          <div>
+            <label className="flex items-center gap-2 text-ink font-medium mb-2">
+              <Brain className="w-5 h-5 text-divine-gold" />
+              Sagesse
+            </label>
+            
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setWisdomValue(Math.max(1, wisdom - 1))}
+                className="w-12 h-12 rounded-lg bg-parchment-dark hover:bg-divine-gold/20 
+                         flex items-center justify-center text-xl font-bold transition-colors"
+              >
+                -
+              </button>
+              
+              <div className="flex-1 text-center">
+                <div className="text-3xl font-display text-ink">{wisdom}</div>
+                <div className="text-sm text-divine-gold-dark font-bold">
+                  Modificateur: {formatModifier(wisdom)}
+                </div>
+              </div>
+              
+              <button
+                onClick={() => setWisdomValue(Math.min(30, wisdom + 1))}
+                className="w-12 h-12 rounded-lg bg-parchment-dark hover:bg-divine-gold/20 
+                         flex items-center justify-center text-xl font-bold transition-colors"
+              >
+                +
+              </button>
+            </div>
+            
+            <input
+              type="range"
+              min="1"
+              max="30"
+              value={wisdom}
+              onChange={(e) => setWisdomValue(Number(e.target.value))}
+              className="w-full mt-4 accent-divine-gold"
+            />
+          </div>
+          
+          {/* Charisme */}
+          <div>
+            <label className="flex items-center gap-2 text-ink font-medium mb-2">
+              <Stars className="w-5 h-5 text-bronze" />
+              Charisme
+            </label>
+            
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setCharismaValue(Math.max(1, charisma - 1))}
+                className="w-12 h-12 rounded-lg bg-parchment-dark hover:bg-bronze/20 
+                         flex items-center justify-center text-xl font-bold transition-colors"
+              >
+                -
+              </button>
+              
+              <div className="flex-1 text-center">
+                <div className="text-3xl font-display text-ink">{charisma}</div>
+                <div className="text-sm text-bronze font-bold">
+                  Modificateur: {formatModifier(charisma)}
+                </div>
+              </div>
+              
+              <button
+                onClick={() => setCharismaValue(Math.min(30, charisma + 1))}
+                className="w-12 h-12 rounded-lg bg-parchment-dark hover:bg-bronze/20 
+                         flex items-center justify-center text-xl font-bold transition-colors"
+              >
+                +
+              </button>
+            </div>
+            
+            <input
+              type="range"
+              min="1"
+              max="30"
+              value={charisma}
+              onChange={(e) => setCharismaValue(Number(e.target.value))}
+              className="w-full mt-4 accent-bronze"
+            />
+          </div>
+          
           {/* Calcul des sorts */}
           <div className="card bg-divine-gold/10 border-divine-gold/30">
             <div className="flex items-start gap-2 mb-2">
@@ -208,48 +385,6 @@ export function CharacterEditor({ isOpen, onClose }: CharacterEditorProps) {
                 <span className="font-display text-xl text-divine-gold-dark">{maxPrepared}</span>
               </div>
             </div>
-          </div>
-          
-          {/* Force */}
-          <div>
-            <label className="flex items-center gap-2 text-ink font-medium mb-2">
-              <Dumbbell className="w-5 h-5 text-forest" />
-              Force
-            </label>
-            
-            <div className="flex items-center gap-4">
-              <button
-                onClick={() => setStrengthValue(Math.max(1, strength - 1))}
-                className="w-12 h-12 rounded-lg bg-parchment-dark hover:bg-forest/20 
-                         flex items-center justify-center text-xl font-bold transition-colors"
-              >
-                -
-              </button>
-              
-              <div className="flex-1 text-center">
-                <div className="text-3xl font-display text-ink">{strength}</div>
-                <div className="text-sm text-forest font-bold">
-                  Modificateur: {formatModifier(strength)}
-                </div>
-              </div>
-              
-              <button
-                onClick={() => setStrengthValue(Math.min(30, strength + 1))}
-                className="w-12 h-12 rounded-lg bg-parchment-dark hover:bg-forest/20 
-                         flex items-center justify-center text-xl font-bold transition-colors"
-              >
-                +
-              </button>
-            </div>
-            
-            <input
-              type="range"
-              min="1"
-              max="30"
-              value={strength}
-              onChange={(e) => setStrengthValue(Number(e.target.value))}
-              className="w-full mt-4 accent-forest"
-            />
           </div>
           
           {/* Capacité d'emport */}

@@ -310,11 +310,11 @@ function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: {
   const [activeTab, setActiveTab] = useState(initialTab);
   const [localName, setLocalName] = useState(character.name);
   const [localLevel, setLocalLevel] = useState(character.level);
-  const [localWisdom, setLocalWisdom] = useState(character.wisdom);
-  const [localCon, setLocalCon] = useState(character.constitution);
   const [localStr, setLocalStr] = useState(character.strength);
   const [localDex, setLocalDex] = useState(character.dexterity || 10);
+  const [localCon, setLocalCon] = useState(character.constitution);
   const [localInt, setLocalInt] = useState(character.intelligence || 10);
+  const [localWisdom, setLocalWisdom] = useState(character.wisdom);
   const [localCha, setLocalCha] = useState(character.charisma || 10);
   const [localDescription, setLocalDescription] = useState(character.description || '');
   const [localRace, setLocalRace] = useState(character.race || 'Humain');
@@ -330,11 +330,11 @@ function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: {
       setActiveTab(initialTab);
       setLocalName(character.name);
       setLocalLevel(character.level);
-      setLocalWisdom(character.wisdom);
-      setLocalCon(character.constitution);
       setLocalStr(character.strength);
       setLocalDex(character.dexterity || 10);
+      setLocalCon(character.constitution);
       setLocalInt(character.intelligence || 10);
+      setLocalWisdom(character.wisdom);
       setLocalCha(character.charisma || 10);
       setLocalDescription(character.description || '');
       setLocalRace(character.race || 'Humain');
@@ -353,11 +353,11 @@ function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: {
   const handleSave = () => {
     setName(localName);
     setLevel(localLevel);
-    setWisdom(localWisdom);
-    setConstitution(localCon);
     setStrength(localStr);
     setDexterity(localDex);
+    setConstitution(localCon);
     setIntelligence(localInt);
+    setWisdom(localWisdom);
     setCharisma(localCha);
     setDescription(localDescription);
     setRace(localRace);
@@ -562,6 +562,32 @@ function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: {
                 </div>
               </div>
               
+              {/* Force */}
+              <div>
+                <label className="flex items-center gap-2 text-ink font-medium mb-2">
+                  <Sword className="w-5 h-5 text-steel-blue" />
+                  Force
+                </label>
+                <div className="flex items-center gap-4">
+                  <button
+                    onClick={() => setLocalStr(Math.max(1, localStr - 1))}
+                    className="w-10 h-10 rounded-lg bg-parchment-dark hover:bg-steel-blue/20 flex items-center justify-center text-xl font-bold"
+                  >
+                    -
+                  </button>
+                  <div className="flex-1 text-center">
+                    <div className="text-3xl font-display text-ink">{localStr}</div>
+                    <div className="text-sm text-steel-blue font-bold">{formatModifier(localStr)}</div>
+                  </div>
+                  <button
+                    onClick={() => setLocalStr(Math.min(30, localStr + 1))}
+                    className="w-10 h-10 rounded-lg bg-parchment-dark hover:bg-steel-blue/20 flex items-center justify-center text-xl font-bold"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+              
               {/* Dextérité */}
               <div>
                 <label className="flex items-center gap-2 text-ink font-medium mb-2">
@@ -582,32 +608,6 @@ function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: {
                   <button
                     onClick={() => setLocalDex(Math.min(30, localDex + 1))}
                     className="w-10 h-10 rounded-lg bg-parchment-dark hover:bg-forest/20 flex items-center justify-center text-xl font-bold"
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-              
-              {/* Sagesse */}
-              <div>
-                <label className="flex items-center gap-2 text-ink font-medium mb-2">
-                  <Brain className="w-5 h-5 text-divine-gold" />
-                  Sagesse
-                </label>
-                <div className="flex items-center gap-4">
-                  <button
-                    onClick={() => setLocalWisdom(Math.max(1, localWisdom - 1))}
-                    className="w-10 h-10 rounded-lg bg-parchment-dark hover:bg-divine-gold/20 flex items-center justify-center text-xl font-bold"
-                  >
-                    -
-                  </button>
-                  <div className="flex-1 text-center">
-                    <div className="text-3xl font-display text-ink">{localWisdom}</div>
-                    <div className="text-sm text-divine-gold-dark font-bold">{formatModifier(localWisdom)}</div>
-                  </div>
-                  <button
-                    onClick={() => setLocalWisdom(Math.min(30, localWisdom + 1))}
-                    className="w-10 h-10 rounded-lg bg-parchment-dark hover:bg-divine-gold/20 flex items-center justify-center text-xl font-bold"
                   >
                     +
                   </button>
@@ -640,32 +640,6 @@ function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: {
                 </div>
               </div>
               
-              {/* Force */}
-              <div>
-                <label className="flex items-center gap-2 text-ink font-medium mb-2">
-                  <Sword className="w-5 h-5 text-steel-blue" />
-                  Force
-                </label>
-                <div className="flex items-center gap-4">
-                  <button
-                    onClick={() => setLocalStr(Math.max(1, localStr - 1))}
-                    className="w-10 h-10 rounded-lg bg-parchment-dark hover:bg-steel-blue/20 flex items-center justify-center text-xl font-bold"
-                  >
-                    -
-                  </button>
-                  <div className="flex-1 text-center">
-                    <div className="text-3xl font-display text-ink">{localStr}</div>
-                    <div className="text-sm text-steel-blue font-bold">{formatModifier(localStr)}</div>
-                  </div>
-                  <button
-                    onClick={() => setLocalStr(Math.min(30, localStr + 1))}
-                    className="w-10 h-10 rounded-lg bg-parchment-dark hover:bg-steel-blue/20 flex items-center justify-center text-xl font-bold"
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-              
               {/* Intelligence */}
               <div>
                 <label className="flex items-center gap-2 text-ink font-medium mb-2">
@@ -686,6 +660,32 @@ function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: {
                   <button
                     onClick={() => setLocalInt(Math.min(30, localInt + 1))}
                     className="w-10 h-10 rounded-lg bg-parchment-dark hover:bg-royal-purple/20 flex items-center justify-center text-xl font-bold"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+              
+              {/* Sagesse */}
+              <div>
+                <label className="flex items-center gap-2 text-ink font-medium mb-2">
+                  <Brain className="w-5 h-5 text-divine-gold" />
+                  Sagesse
+                </label>
+                <div className="flex items-center gap-4">
+                  <button
+                    onClick={() => setLocalWisdom(Math.max(1, localWisdom - 1))}
+                    className="w-10 h-10 rounded-lg bg-parchment-dark hover:bg-divine-gold/20 flex items-center justify-center text-xl font-bold"
+                  >
+                    -
+                  </button>
+                  <div className="flex-1 text-center">
+                    <div className="text-3xl font-display text-ink">{localWisdom}</div>
+                    <div className="text-sm text-divine-gold-dark font-bold">{formatModifier(localWisdom)}</div>
+                  </div>
+                  <button
+                    onClick={() => setLocalWisdom(Math.min(30, localWisdom + 1))}
+                    className="w-10 h-10 rounded-lg bg-parchment-dark hover:bg-divine-gold/20 flex items-center justify-center text-xl font-bold"
                   >
                     +
                   </button>

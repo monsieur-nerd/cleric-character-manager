@@ -22,6 +22,11 @@ export function SpellDetailModal({
   const componentData = useInventoryStore((state) => state.getComponentForSpell(spell.id));
   const incantation = useSpellIncantation(spell);
   const canHaveIncantation = useCanHaveIncantation(spell);
+  
+  // Les tours de magie et sorts de domaine sont toujours préparés
+  const isCantrip = spell.level === 0;
+  const isAlwaysPrepared = spell.isDomainSpell || isCantrip;
+  const isPreparedEffective = isPrepared || isAlwaysPrepared;
 
   if (!isOpen) return null;
 
@@ -251,17 +256,17 @@ export function SpellDetailModal({
                   onTogglePrepare();
                   onClose();
                 }}
-                disabled={spell.isDomainSpell}
+                disabled={isAlwaysPrepared}
                 className={`w-full py-3 px-4 rounded-lg font-ui font-bold flex items-center justify-center gap-2 transition-all ${
-                  spell.isDomainSpell
+                  isAlwaysPrepared
                     ? 'bg-divine-gold/30 text-ink-muted cursor-not-allowed'
                     : isPrepared
                       ? 'bg-blood-red/10 text-blood-red hover:bg-blood-red/20 border-2 border-blood-red/30'
                       : 'bg-divine-gold text-ink hover:bg-divine-gold-light border-2 border-divine-gold-dark'
                 }`}
               >
-                {spell.isDomainSpell ? (
-                  <><Shield className="w-5 h-5" /> Toujours préparé (domaine)</>
+                {isAlwaysPrepared ? (
+                  <><Shield className="w-5 h-5" /> {isCantrip ? 'Toujours disponible (tour de magie)' : 'Toujours préparé (domaine)'}</>
                 ) : isPrepared ? (
                   <><X className="w-5 h-5" /> Retirer de la préparation</>
                 ) : (

@@ -23,6 +23,9 @@ export function SpellCard({
   const summary = spell.summary;
   
   const isDomain = spell.isDomainSpell;
+  const isCantrip = spell.level === 0;
+  // Les tours de magie sont toujours considérés comme préparés
+  const isPreparedEffective = isPrepared || isDomain || isCantrip;
   const isUsed = spell.isUsed;
   const missingComponent = spell.components.material && !hasComponent;
 
@@ -31,7 +34,7 @@ export function SpellCard({
       <div 
         className={`card relative overflow-hidden transition-all duration-150
           hover:shadow-xl
-          ${isPrepared 
+          ${isPreparedEffective 
             ? 'border-divine-gold bg-divine-gold/10 shadow-md hover:bg-divine-gold/15' 
             : 'hover:border-parchment-dark hover:bg-parchment-light'
           } 
@@ -47,21 +50,21 @@ export function SpellCard({
               onClick={(e) => {
                 e.stopPropagation();
                 e.preventDefault();
-                if (!isDomain) {
+                if (!isDomain && !isCantrip) {
                   onTogglePrepare();
                 }
               }}
             >
               <div
                 className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-colors ${
-                  isDomain 
+                  isDomain || isCantrip
                     ? 'border-divine-gold bg-divine-gold cursor-not-allowed' 
                     : isPrepared
                       ? 'border-divine-gold bg-divine-gold'
                       : 'border-parchment-dark hover:border-divine-gold'
                 }`}
               >
-                {(isPrepared || isDomain) && (
+                {(isPreparedEffective) && (
                   <Check className="w-4 h-4 text-ink" />
                 )}
               </div>

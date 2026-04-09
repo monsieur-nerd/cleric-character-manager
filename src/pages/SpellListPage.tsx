@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Search, Filter } from 'lucide-react';
-import { useSpellStore } from '@/stores';
+import { useSpellStore, useCharacterStore } from '@/stores';
 import { SpellCard } from '@/components/spells/SpellCard';
 import type { Spell } from '@/types';
 
@@ -12,6 +12,7 @@ export function SpellListPage() {
   const allSpells = useSpellStore((state) => state.allSpells);
   const preparedSpellIds = useSpellStore((state) => state.preparedSpellIds);
   const toggleSpellPrepared = useSpellStore((state) => state.toggleSpellPrepared);
+  const maxPrepared = useCharacterStore((state) => state.character.maxPreparedSpells);
   
   // Filtre les sorts
   const filteredSpells = allSpells.filter((spell: Spell) => {
@@ -101,7 +102,7 @@ export function SpellListPage() {
                   key={spell.id}
                   spell={spell}
                   isPrepared={preparedSpellIds.includes(spell.id)}
-                  onTogglePrepare={() => toggleSpellPrepared(spell.id)}
+                  onTogglePrepare={() => toggleSpellPrepared(spell.id, maxPrepared)}
                 />
               ))}
             </div>

@@ -16,7 +16,7 @@ interface SpellState {
   loadSpells: (spells: Spell[]) => void;
   prepareSpell: (spellId: string) => void;
   unprepareSpell: (spellId: string) => void;
-  toggleSpellPrepared: (spellId: string) => void;
+  toggleSpellPrepared: (spellId: string, maxNonDomain?: number) => void;
   markAsUsed: (spellId: string) => void;
   clearNonDomainPrepared: () => void;
 
@@ -74,11 +74,15 @@ export const useSpellStore = create<SpellState>()(
         }));
       },
       
-      toggleSpellPrepared: (spellId) => {
-        const { preparedSpellIds, unprepareSpell, prepareSpell } = get();
+      toggleSpellPrepared: (spellId, maxNonDomain) => {
+        const { preparedSpellIds, unprepareSpell, prepareSpell, canPrepareSpell } = get();
         if (preparedSpellIds.includes(spellId)) {
           unprepareSpell(spellId);
         } else {
+          // Vérifie la limite si maxNonDomain est fourni
+          if (maxNonDomain !== undefined && !canPrepareSpell(spellId, maxNonDomain)) {
+            return; // Ne peut pas préparer (limite atteinte)
+          }
           prepareSpell(spellId);
         }
       },
@@ -203,10 +207,13 @@ export const useSpellStore = create<SpellState>()(
         // Les sorts de domaine sont toujours préparables
         if (spell.isDomainSpell) return true;
         
+        // Les tours de magie (niveau 0) sont toujours disponibles
+        if (spell.level === 0) return true;
+        
         // Vérifie si déjà préparé
         if (get().preparedSpellIds.includes(spellId)) return true;
         
-        // Compte les sorts non-domaine déjà préparés
+        // Compte les sorts non-domaine déjà préparés (niveau > 0 uniquement)
         const nonDomainCount = get().getNonDomainPreparedSpells().length;
         return nonDomainCount < maxNonDomain;
       },
