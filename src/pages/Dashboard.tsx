@@ -1656,8 +1656,19 @@ export function Dashboard() {
                 const skill = getSkillById(skillId);
                 if (!skill) return null;
                 
+                // Mapping AbilityScore -> propriété Character
+                const abilityMap: Record<string, keyof typeof character> = {
+                  'STR': 'strength',
+                  'DEX': 'dexterity', 
+                  'CON': 'constitution',
+                  'INT': 'intelligence',
+                  'WIS': 'wisdom',
+                  'CHA': 'charisma'
+                };
+                
                 // Calcule le bonus total
-                const abilityMod = Math.floor((character[skill.abilityScore.toLowerCase() as keyof typeof character] as number - 10) / 2);
+                const abilityValue = character[abilityMap[skill.abilityScore]] as number;
+                const abilityMod = Math.floor((abilityValue - 10) / 2);
                 const profBonus = Math.floor((character.level - 1) / 4) + 2;
                 const totalBonus = abilityMod + profBonus;
                 
