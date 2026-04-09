@@ -203,22 +203,23 @@ export function CombatStatsCard() {
                 <div key={weapon.id} className="flex items-center justify-between bg-parchment/50 rounded p-2">
                   <div>
                     <div className="font-medium text-sm text-ink">{weapon.name}</div>
-                    <div className="text-xs text-ink-muted">
-                      {weapon.damage} {weapon.damageType}
+                    <div className="text-xs text-ink-light">
+                      <span className="text-blood-red font-bold">Dégâts: {weapon.damage} +{attack.damageMod}</span>
+                      <span className="text-ink-muted"> ({weapon.damageType})</span>
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="flex items-center gap-1 text-blood-red font-bold">
+                    <div className="flex items-center gap-1 text-forest font-bold">
                       <Target className="w-3 h-3" />
-                      +{attack.toHit}
+                      +{attack.toHit} pour toucher
                     </div>
                     <div className="text-xs text-ink-muted">
-                      {attack.ability} + Maitrise
+                      {attack.ability} + Maîtrise
                     </div>
                   </div>
                 </div>
               );
-            })}
+            })};
           </div>
         </div>
       )}

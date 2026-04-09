@@ -11,3 +11,10 @@ export {
   type ConsumptionResult,
   type NewSpellCheckResult,
 } from './useComponentConsumption';
+
+export {
+  useItemEffects,
+  DEFAULT_ITEM_EFFECTS,
+  type ItemEffect,
+  type ItemEffectType,
+} from './useItemEffects';

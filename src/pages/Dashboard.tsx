@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Sparkles, Zap, Brain, AlertCircle, Shield, Edit3, Sword, Stars, User, Camera, Cross, Heart, X, ChevronDown, ChevronUp, GraduationCap, Menu, Check, Scroll } from 'lucide-react';
 import { useSpellStore, useCharacterStore, useModalStore } from '@/stores';
+import { useItemEffects } from '@/hooks';
 import { SkillsFeatsModal } from '@/components/skills/SkillsFeatsModal';
 import { BACKGROUND_TRAITS } from '@/data/characterConfig';
 import { SpellSlotBar } from '@/components/spells/SpellSlotBar';
@@ -213,7 +214,7 @@ function DomainSelector({ currentDomain, onSelect }: { currentDomain: ClericDoma
 function SkillDetail({ skill, isMastered, bonus, abilityMod, profBonus, onToggle, onClose }: {
   skill: ReturnType<typeof getSkillById>;
   isMastered: boolean;
-  bonus: number;
+  bonus: { total: number; itemBonus: number; hasAdvantage: boolean };
   abilityMod: number;
   profBonus: number;
   onToggle: () => void;
@@ -251,19 +252,16 @@ function SkillDetail({ skill, isMastered, bonus, abilityMod, profBonus, onToggle
           <div className="flex items-center justify-between p-4 bg-parchment-dark/30 rounded-lg">
             <div className="flex items-center gap-4">
               <div className={`text-3xl font-display ${isMastered ? 'text-divine-gold-dark' : 'text-ink-muted'}`}>
-                {bonus >= 0 ? `+${bonus}` : bonus}
+                {bonus.total >= 0 ? `+${bonus.total}` : bonus.total}
               </div>
-              <div className="text-xs text-ink-muted">
-                {isMastered ? (
-                  <>
-                    <div>Mod {abilityMod >= 0 ? `+${abilityMod}` : abilityMod}</div>
-                    <div>+ Maîtrise +{profBonus}</div>
-                  </>
-                ) : (
-                  <>
-                    <div>Mod seul</div>
-                    <div>{abilityMod >= 0 ? `+${abilityMod}` : abilityMod}</div>
-                  </>
+              <div className="text-xs text-ink-muted space-y-0.5">
+                <div>Mod {abilityMod >= 0 ? `+${abilityMod}` : abilityMod}</div>
+                {isMastered && <div>+ Maîtrise +{profBonus}</div>}
+                {bonus.itemBonus > 0 && (
+                  <div className="text-forest font-bold">+ Item +{bonus.itemBonus}</div>
+                )}
+                {bonus.hasAdvantage && (
+                  <div className="text-divine-gold font-bold">🎯 Avantage!</div>
                 )}
               </div>
             </div>
@@ -315,7 +313,7 @@ function SkillCard({
 }: { 
   skill: Skill; 
   isMastered: boolean; 
-  bonus: number;
+  bonus: { total: number; itemBonus: number; hasAdvantage: boolean };
   onClick: () => void;
 }) {
   const abilityColors: Record<AbilityScore, { text: string; bg: string; border: string }> = {
@@ -358,9 +356,21 @@ function SkillCard({
           <span className={`text-xs font-medium ${colors.text}`}>
             {ABILITY_SCORES[skill.abilityScore].name}
           </span>
-          <span className={`font-display text-lg ${isMastered ? colors.text : 'text-ink-muted'}`}>
-            {bonus >= 0 ? `+${bonus}` : bonus}
-          </span>
+          <div className="flex flex-col items-end">
+            <span className={`font-display text-lg ${isMastered ? colors.text : 'text-ink-muted'}`}>
+              {bonus.total >= 0 ? `+${bonus.total}` : bonus.total}
+            </span>
+            {bonus.itemBonus > 0 && (
+              <span className="text-xs text-forest font-bold">
+                +{bonus.itemBonus} item
+              </span>
+            )}
+            {bonus.hasAdvantage && (
+              <span className="text-xs text-divine-gold font-bold">
+                Avantage!
+              </span>
+            )}
+          </div>
         </div>
       </div>
     </button>
@@ -450,6 +460,9 @@ function SkillsTab() {
   const getProficiencyBonus = useCharacterStore((state) => state.getProficiencyBonus);
   const getModifier = useCharacterStore((state) => state.getModifier);
   
+  // Hook pour les effets d'items
+  const { getSkillBonus } = useItemEffects();
+  
   const [activeSection, setActiveSection] = useState<'skills' | 'feats'>('feats');
   const [showFeatSelector, setShowFeatSelector] = useState(false);
   const [selectedSkill, setSelectedSkill] = useState<string | null>(null);
@@ -459,11 +472,23 @@ function SkillsTab() {
   const masteredSkills = character.masteredSkills || [];
   const characterFeats = character.feats || [];
   
-  const getSkillTotalBonus = (skillId: string, abilityScore: 'STR' | 'DEX' | 'CON' | 'INT' | 'WIS' | 'CHA'): number => {
+  const getSkillTotalBonus = (skillId: string, abilityScore: 'STR' | 'DEX' | 'CON' | 'INT' | 'WIS' | 'CHA'): { total: number; itemBonus: number; hasAdvantage: boolean } => {
     const abilityValue = character[abilityScore.toLowerCase() as keyof typeof character] as number ?? 10;
     const abilityMod = getModifier(abilityValue);
     const isMastered = masteredSkills.includes(skillId);
-    return abilityMod + (isMastered ? profBonus : 0);
+    const skillData = getSkillById(skillId);
+    const skillName = skillData?.name || '';
+    
+    // Bonus des items utilisés
+    const itemEffects = getSkillBonus(skillName);
+    const itemBonus = itemEffects.bonus;
+    const hasAdvantage = itemEffects.hasAdvantage;
+    
+    return {
+      total: abilityMod + (isMastered ? profBonus : 0) + itemBonus,
+      itemBonus,
+      hasAdvantage,
+    };
   };
   
   const getAbilityMod = (abilityScore: 'STR' | 'DEX' | 'CON' | 'INT' | 'WIS' | 'CHA'): number => {

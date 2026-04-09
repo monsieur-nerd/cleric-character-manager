@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Package, Plus, Minus, AlertCircle, ShoppingCart, PlusCircle, Sword, CheckCircle2 } from 'lucide-react';
+import { Package, Plus, Minus, AlertCircle, ShoppingCart, PlusCircle, Sword, CheckCircle2, Play } from 'lucide-react';
 import { useInventoryStore } from '@/stores';
 import { useCharacterStore } from '@/stores';
 import { formatWeight, formatPrice } from '@/utils/formatters';
@@ -7,6 +7,9 @@ import { ShoppingList } from '@/components/inventory/ShoppingList';
 import { AddItemModal } from '@/components/inventory/AddItemModal';
 import { CombatEquipmentTab } from '@/components/inventory/CombatEquipmentTab';
 import { LightSourcePanel } from '@/components/inventory/LightSourcePanel';
+import { ItemUsePanel } from '@/components/inventory/ItemUsePanel';
+import { ActiveItemEffects } from '@/components/inventory/ActiveItemEffects';
+import { useItemEffects, type ItemEffect } from '@/hooks/useItemEffects';
 import type { EquipmentItem } from '@/types';
 
 const categories = [
@@ -33,6 +36,10 @@ export function InventoryPage() {
   const [selectedCategory, setSelectedCategory] = useState('Tous');
   const [activeTab, setActiveTab] = useState<'inventory' | 'combat' | 'shopping'>('inventory');
   const [showAddModal, setShowAddModal] = useState(false);
+  const [selectedItemForUse, setSelectedItemForUse] = useState<EquipmentItem | null>(null);
+  
+  // Hook pour les effets d'items
+  const { activeEffects, addEffect, removeEffect, clearAllEffects } = useItemEffects();
   
   const items = useInventoryStore((state) => state.items);
   const updateQuantity = useInventoryStore((state) => state.updateQuantity);
@@ -154,6 +161,12 @@ export function InventoryPage() {
             </div>
           </div>
           
+          <ActiveItemEffects 
+            effects={activeEffects}
+            onRemoveEffect={removeEffect}
+            onClearAll={clearAllEffects}
+          />
+          
           <LightSourcePanel compact />
           
           <div className="flex flex-wrap gap-1">
@@ -252,11 +265,19 @@ export function InventoryPage() {
                         </div>
                       </div>
                       
-                      <div className="mt-2 pt-2 border-t border-parchment-dark/50 flex justify-between text-xs">
-                        <span className="text-ink-muted">Total:</span>
-                        <span className="text-ink">
-                          {formatPrice(item.totalPrice)} - {formatWeight(item.totalWeight)}
+                      <div className="mt-2 pt-2 border-t border-parchment-dark/50 flex justify-between items-center">
+                        <span className="text-xs text-ink-muted">
+                          Total: {formatPrice(item.totalPrice)} - {formatWeight(item.totalWeight)}
                         </span>
+                        <button
+                          onClick={() => setSelectedItemForUse(item)}
+                          className="flex items-center gap-1 text-xs bg-forest/10 text-forest border border-forest/30 
+                                   rounded px-2 py-1 hover:bg-forest/20 transition-colors"
+                          title="Utiliser cet item"
+                        >
+                          <Play className="w-3 h-3" />
+                          Utiliser
+                        </button>
                       </div>
                     </div>
                   ))}
@@ -291,6 +312,14 @@ export function InventoryPage() {
         isOpen={showAddModal}
         onClose={() => setShowAddModal(false)}
       />
+      
+      {selectedItemForUse && (
+        <ItemUsePanel
+          item={selectedItemForUse}
+          onUseItem={(effect) => addEffect({ ...effect, itemId: selectedItemForUse.id, itemName: selectedItemForUse.name })}
+          onClose={() => setSelectedItemForUse(null)}
+        />
+      )}
     </div>
   );
 }
