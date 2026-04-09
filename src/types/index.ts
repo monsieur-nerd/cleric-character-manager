@@ -525,7 +525,7 @@ export const CLERIC_DOMAINS: ClericDomain[] = [
     nameEn: 'Nature Domain',
     icon: '🌿',
     description: 'Gardiens de la nature qui maîtrisent les éléments et communiquent avec les bêtes.',
-    spellIds: ['animal-friendship', 'speak-with-animals', 'barkskin', 'spike-growth'],
+    spellIds: ['amitié-avec-les-animaux', 'communication-avec-les-animaux', 'peau-décorce', 'croissance-dépines', 'invocation-danimaux', 'croissance-végétale', 'maîtrise-des-eaux', 'insecte-géant', 'communion-avec-la-nature', 'invocation-délémentaire'],
     abilities: {
       level1: { name: 'Acolyte de la nature', nameEn: 'Acolyte of Nature', description: 'Maîtrise d\'une compétence de nature', uses: 0 },
       level2: { name: 'Conduit divin : Charme animal/plante', nameEn: 'Charm Animals and Plants', description: 'Charme créatures dans 9m', uses: 1, shortRest: false, longRest: true },
@@ -541,7 +541,7 @@ export const CLERIC_DOMAINS: ClericDomain[] = [
     nameEn: 'Tempest Domain',
     icon: '⛈️',
     description: 'Maîtres des tempêtes qui invoquent la foudre et contrôlent les vents.',
-    spellIds: ['fog-cloud', 'thunderwave', 'gust-of-wind', 'shatter'],
+    spellIds: ['nuage-de-brouillard', 'onde-de-tonnerre', 'rafale-de-vent', 'fracassement', 'foudre', 'appel-de-la-foudre', 'contrôle-de-leau', 'tempête-de-glace', 'invocation-délémentaire-destructeur', 'contrôle-des-vents'],
     abilities: {
       level1: { name: 'Frappe de la tempête', nameEn: 'Wrath of the Storm', description: 'Réaction : dégâts de foudre ou tonnerre 2d8', uses: 3, shortRest: false, longRest: true },
       level2: { name: 'Conduit divin : Destructive Wrath', nameEn: 'Destructive Wrath', description: 'Dés de dégâts maximaux (foudre/tonnerre)', uses: 1, shortRest: false, longRest: true },
@@ -557,7 +557,7 @@ export const CLERIC_DOMAINS: ClericDomain[] = [
     nameEn: 'Trickery Domain',
     icon: '🎭',
     description: 'Filous et mystificateurs qui servent les dieux de la ruse.',
-    spellIds: ['charm-person', 'disguise-self', 'mirror-image', 'pass-without-trace'],
+    spellIds: ['charme-personne', 'déguisement', 'invisibilité', 'passage-sans-trace', 'motif-hypnotique', 'antidétection', 'confusion', 'porte-dimensionnelle', 'domination-de-personne', 'modification-de-mémoire'],
     abilities: {
       level1: { name: 'Bénédiction du filou', nameEn: 'Blessing of the Trickster', description: 'Avantage en Discrétion pour un allié', uses: 0 },
       level2: { name: 'Conduit divin : Invocation du double', nameEn: 'Invoke Duplicity', description: 'Crée un illusion de vous', uses: 1, shortRest: false, longRest: true },
@@ -573,7 +573,7 @@ export const CLERIC_DOMAINS: ClericDomain[] = [
     nameEn: 'Knowledge Domain',
     icon: '📚',
     description: 'Érudits et savants qui cherchent la vérité cachée.',
-    spellIds: ['command', 'identify', 'augury', 'suggestion'],
+    spellIds: ['injonction', 'identification', 'augure', 'suggestion', 'langues', 'envoi-de-message', 'divination', 'vol', 'légende', 'quête'],
     abilities: {
       level1: { name: 'Béni du savoir', nameEn: 'Blessings of Knowledge', description: '2 langues + maîtrise compétences', uses: 0 },
       level2: { name: 'Conduit divin : Connaissance des âges', nameEn: 'Knowledge of the Ages', description: 'Maîtrise d\'une compétence pendant 10 min', uses: 1, shortRest: false, longRest: true },
@@ -589,7 +589,7 @@ export const CLERIC_DOMAINS: ClericDomain[] = [
     nameEn: 'Forge Domain',
     icon: '🔨',
     description: 'Artisans divins qui bénissent les créations et maîtrisent le feu.',
-    spellIds: ['searing-smite', 'identify', 'heat-metal', 'magic-weapon'],
+    spellIds: ['châtiment-brûlant', 'identification', 'chaleur-métallique', 'arme-magique', 'élémentaire-de-feu', 'protection-contre-une-énergie', 'fabrication', 'mur-de-pierre', 'animation-des-objets', 'mur-de-force'],
     abilities: {
       level1: { name: 'Bénédiction du forgeron', nameEn: 'Blessing of the Forge', description: '+1 armure ou arme non-magique', uses: 1, shortRest: false, longRest: true },
       level2: { name: 'Conduit divin : Artisan de la Flamme', nameEn: 'Artisan\'s Blessing', description: 'Crée un objet métallique simple', uses: 1, shortRest: false, longRest: true },
@@ -605,7 +605,7 @@ export const CLERIC_DOMAINS: ClericDomain[] = [
     nameEn: 'Grave Domain',
     icon: '⚰️',
     description: 'Gardiens des frontières entre vie et mort.',
-    spellIds: ['bane', 'false-life', 'gentle-repose', 'ray-of-enfeeblement'],
+    spellIds: ['fléau', 'fausse-vie', 'repose-en-paix', 'rayon-daffaiblissement', 'animation-des-morts', 'vampire', 'flétrissement', 'invisibilité-suprême', 'antipathie-sympathie', 'nuage-mortel'],
     abilities: {
       level1: { name: 'Sentinelle du cercueil', nameEn: 'Circle of Mortality', description: 'Soins max à 0 PV, rayon de lumière', uses: 0 },
       level2: { name: 'Conduit divin : Sentinelle des âmes', nameEn: 'Path to the Grave', description: 'Prochaine attaque = vulnérabilité', uses: 1, shortRest: false, longRest: true },

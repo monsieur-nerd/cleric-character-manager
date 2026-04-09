@@ -1392,14 +1392,6 @@ export function Dashboard() {
                 <User className="w-12 h-12 text-ink-muted" />
               )}
             </button>
-            {/* Bouton pour changer la photo */}
-            <button
-              onClick={() => openCharacterEditor('identity')}
-              className="absolute bottom-0 right-0 w-8 h-8 bg-divine-gold rounded-full flex items-center justify-center shadow-lg hover:bg-divine-gold-light transition-colors"
-              title="Modifier la photo"
-            >
-              <Camera className="w-4 h-4 text-ink" />
-            </button>
           </div>
         </div>
         
