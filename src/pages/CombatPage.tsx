@@ -6,6 +6,7 @@ import { getFeatById } from '@/types/feats';
 import type { Feat } from '@/types/feats';
 import { SpellCastAnimation } from '@/components/effects/SpellCastAnimation';
 import { SpellDetailModal } from '@/components/spells/SpellDetailModal';
+import { CombatStatsCard } from '@/components/combat/CombatStatsCard';
 
 const castingTimeFilters = [
   { id: 'all', label: 'Tous' },
@@ -417,6 +418,9 @@ export function CombatPage() {
           </div>
         )}
       </div>
+
+      {/* Statistiques de combat (CA, equipement) */}
+      <CombatStatsCard />
 
       {/* Explication Actions */}
       <div className="card bg-parchment-dark/30 border-parchment-dark">
