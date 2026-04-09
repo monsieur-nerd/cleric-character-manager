@@ -12,6 +12,7 @@ import { spellsData, DOMAIN_SPELLS } from '@/data/spellsData';
 import { equipmentData } from '@/data/equipmentData';
 import { componentMappingData } from '@/data/componentMappingData';
 import { CHARACTER_IDENTITY, CHARACTER_ABILITIES, STARTING_EQUIPMENT } from '@/data/characterConfig';
+import '@/utils/debugStorage'; // Import pour exposer debug tools dans la console
 
 // Gère la redirection depuis 404.html pour GitHub Pages
 function RedirectHandler() {

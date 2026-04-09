@@ -204,8 +204,21 @@ export function PreparationPage() {
             {preparedCount} / {maxPrepared}
           </span>
         </div>
-        <div className="text-xs text-ink-muted mt-2 pt-2 border-t border-divine-gold/20">
-          + {domainSpells.length} sorts de domaine (toujours préparés gratuitement)
+        <div className="text-xs text-ink-muted mt-2 pt-2 border-t border-divine-gold/20 flex justify-between items-center">
+          <span>+ {domainSpells.length} sorts de domaine (toujours préparés gratuitement)</span>
+          {preparedCount > maxPrepared && (
+            <button
+              onClick={() => {
+                if (confirm('⚠️ URGENCE : Vider complètement le stockage des sorts ?')) {
+                  localStorage.removeItem('v2-cleric-spell-store');
+                  window.location.reload();
+                }
+              }}
+              className="text-xs bg-blood-red text-white px-2 py-1 rounded hover:bg-blood-red-dark transition-colors"
+            >
+              🚨 RESET URGENCE
+            </button>
+          )}
         </div>
       </div>
       
