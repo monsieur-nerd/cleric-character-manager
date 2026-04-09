@@ -12,6 +12,7 @@ import { spellsData } from '@/data/spellsData';
 import { equipmentData } from '@/data/equipmentData';
 import { componentMappingData } from '@/data/componentMappingData';
 import { CHARACTER_IDENTITY, CHARACTER_ABILITIES, STARTING_EQUIPMENT } from '@/data/characterConfig';
+import { CLERIC_DOMAINS } from '@/types';
 import '@/utils/debugStorage'; // Import pour exposer debug tools dans la console
 
 // Gère la redirection depuis 404.html pour GitHub Pages
@@ -59,6 +60,9 @@ function App() {
   const longRest = useCharacterStore((state) => state.longRest);
   const setCurrentDomain = useSpellStore((state) => state.setCurrentDomain);
   const setCharacterLevel = useSpellStore((state) => state.setCharacterLevel);
+  const preparedSpellIds = useSpellStore((state) => state.preparedSpellIds);
+  const allSpells = useSpellStore((state) => state.allSpells);
+  const prepareMultipleSpells = useSpellStore((state) => state.prepareMultipleSpells);
 
   useEffect(() => {
     try {
@@ -91,6 +95,33 @@ function App() {
       setCharacterLevel(character.level);
     }
   }, [character?.domain?.id, character?.level, setCurrentDomain, setCharacterLevel]);
+  
+  // Synchronise les sorts préparés après le chargement des sorts
+  // Cela nettoie les IDs obsolètes et s'assure que les sorts de domaine sont corrects
+  useEffect(() => {
+    if (!isLoading && allSpells.length > 0 && character?.domain?.id) {
+      const currentDomain = CLERIC_DOMAINS.find(d => d.id === character.domain?.id);
+      const currentDomainSpellIds = currentDomain?.spellIds || [];
+      const maxSpellLevel = Math.min(5, Math.floor((character.level + 1) / 2));
+      
+      // Filtre les sorts préparés :
+      // 1. Supprime les IDs de sorts qui n'existent pas (obsolètes)
+      // 2. Supprime les sorts de domaine d'autres domaines
+      // 3. Supprime les sorts au-delà du niveau accessible
+      const validSpellIds = preparedSpellIds.filter(id => {
+        const spell = allSpells.find(s => s.id === id);
+        if (!spell) return false; // Sort inexistant (ID obsolète)
+        if (spell.isDomainSpell && !currentDomainSpellIds.includes(id)) return false; // Domaine différent
+        if (spell.level > maxSpellLevel) return false; // Niveau trop élevé
+        return true;
+      });
+      
+      // Si des changements sont nécessaires, met à jour
+      if (validSpellIds.length !== preparedSpellIds.length) {
+        prepareMultipleSpells(validSpellIds, character.maxPreparedSpells);
+      }
+    }
+  }, [isLoading, allSpells, character, preparedSpellIds, prepareMultipleSpells]);
   
   // Vérifie la migration une fois le chargement terminé
   useEffect(() => {

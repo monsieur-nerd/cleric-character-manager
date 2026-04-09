@@ -340,9 +340,9 @@ export const useSpellStore = create<SpellState>()(
     {
       name: STORAGE_KEYS.SPELL,
       partialize: (state) => ({
-        // Note: On ne persiste QUE les emplacements de sorts
-        // preparedSpellIds et currentDomainId sont recalculés depuis le characterStore
-        // pour éviter les problèmes de synchronisation et les IDs obsolètes
+        // Persiste les sorts préparés et les emplacements
+        // Ces données sont essentielles pour conserver l'état entre les rafraîchissements
+        preparedSpellIds: state.preparedSpellIds,
         spellSlots: state.spellSlots,
       }),
     }
