@@ -18,3 +18,8 @@ export {
   type ItemEffect,
   type ItemEffectType,
 } from './useItemEffects';
+
+export {
+  useSpellIncantation,
+  useCanHaveIncantation,
+} from './useSpellIncantation';

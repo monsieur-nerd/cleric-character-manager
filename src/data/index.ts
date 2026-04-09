@@ -35,3 +35,10 @@ export {
   createInitialCharacter,
   BACKGROUND_TRAITS,
 } from './characterConfig';
+
+export {
+  SPELL_CATEGORIES,
+  INCANTATION_TEMPLATES,
+  getSpellIncantation,
+  type SpellCategory,
+} from './spellIncantations';

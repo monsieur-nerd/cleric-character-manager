@@ -1,6 +1,7 @@
-import { X, Clock, Target, Sparkles, BookOpen, Zap, Shield, AlertCircle } from 'lucide-react';
+import { X, Clock, Target, Sparkles, BookOpen, Zap, Shield, AlertCircle, Mic } from 'lucide-react';
 import type { Spell } from '@/types';
 import { useInventoryStore } from '@/stores';
+import { useSpellIncantation, useCanHaveIncantation } from '@/hooks/useSpellIncantation';
 
 interface SpellDetailModalProps {
   spell: Spell;
@@ -19,6 +20,8 @@ export function SpellDetailModal({
 }: SpellDetailModalProps) {
   const hasComponent = useInventoryStore((state) => state.hasComponentForSpell(spell.id));
   const componentData = useInventoryStore((state) => state.getComponentForSpell(spell.id));
+  const incantation = useSpellIncantation(spell);
+  const canHaveIncantation = useCanHaveIncantation(spell);
 
   if (!isOpen) return null;
 
@@ -217,15 +220,26 @@ export function SpellDetailModal({
           )}
 
           {/* Incantation */}
-          {spell.incantation && (
+          {canHaveIncantation && (
             <div>
               <h3 className="font-display text-ink mb-2 flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-divine-gold" />
+                <Mic className="w-4 h-4 text-divine-gold" />
                 Incantation
+                {!spell.incantation && (
+                  <span className="text-xs text-ink-muted font-normal">(générée selon votre dieu)</span>
+                )}
               </h3>
-              <div className="bg-parchment-dark/30 p-4 rounded-lg border-l-4 border-divine-gold italic">
-                <p className="text-sm text-ink font-body">"{spell.incantation}"</p>
-              </div>
+              {incantation ? (
+                <div className="bg-parchment-dark/30 p-4 rounded-lg border-l-4 border-divine-gold italic">
+                  <p className="text-sm text-ink font-body">"{incantation}"</p>
+                </div>
+              ) : (
+                <div className="bg-parchment-dark/20 p-4 rounded-lg border-l-4 border-ink/20">
+                  <p className="text-sm text-ink-muted italic">
+                    Ce sort nécessite une incantation, mais aucune n'est définie pour votre dieu.
+                  </p>
+                </div>
+              )}
             </div>
           )}
 
