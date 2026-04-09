@@ -18,6 +18,9 @@ export function SpellListPage() {
   const maxPrepared = character.maxPreparedSpells;
   const currentDomainSpellIds = character.domain?.spellIds || [];
   
+  // DEBUG
+  console.log('SpellList - Domain:', character.domain?.name, 'spellIds:', currentDomainSpellIds);
+  
   // Niveau de sort maximum accessible selon le niveau du personnage
   const maxSpellLevel = getMaxSpellLevelForCharacter(character.level);
   
@@ -40,6 +43,10 @@ export function SpellListPage() {
     // IMPORTANT: Filtre les sorts de domaine qui ne sont pas du domaine du personnage
     // Les sorts avec isDomainSpell: true ne sont visibles que si ils sont dans le domaine actuel
     if (spell.isDomainSpell && !currentDomainSpellIds.includes(spell.id)) {
+      // DEBUG
+      if (spell.name === 'Boule de feu' || spell.name === 'Marche sur l\'eau') {
+        console.log('Filtered out:', spell.name, 'isDomainSpell:', spell.isDomainSpell, 'inDomain:', currentDomainSpellIds.includes(spell.id));
+      }
       return false;
     }
     
@@ -139,7 +146,7 @@ export function SpellListPage() {
                   spell={spell}
                   isPrepared={preparedSpellIds.includes(spell.id)}
                   onTogglePrepare={() => toggleSpellPrepared(spell.id, maxPrepared)}
-                  isDomainSpell={currentDomainSpellIds.includes(spell.id) ? true : undefined}
+                  isDomainSpell={currentDomainSpellIds.includes(spell.id)}
                 />
               ))}
             </div>
