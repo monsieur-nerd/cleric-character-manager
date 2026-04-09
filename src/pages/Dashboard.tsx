@@ -1378,7 +1378,10 @@ export function Dashboard() {
       <div className="card-ornate text-center p-8">
         <div className="flex justify-center mb-6">
           <div className="relative">
-            <div className="w-24 h-24 rounded-full bg-parchment-dark border-4 border-divine-gold overflow-hidden flex items-center justify-center">
+            <button
+              onClick={() => openCharacterEditor('identity')}
+              className="w-24 h-24 rounded-full bg-parchment-dark border-4 border-divine-gold overflow-hidden flex items-center justify-center hover:border-divine-gold-light transition-colors"
+            >
               {character.avatar ? (
                 <img 
                   src={character.avatar} 
@@ -1388,17 +1391,16 @@ export function Dashboard() {
               ) : (
                 <User className="w-12 h-12 text-ink-muted" />
               )}
-            </div>
-            <button
-              onClick={() => openCharacterEditor('identity')}
-              className="absolute bottom-0 right-0 w-8 h-8 bg-divine-gold rounded-full flex items-center justify-center shadow-lg hover:bg-divine-gold-light transition-colors"
-            >
-              <Edit3 className="w-4 h-4 text-ink" />
             </button>
           </div>
         </div>
         
-        <h2 className="font-display text-xl text-ink mt-4">{character.name}</h2>
+        <button 
+          onClick={() => openCharacterEditor('identity')}
+          className="font-display text-xl text-ink mt-4 hover:text-divine-gold-dark transition-colors"
+        >
+          {character.name}
+        </button>
         <div className="flex flex-col gap-1 mt-2 items-center">
           {/* Ligne Race et Alignement */}
           <div className="flex items-center justify-center gap-2 text-ink-muted font-ui text-sm">

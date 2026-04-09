@@ -174,6 +174,7 @@ const createDefaultCharacter = (): Character => {
     age: CHARACTER_IDENTITY.age,
     height: CHARACTER_IDENTITY.height,
     weight: CHARACTER_IDENTITY.weight,
+    knownSpellIds: [] as string[],
     currentState: {
       date: new Date().toISOString().split('T')[0],
       preparedSpellIds: INITIAL_DAILY_STATE.preparedSpellIds,
