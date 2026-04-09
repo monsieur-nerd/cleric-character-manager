@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Sparkles, Zap, Brain, AlertCircle, Shield, Edit3, Sword, Stars, User, Camera, Cross, Heart, X, ChevronDown, ChevronUp, GraduationCap, Menu, Check, Scroll } from 'lucide-react';
-import { useSpellStore, useCharacterStore } from '@/stores';
+import { useSpellStore, useCharacterStore, useModalStore } from '@/stores';
 import { SkillsFeatsModal } from '@/components/skills/SkillsFeatsModal';
 import { BACKGROUND_TRAITS } from '@/data/characterConfig';
 import { SpellSlotBar } from '@/components/spells/SpellSlotBar';
@@ -1301,8 +1301,11 @@ function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: { is
 }
 
 export function Dashboard() {
-  const [showEditor, setShowEditor] = useState(false);
-  const [editorInitialTab, setEditorInitialTab] = useState<'identity' | 'stats' | 'abilities' | 'skills'>('identity');
+  // Modal store for character editor
+  const isCharacterEditorOpen = useModalStore((state) => state.isCharacterEditorOpen);
+  const closeCharacterEditor = useModalStore((state) => state.closeCharacterEditor);
+  const editorInitialTab = useModalStore((state) => state.editorInitialTab);
+  const openCharacterEditor = useModalStore((state) => state.openCharacterEditor);
   const [showSkillsFeatsModal, setShowSkillsFeatsModal] = useState(false);
   
   // Synchronise la divinité au chargement pour mettre à jour le symbole
@@ -1311,10 +1314,7 @@ export function Dashboard() {
     syncDeity();
   }, [syncDeity]);
 
-  const openEditor = (tab: 'identity' | 'stats' | 'abilities' | 'skills' = 'identity') => {
-    setEditorInitialTab(tab);
-    setShowEditor(true);
-  };
+
   const character = useCharacterStore((state) => state.character);
   const getSaveBonus = useCharacterStore((state) => state.getSaveBonus);
   const getProficiencyBonus = useCharacterStore((state) => state.getProficiencyBonus);
@@ -1363,7 +1363,7 @@ export function Dashboard() {
               )}
             </div>
             <button
-              onClick={() => openEditor('identity')}
+              onClick={() => openCharacterEditor('identity')}
               className="absolute bottom-0 right-0 w-8 h-8 bg-divine-gold rounded-full flex items-center justify-center shadow-lg hover:bg-divine-gold-light transition-colors"
             >
               <Edit3 className="w-4 h-4 text-ink" />
@@ -1404,7 +1404,7 @@ export function Dashboard() {
           <div className="grid grid-cols-3 gap-2 sm:grid-cols-6 sm:gap-3">
             {/* Force */}
             <button 
-              onClick={() => openEditor('stats')}
+              onClick={() => openCharacterEditor('stats')}
               className="flex flex-col items-center p-2 bg-parchment-dark/40 rounded-lg hover:bg-parchment-dark/60 transition-colors"
             >
               <span className="text-xs font-bold text-steel-blue">FOR</span>
@@ -1417,7 +1417,7 @@ export function Dashboard() {
             
             {/* Dextérité */}
             <button 
-              onClick={() => openEditor('stats')}
+              onClick={() => openCharacterEditor('stats')}
               className="flex flex-col items-center p-2 bg-parchment-dark/40 rounded-lg hover:bg-parchment-dark/60 transition-colors"
             >
               <span className="text-xs font-bold text-forest">DEX</span>
@@ -1430,7 +1430,7 @@ export function Dashboard() {
             
             {/* Constitution */}
             <button 
-              onClick={() => openEditor('stats')}
+              onClick={() => openCharacterEditor('stats')}
               className="flex flex-col items-center p-2 bg-parchment-dark/40 rounded-lg hover:bg-parchment-dark/60 transition-colors"
             >
               <span className="text-xs font-bold text-blood-red">CON</span>
@@ -1443,7 +1443,7 @@ export function Dashboard() {
             
             {/* Intelligence */}
             <button 
-              onClick={() => openEditor('stats')}
+              onClick={() => openCharacterEditor('stats')}
               className="flex flex-col items-center p-2 bg-parchment-dark/40 rounded-lg hover:bg-parchment-dark/60 transition-colors"
             >
               <span className="text-xs font-bold text-royal-purple">INT</span>
@@ -1456,7 +1456,7 @@ export function Dashboard() {
             
             {/* Sagesse - Maîtrise de classe */}
             <button 
-              onClick={() => openEditor('stats')}
+              onClick={() => openCharacterEditor('stats')}
               className="flex flex-col items-center p-2 bg-divine-gold/20 rounded-lg hover:bg-divine-gold/30 transition-colors border border-divine-gold/30"
             >
               <span className="text-xs font-bold text-divine-gold-dark">SAG</span>
@@ -1469,7 +1469,7 @@ export function Dashboard() {
             
             {/* Charisme - Maîtrise de classe */}
             <button 
-              onClick={() => openEditor('stats')}
+              onClick={() => openCharacterEditor('stats')}
               className="flex flex-col items-center p-2 bg-bronze/10 rounded-lg hover:bg-bronze/20 transition-colors border border-bronze/30"
             >
               <span className="text-xs font-bold text-bronze">CHA</span>
@@ -1797,8 +1797,8 @@ export function Dashboard() {
       
       {/* Éditeur de personnage */}
       <CharacterEditorModal 
-        isOpen={showEditor} 
-        onClose={() => setShowEditor(false)}
+        isOpen={isCharacterEditorOpen} 
+        onClose={closeCharacterEditor}
         initialTab={editorInitialTab}
       />
     </div>

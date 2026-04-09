@@ -1,16 +1,22 @@
 import { Shield } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { SaveLoadButton } from './SaveLoadButton';
-import { useCharacterStore } from '@/stores';
+import { useCharacterStore, useModalStore } from '@/stores';
 
 export function Header() {
   const character = useCharacterStore((state) => state.character);
-  const { name, deity } = character;
+  const openCharacterEditor = useModalStore((state) => state.openCharacterEditor);
+  const { name, deity, avatar } = character;
   
   // Format : "Nom, Clerc de Torm"
   const characterInfo = deity 
     ? `${name}, Clerc de ${deity.name}`
     : `${name}, Clerc`;
+
+  // Handle avatar path for GitHub Pages
+  const avatarSrc = avatar?.startsWith('images/') 
+    ? `/cleric-character-manager/${avatar}` 
+    : avatar;
   
   return (
     <header className="fixed top-0 left-0 right-0 bg-parchment-dark border-b border-divine-gold/30 z-50">
@@ -26,6 +32,27 @@ export function Header() {
         </Link>
         
         <div className="flex items-center gap-3">
+          {/* Clickable Avatar */}
+          <button
+            onClick={() => openCharacterEditor('identity')}
+            className="flex items-center justify-center group"
+            title="Modifier le personnage"
+          >
+            {avatarSrc ? (
+              <img
+                src={avatarSrc}
+                alt={name}
+                className="w-8 h-8 rounded-full object-cover border-2 border-divine-gold/50 group-hover:border-divine-gold transition-colors"
+              />
+            ) : (
+              <div className="w-8 h-8 rounded-full bg-slate-300 border-2 border-divine-gold/50 group-hover:border-divine-gold transition-colors flex items-center justify-center">
+                <span className="text-xs font-bold text-slate-600">
+                  {name.charAt(0).toUpperCase()}
+                </span>
+              </div>
+            )}
+          </button>
+
           <span className="text-sm text-ink font-ui hidden md:block truncate max-w-[300px]">
             {characterInfo}
           </span>
