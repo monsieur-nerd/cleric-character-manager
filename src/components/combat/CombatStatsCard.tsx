@@ -65,6 +65,7 @@ export function CombatStatsCard() {
     
     return {
       toHit: abilityMod + profBonus,
+      damageMod: abilityMod,
       ability: isFinesse && dexMod > strMod ? 'DEX' : isRanged ? 'DEX' : 'FOR',
     };
   };

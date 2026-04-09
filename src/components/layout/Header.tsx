@@ -35,8 +35,9 @@ export function Header() {
           {/* Clickable Avatar */}
           <button
             onClick={() => openCharacterEditor('identity')}
-            className="flex items-center justify-center group"
+            className="flex items-center justify-center group cursor-pointer relative z-10"
             title="Modifier le personnage"
+            type="button"
           >
             {avatarSrc ? (
               <img

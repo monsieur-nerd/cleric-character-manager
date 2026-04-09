@@ -762,7 +762,9 @@ function CharacterSheetMobileNav({
 }
 
 // Modal d'édition du personnage
-function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: { isOpen: boolean; onClose: () => void; initialTab?: 'identity' | 'stats' | 'abilities' | 'skills' | 'traits' }) {
+// NOTE: Cette modale n'est plus utilisée directement - voir CharacterEditorGlobal dans Layout
+// Gardée pour référence et potentielles fonctionnalités avancées (onglet Skills complet)
+function _UnusedCharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: { isOpen: boolean; onClose: () => void; initialTab?: 'identity' | 'stats' | 'abilities' | 'skills' | 'traits' }) {
   const character = useCharacterStore((state) => state.character);
   const getSpellById = useSpellStore((state) => state.getSpellById);
   const setName = useCharacterStore((state) => state.setName);
@@ -1819,13 +1821,7 @@ export function Dashboard() {
         isOpen={showSkillsFeatsModal}
         onClose={() => setShowSkillsFeatsModal(false)}
       />
-      
-      {/* Éditeur de personnage */}
-      <CharacterEditorModal 
-        isOpen={isCharacterEditorOpen} 
-        onClose={closeCharacterEditor}
-        initialTab={editorInitialTab}
-      />
+
     </div>
   );
 }
