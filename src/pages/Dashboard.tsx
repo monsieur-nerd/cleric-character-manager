@@ -1627,9 +1627,9 @@ export function Dashboard() {
         </section>
       )}
       
-      {/* Talents et compétences - Résumé */}
+      {/* Talents et compétences - Détail complet */}
       <section className="card">
-        <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center justify-between mb-4">
           <h3 className="font-display text-lg text-ink flex items-center gap-2">
             <GraduationCap className="w-5 h-5 text-divine-gold" />
             Talents et compétences
@@ -1643,55 +1643,86 @@ export function Dashboard() {
           </button>
         </div>
         
-        <div className="space-y-2">
-          {/* Compétences maîtrisées */}
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-ink-light">Compétences maîtrisées</span>
-            <span className="font-bold text-divine-gold-dark">
-              {(character.masteredSkills || []).length}
-            </span>
-          </div>
-          {(character.masteredSkills || []).length > 0 && (
-            <div className="flex flex-wrap gap-1">
-              {(character.masteredSkills || []).slice(0, 3).map(skillId => {
-                const skill = getSkillById(skillId);
-                return skill ? (
-                  <span key={skillId} className="text-xs bg-parchment-dark px-2 py-1 rounded">
-                    {skill.name}
-                  </span>
-                ) : null;
-              })}
-              {(character.masteredSkills || []).length > 3 && (
-                <span className="text-xs text-ink-muted px-2 py-1">
-                  +{(character.masteredSkills || []).length - 3} autres
-                </span>
-              )}
-            </div>
-          )}
+        {/* Compétences maîtrisées - Cartes détaillées */}
+        <div className="mb-4">
+          <h4 className="text-sm font-medium text-ink-light mb-3 flex items-center gap-2">
+            <Check className="w-4 h-4 text-forest" />
+            Compétences maîtrisées ({(character.masteredSkills || []).length})
+          </h4>
           
-          {/* Talents */}
-          <div className="flex items-center justify-between text-sm pt-2 border-t border-parchment-dark/50">
-            <span className="text-ink-light">Talents</span>
-            <span className="font-bold text-divine-gold-dark">
-              {(character.feats || []).length}
-            </span>
-          </div>
-          {(character.feats || []).length > 0 && (
-            <div className="flex flex-wrap gap-1">
-              {(character.feats || []).slice(0, 2).map(featId => {
-                const feat = getFeatById(featId);
-                return feat ? (
-                  <span key={featId} className="text-xs bg-divine-gold/20 text-divine-gold-dark px-2 py-1 rounded">
-                    {feat.name}
-                  </span>
-                ) : null;
+          {(character.masteredSkills || []).length > 0 ? (
+            <div className="space-y-3">
+              {(character.masteredSkills || []).map(skillId => {
+                const skill = getSkillById(skillId);
+                if (!skill) return null;
+                
+                // Calcule le bonus total
+                const abilityMod = Math.floor((character[skill.abilityScore.toLowerCase() as keyof typeof character] as number - 10) / 2);
+                const profBonus = Math.floor((character.level - 1) / 4) + 2;
+                const totalBonus = abilityMod + profBonus;
+                
+                return (
+                  <div key={skillId} className="bg-parchment-dark/30 rounded-lg p-3 border-l-4 border-forest">
+                    <div className="flex items-start justify-between mb-1">
+                      <h5 className="font-bold text-ink">{skill.name}</h5>
+                      <span className="text-xs font-bold text-forest bg-forest/10 px-2 py-0.5 rounded">
+                        +{totalBonus}
+                      </span>
+                    </div>
+                    <p className="text-xs text-ink-light mb-2">{skill.description}</p>
+                    <div className="flex items-center gap-2 text-xs">
+                      <span className="text-ink-muted">
+                        Carac: <strong className="text-ink">{ABILITY_SCORES[skill.abilityScore].name}</strong>
+                      </span>
+                      <span className="text-ink-muted">•</span>
+                      <span className="text-ink-muted">
+                        Mod: {abilityMod >= 0 ? '+' : ''}{abilityMod}
+                      </span>
+                      <span className="text-ink-muted">•</span>
+                      <span className="text-divine-gold-dark font-medium">
+                        Maîtrise: +{profBonus}
+                      </span>
+                    </div>
+                  </div>
+                );
               })}
-              {(character.feats || []).length > 2 && (
-                <span className="text-xs text-ink-muted px-2 py-1">
-                  +{(character.feats || []).length - 2} autres
-                </span>
-              )}
             </div>
+          ) : (
+            <p className="text-sm text-ink-muted italic">Aucune compétence maîtrisée</p>
+          )}
+        </div>
+        
+        {/* Séparateur */}
+        <div className="border-t border-parchment-dark/50 my-4"></div>
+        
+        {/* Talents - Cartes détaillées */}
+        <div>
+          <h4 className="text-sm font-medium text-ink-light mb-3 flex items-center gap-2">
+            <Stars className="w-4 h-4 text-divine-gold" />
+            Talents ({(character.feats || []).length})
+          </h4>
+          
+          {(character.feats || []).length > 0 ? (
+            <div className="space-y-3">
+              {(character.feats || []).map(featId => {
+                const feat = getFeatById(featId);
+                if (!feat) return null;
+                
+                return (
+                  <div key={featId} className="bg-divine-gold/10 rounded-lg p-3 border-l-4 border-divine-gold">
+                    <h5 className="font-bold text-ink mb-1">{feat.name}</h5>
+                    <p className="text-xs text-ink-light">{feat.description}</p>
+                    {feat.effect && (
+                      <p className="text-xs text-divine-gold-dark mt-2 font-medium">
+                        Effet: {feat.effect}
+                      </p>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <p className="text-sm text-ink-muted italic">Aucun talent sélectionné</p>
           )}
         </div>
       </section>
