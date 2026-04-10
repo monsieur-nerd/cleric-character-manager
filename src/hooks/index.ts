@@ -1,27 +1,3 @@
-// hooks/index.ts
-export { 
-  useEquipment, 
-  useEquippedWeapons, 
-  useLightSources, 
-  useVisionEffects 
-} from './useEquipment';
-
-export { 
-  useComponentConsumption,
-  type ConsumptionResult,
-  type NewSpellCheckResult,
-} from './useComponentConsumption';
-
-export {
-  useItemEffects,
-  DEFAULT_ITEM_EFFECTS,
-  type ItemEffect,
-  type ItemEffectType,
-} from './useItemEffects';
-
-export {
-  useSpellIncantation,
-  useCanHaveIncantation,
-} from './useSpellIncantation';
-
-export { usePersistentState } from './usePersistentState';
+export { useDomainSpells } from './useDomainSpells';
+export { usePresetSelection } from './usePresetSelection';
+export { useItemEffects } from './useItemEffects';

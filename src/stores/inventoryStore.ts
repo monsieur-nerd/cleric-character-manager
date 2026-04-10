@@ -452,16 +452,16 @@ export const useInventoryStore = create<InventoryState>()(
       
       getCarriedWeight: () => {
         return get().items
-          .filter(item => item.isCarried)
+          .filter(item => item.isCarried && item.type !== 'Monture')
           .reduce((sum, item) => sum + (item.totalWeight || 0), 0);
       },
     }),
     {
       name: STORAGE_KEYS.INVENTORY,
-      version: 4, // Incrémenté pour ajouter les nouveaux équipements
+      version: 5, // Incrémenté pour corriger le calcul du poids (exclure montures) et réinitialiser les items
       migrate: (persistedState: unknown, version) => {
         // Si la version est ancienne, on réinitialise les items (ils seront rechargés depuis App.tsx)
-        if (version < 4) {
+        if (version < 5) {
           return { items: [] } as unknown as InventoryState;
         }
         return persistedState as InventoryState;
