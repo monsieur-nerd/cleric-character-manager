@@ -377,3 +377,52 @@ h1, h2, h3, h4, h5, h6 {
   background: var(--color-divine-gold);
   border-radius: 3px;
 }
+
+/* ============================================
+   ANTI-FLASH ET HYDRATATION
+   ============================================ */
+
+/* Masquer les animations pendant l'hydratation initiale */
+html:not(.react-loaded) .animate-fade-in,
+html:not(.react-loaded) .animate-slide-up {
+  animation: none !important;
+  opacity: 0;
+}
+
+/* Une fois chargé, les animations fonctionnent normalement */
+html.react-loaded .animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+html.react-loaded .animate-slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+/* Éviter les flashs de modales/dropdowns */
+[data-modal="true"],
+[role="dialog"] {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.15s ease-out, visibility 0.15s ease-out;
+}
+
+[data-modal="true"][data-open="true"],
+[role="dialog"][aria-hidden="false"] {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Réduire les flashs de layout */
+#root {
+  min-height: 100vh;
+}
+
+/* Assurer que le contenu n'apparaît pas avant le rendu */
+main {
+  opacity: 1;
+  transition: opacity 0.1s ease-out;
+}
+
+html:not(.react-loaded) main {
+  opacity: 0;
+}

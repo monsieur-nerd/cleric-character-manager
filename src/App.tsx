@@ -39,6 +39,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [needsMigration, setNeedsMigration] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
   
   const loadSpells = useSpellStore((state) => state.loadSpells);
   const loadItems = useInventoryStore((state) => state.loadItems);
@@ -95,6 +96,19 @@ function App() {
       setIsLoading(false);
     }
   }, [loadSpells, loadItems, loadComponentMapping]);
+  
+  // Marque l'hydratation comme complète après le chargement pour éviter les flashs
+  useEffect(() => {
+    if (!isLoading) {
+      // Petit délai pour s'assurer que tout est rendu
+      const timer = setTimeout(() => {
+        setIsHydrated(true)
+        // Signale au HTML que React est prêt
+        document.documentElement.classList.add('react-loaded')
+      }, 100)
+      return () => clearTimeout(timer)
+    }
+  }, [isLoading])
   
   // Synchronise le domaine et le niveau du spellStore vers characterStore au démarrage
   // C'est le spellStore qui a les valeurs persistantes (après refresh)
@@ -184,7 +198,8 @@ function App() {
     setNeedsMigration(false);
   };
 
-  if (isLoading) {
+  // Affiche le loader tant que les données ne sont pas prêtes
+  if (isLoading || !isHydrated) {
     return (
       <div className="min-h-screen bg-parchment flex items-center justify-center">
         <div className="text-center">
