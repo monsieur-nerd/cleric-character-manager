@@ -11,7 +11,7 @@ import type { SpellPreset } from '@/types';
  */
 
 // Version du preset pour forcer la mise à jour des caches
-export const PRESET_VERSION = '2024-01-15-v4-con';
+export const PRESET_VERSION = '2024-01-15-v5-war-caster';
 
 export const defaultPresets: SpellPreset[] = [
   {
@@ -47,26 +47,25 @@ export const defaultPresets: SpellPreset[] = [
     id: 'survie',
     name: '🏥 Mode Survie',
     icon: 'heart',
-    description: 'Maximum de soins et protection pour des combats difficiles (optimisé CON 10)',
+    description: 'Maximum de soins et protection pour des combats difficiles (Lanceur de Guerre: avantage CON)',
     spellIds: [
-      // N3 - Heals instantanés prioritaires
+      // N3 - Concentration puissante avec Lanceur de Guerre
+      'lueur-despoir',                      // Heal zone + buff CA - CONCENTRATION (75% réussite)
       'retour-a-la-vie',                    // Ultime recours - instantané
-      'dissipation-de-la-magie',            // Annuler sorts ennemis - instantané
       'mot-de-guérison-de-groupe',          // Heal 6 cibles - instantané
-      'lueur-despoir',                      // Heal massif - concentration acceptable
-      // N2 - Protection sans concentration
-      'prière-de-guérison',                 // Heal efficace - instantané
+      // N2 - Contrôle et protection
+      'prière-de-guérison',                 // Heal zone efficace - instantané
+      'immobilisation-de-personne',         // PARALYSIE - CONCENTRATION (Lanceur de Guerre)
       'aide',                               // Buff PV max 8h - pas concentration
-      'lien-de-protection',                 // Protection allié 1h - pas concentration
       'protection-contre-le-poison',        // Immun poison 1h - pas concentration
-      // N1 - Heal instantané
+      // N1 - Heal et protection
       'soins',                              // Heal fiable - instantané
+      'bénédiction',                        // Avantage attaques groupe - CONCENTRATION
+      'sanctuaire',                         // Protection urgence - pas concentration
+      // Extras avec concentration (risqué mais puissant)
+      'lien-de-protection',                 // Transfer dégâts - pas concentration
+      'protection-contre-une-énergie',      // Résistance 1h - CONCENTRATION
       'mot-de-guérison',                    // Heal action bonus - instantané
-      'sanctuaire',                         // Protection 1 min - pas concentration
-      // Extras
-      'restauration-partielle',             // Guérir états - instantané
-      'protection-contre-une-énergie',      // Résistance - concentration pré-combat
-      'résistance',                         // Buff JS +1d4 (tour de magie)
     ],
     isDefault: true,
   },
@@ -74,25 +73,25 @@ export const defaultPresets: SpellPreset[] = [
     id: 'combat-agressif',
     name: '⚔️ Combat Agressif',
     icon: 'sword',
-    description: 'Dégâts, contrôle et buffs offensifs (optimisé CON 10 - minimise concentration)',
+    description: 'Dégâts, contrôle et buffs offensifs (Lanceur de Guerre: concentration viable)',
     spellIds: [
-      // N3 - Sorts puissants instantanés
-      'dissipation-de-la-magie',            // Annuler buffs ennemis - instantané
+      // N3 - Buffs de combat avec concentration (Lanceur de Guerre)
+      'lueur-despoir',                      // Buff CA + heal zone - CONCENTRATION
+      'dissipation-de-la-magie',            // Annuler buffs - instantané
       'retour-a-la-vie',                    // Sécurité - instantané
-      'lueur-despoir',                      // Zone dégâts + buff - concentration loin combat
-      // N2 - Dégâts et contrôle sans concentration
+      // N2 - Contrôle et buffs (concentration viable)
+      'bénédiction',                        // Avantage attaques groupe - CONCENTRATION
+      'immobilisation-de-personne',         // PARALYSIE - CONCENTRATION (contrôle puissant)
       'prière-de-guérison',                 // Sustain - instantané
-      'cécité-surdité',                     // Handicap ennemi - PAS CONCENTRATION
-      'aide',                               // Buff PV 8h - pas concentration
-      'arme-spirituelle',                   // Dégâts bonus - SORT DE DOMAINE (gratuit)
-      // N1 - Dégâts instantanés prioritaires
+      'arme-spirituelle',                   // Dégâts bonus - SORT DE DOMAINE
+      // N1 - Dégâts et malus
       'éclair-guidé',                       // Dégâts + avantage - instantané
-      'bénédiction',                        // Avantage attaques - concentration mais essentiel
+      'fléau',                              // Malus ennemis - CONCENTRATION
       'blessure',                           // Dégâts nécrotiques - instantané
       'injonction',                         // Contrôle 1 round - pas concentration
       // Extras
-      'fléau',                              // Malus ennemis - concentration
-      'sanctuaire',                         // Protection urgence - pas concentration
+      'cécité-surdité',                     // Handicap - pas concentration
+      'aide',                               // Buff PV 8h - pas concentration
     ],
     isDefault: true,
   },
@@ -104,18 +103,18 @@ export const defaultPresets: SpellPreset[] = [
     id: 'vs-fire',
     name: '🔥 vs Feu',
     icon: 'flame',
-    description: 'Dragons de feu, démons, élémentaires de feu, sorts de feu (optimisé CON 10)',
+    description: 'Dragons de feu, démons, élémentaires de feu (Lanceur de Guerre: antimage viable)',
     spellIds: [
-      // N3 - Protection instantanée prioritaire
-      'protection-contre-une-énergie',      // Résistance feu 1h - concentration OK (pré-combat)
+      // N3 - Protection et antimage
+      'protection-contre-une-énergie',      // Résistance feu - CONCENTRATION (Lanceur Guerre)
+      'silence',                            // ANTIFEU/ANTISOUFFLE - CONCENTRATION (Lanceur Guerre)
       'dissipation-de-la-magie',            // Annuler souffle - instantané
+      'lueur-despoir',                      // Heal zone - CONCENTRATION
       'retour-a-la-vie',                    // Au cas où - instantané
-      'lueur-despoir',                      // Heal zone - concentration acceptable
-      // N2 - Heal et protection sans concentration
+      // N2 - Protection
       'prière-de-guérison',                 // Heal - instantané
-      'aide',                               // Buff PV 8h - pas concentration
       'protection-contre-le-poison',        // Immun poison 1h - pas concentration
-      'lien-de-protection',                 // Transfer dégâts 1h - pas concentration
+      'aide',                               // Buff PV 8h - pas concentration
       // N1 - Utilitaires
       'soins',                              // Heal rapide - instantané
       'marche-sur-l-eau',                   // Fuir - 1h pas concentration
@@ -128,18 +127,18 @@ export const defaultPresets: SpellPreset[] = [
     id: 'vs-cold',
     name: '❄️ vs Froid',
     icon: 'snowflake',
-    description: 'Dragons de glace, élémentaires de glace, sorts de froid, toundra (optimisé CON 10)',
+    description: 'Dragons de glace, élémentaires de glace (Lanceur de Guerre: buffs viables)',
     spellIds: [
-      // N3 - Protection et heal zone
-      'protection-contre-une-énergie',      // Résistance froid 1h - concentration pré-combat
+      // N3 - Protection et buffs avec concentration
+      'protection-contre-une-énergie',      // Résistance froid - CONCENTRATION
+      'lueur-despoir',                      // Heal zone + buff CA - CONCENTRATION
+      'mot-de-guérison-de-groupe',          // Heal multi-cibles - instantané
       'dissipation-de-la-magie',            // Annuler sorts glace - instantané
-      'mot-de-guérison-de-groupe',          // Heal multi-cibles - instantané (IMPORTANT froid zone)
       'retour-a-la-vie',                    // Au cas où - instantané
-      'lueur-despoir',                      // Heal zone - concentration acceptable
-      // N2 - Protection sans concentration
+      // N2 - Protection et contrôle
       'prière-de-guérison',                 // Heal - instantané
+      'immobilisation-de-personne',         // IMMOBILISATION - CONCENTRATION (très fort vs glace)
       'aide',                               // Buff PV 8h - pas concentration
-      'lien-de-protection',                 // Transfer dégâts 1h - pas concentration
       'protection-contre-le-poison',        // Immun poison 1h - pas concentration
       // N1
       'soins',                              // Heal rapide - instantané
@@ -152,22 +151,23 @@ export const defaultPresets: SpellPreset[] = [
     id: 'vs-lightning',
     name: '⚡ vs Foudre',
     icon: 'zap',
-    description: 'Dragons bleus, tempêtes, élémentaires d\'air, sorts électriques (optimisé CON 10)',
+    description: 'Dragons bleus, tempêtes, élémentaires d\'air (Lanceur de Guerre: silence antimage viable)',
     spellIds: [
-      // N3 - Protection et heal prioritaires
-      'protection-contre-une-énergie',      // Résistance foudre 1h - concentration pré-combat
+      // N3 - Protection et antimage
+      'protection-contre-une-énergie',      // Résistance foudre - CONCENTRATION
+      'silence',                            // ANTIFOUDRE/ANTIMAGE - CONCENTRATION (Lanceur Guerre)
+      'lueur-despoir',                      // Heal zone - CONCENTRATION
+      'mot-de-guérison-de-groupe',          // Heal zone - instantané
       'dissipation-de-la-magie',            // Annuler foudre - instantané
-      'mot-de-guérison-de-groupe',          // Heal zone - instantané (IMPORTANT foudre zone)
       'retour-a-la-vie',                    // Foudre = one-shot - instantané
-      'lueur-despoir',                      // Heal zone - concentration acceptable
-      // N2 - Protection sans concentration
+      // N2 - Protection
       'prière-de-guérison',                 // Heal - instantané
+      'immobilisation-de-personne',         // STOP dragons - CONCENTRATION
       'aide',                               // Buff PV 8h - pas concentration
-      'lien-de-protection',                 // Protéger carry 1h - pas concentration
-      'sanctuaire',                         // Protection urgence 1 min - pas concentration
+      'lien-de-protection',                 // Protéger carry - pas concentration
       // N1
       'soins',                              // Heal rapide - instantané
-      'délivrance-des-malédictions',        // Guérir malédictions - instantané
+      'sanctuaire',                         // Protection urgence - pas concentration
     ],
     isDefault: true,
   },
@@ -175,20 +175,23 @@ export const defaultPresets: SpellPreset[] = [
     id: 'vs-acid',
     name: '🧪 vs Acide',
     icon: 'droplet',
-    description: 'Slimes, blobs noirs, dragons noirs, vers de pourriture, sorts d\'acide',
+    description: 'Slimes, blobs noirs, dragons noirs (Lanceur de Guerre: immobilisation viable)',
     spellIds: [
-      'protection-contre-une-énergie',  // Résistance acide (ESSENTIEL)
-      'retour-a-la-vie',                    // Au cas où
-      'lueur-despoir',             // Heal zone + buff
-      'dissipation-de-la-magie',        // Annuler sorts d\'acide
-      'aide',                           // Buff PV
-      'prière-de-guérison',             // Heal
-      'restauration-partielle',         // Guérir dégâts d\'acide persistants
-      'soins',                          // Heal rapide
+      // N3 - Protection et buffs
+      'protection-contre-une-énergie',      // Résistance acide - CONCENTRATION
+      'lueur-despoir',                      // Heal zone + buff CA - CONCENTRATION
+      'retour-a-la-vie',                    // Au cas où - instantané
+      'dissipation-de-la-magie',            // Annuler sorts - instantané
+      // N2 - Protection et contrôle
+      'prière-de-guérison',                 // Heal - instantané
+      'immobilisation-de-personne',         // STOP blobs/oozes - CONCENTRATION
+      'restauration-partielle',             // Guérir états - instantané
+      'protection-contre-le-poison',        // Immun poison - pas concentration
+      'aide',                               // Buff PV - pas concentration
+      // N1
+      'soins',                              // Heal rapide - instantané
       'purification-de-nourriture-et-d-eau', // Eau pour rincer
-      'création-ou-destruction-d-eau',  // Nettoyer l\'acide
-      'protection-contre-le-poison',    // Acide souvent = poison
-      'délivrance-des-malédictions',    // Malédictions d\'ooze
+      'création-ou-destruction-d-eau',      // Nettoyer l\'acide
     ],
     isDefault: true,
   },
@@ -196,20 +199,23 @@ export const defaultPresets: SpellPreset[] = [
     id: 'vs-thunder',
     name: '🔊 vs Tonnerre',
     icon: 'cloud-lightning',
-    description: 'Géants des tempêtes, élémentaires d\'air, sorts de tonnerre, vibrations',
+    description: 'Géants des tempêtes, élémentaires d\'air (Lanceur de Guerre: silence antimage viable)',
     spellIds: [
-      'protection-contre-une-énergie',  // Résistance tonnerre (ESSENTIEL)
-      'retour-a-la-vie',                    // Au cas où
-      'lueur-despoir',             // Heal zone + buff
-      'dissipation-de-la-magie',        // Annuler tonnerre
-      'aide',                           // Buff PV
-      'prière-de-guérison',             // Heal
-      'silence',                        // Contre sorts sonores
-      'soins',                          // Heal rapide
-      'mot-de-guérison-de-groupe',      // Tonnerre = zone
-      'lien-de-protection',             // Protéger alliés
-      'cécité-surdité',                 // Surdité contre dégâts sonores
-      'sanctuaire',                     // Protection urgence
+      // N3 - Protection et antimage
+      'protection-contre-une-énergie',      // Résistance tonnerre - CONCENTRATION
+      'silence',                            // ANTITONNERRE - CONCENTRATION (Lanceur Guerre)
+      'lueur-despoir',                      // Heal zone + buff CA - CONCENTRATION
+      'dissipation-de-la-magie',            // Annuler tonnerre - instantané
+      'retour-a-la-vie',                    // Au cas où - instantané
+      // N2 - Heal et protection
+      'prière-de-guérison',                 // Heal - instantané
+      'mot-de-guérison-de-groupe',          // Heal zone - instantané
+      'aide',                               // Buff PV - pas concentration
+      'lien-de-protection',                 // Protéger alliés - pas concentration
+      // N1 - Protection sonore
+      'cécité-surdité',                     // Surdité tonnerre - pas concentration
+      'soins',                              // Heal rapide - instantané
+      'sanctuaire',                         // Protection urgence - pas concentration
     ],
     isDefault: true,
   },
@@ -217,20 +223,23 @@ export const defaultPresets: SpellPreset[] = [
     id: 'vs-poison',
     name: '☠️ vs Poison',
     icon: 'venom',
-    description: 'Insectes géants, araignées, serpents, plantes carnivores, assassins',
+    description: 'Insectes géants, araignées, serpents (Lanceur de Guerre: buffs viables)',
     spellIds: [
-      'protection-contre-le-poison',    // Immunité poison (ESSENTIEL)
-      'protection-contre-une-énergie',  // Résistance poison (si optionnel)
-      'retour-a-la-vie',                    // Au cas où
-      'lueur-despoir',             // Heal zone + buff
-      'délivrance-des-malédictions',    // Certains poisons maudissent
-      'aide',                           // Buff PV
-      'prière-de-guérison',             // Heal
-      'restauration-partielle',         // Guérir empoisonnement
-      'soins',                          // Heal rapide
-      'mot-de-guérison-de-groupe',      // Multiple victimes empoisonnées
-      'purification-de-nourriture-et-d-eau', // Nourriture empoisonnée
-      'détection-du-poison-et-des-maladies', // Détecter poison
+      // N2 - Immunités (pas de concentration)
+      'protection-contre-le-poison',        // Immunité poison - PAS CONCENTRATION
+      'protection-contre-une-énergie',      // Résistance poison - CONCENTRATION
+      // N3 - Heal et buffs
+      'lueur-despoir',                      // Heal zone + buff CA - CONCENTRATION
+      'délivrance-des-malédictions',        // Guérir malédictions - instantané
+      'retour-a-la-vie',                    // Au cas où - instantané
+      // N2 - Heal
+      'prière-de-guérison',                 // Heal - instantané
+      'restauration-partielle',             // Guérir empoisonnement - instantané
+      'mot-de-guérison-de-groupe',          // Heal multi-cibles - instantané
+      'aide',                               // Buff PV - pas concentration
+      // N1
+      'soins',                              // Heal rapide - instantané
+      'mot-de-guérison',                    // Heal action bonus - instantané
     ],
     isDefault: true,
   },
@@ -238,20 +247,23 @@ export const defaultPresets: SpellPreset[] = [
     id: 'vs-elements',
     name: '🛡️ vs Multi-Éléments',
     icon: 'shield',
-    description: 'Environnements variés, élémentaires multiples, sorts divers',
+    description: 'Environnements variés, élémentaires multiples (Lanceur de Guerre: silence viable)',
     spellIds: [
-      'protection-contre-une-énergie',  // Choisir selon situation
-      'dissipation-de-la-magie',        // Annuler tout sort élémentaire
-      'retour-a-la-vie',                    // Au cas où
-      'lueur-despoir',             // Heal zone + buff
-      'prière-de-guérison',             // Heal
-      'aide',                           // Buff PV
-      'soins',                          // Heal rapide
-      'protection-contre-le-poison',    // Souvent associé aux éléments
-      'résistance',                     // +1d4 générique
-      'restauration-partielle',         // Guérir états divers
-      'sanctuaire',                     // Protection urgence
-      'cercle-magique',                 // Protection zone
+      // N3 - Protection et antimage
+      'protection-contre-une-énergie',      // Résistance choix - CONCENTRATION
+      'silence',                            // Antimage élémentaire - CONCENTRATION
+      'dissipation-de-la-magie',            // Annuler sorts - instantané
+      'lueur-despoir',                      // Heal zone - CONCENTRATION
+      'retour-a-la-vie',                    // Au cas où - instantané
+      // N2 - Protection
+      'prière-de-guérison',                 // Heal - instantané
+      'aide',                               // Buff PV - pas concentration
+      'protection-contre-le-poison',        // Immun poison - pas concentration
+      'restauration-partielle',             // Guérir états - instantané
+      // N1
+      'soins',                              // Heal rapide - instantané
+      'sanctuaire',                         // Protection urgence - pas concentration
+      'cercle-magique',                     // Protection zone - pas concentration
     ],
     isDefault: true,
   },
@@ -259,20 +271,22 @@ export const defaultPresets: SpellPreset[] = [
     id: 'vs-undead',
     name: '💀 vs Morts-Vivants',
     icon: 'skull',
-    description: 'Lumière, protection et soins contre nécromanciens et morts-vivants',
+    description: 'Lumière, protection et soins contre nécromanciens (Lanceur de Guerre: contrôle viable)',
     spellIds: [
-      'lumière-du-jour',                // Désavantage morts-vivants (ESSENTIEL)
-      'retour-a-la-vie',                    // Contre la mort
-      'lueur-despoir',             // Dégâts radiants + heal
-      'dissipation-de-la-magie',        // Annuler nécromancie
-      'mot-de-guérison-de-groupe',      // Heal multi-cibles
-      'aide',                           // Buff
-      'prière-de-guérison',             // Heal
-      'soins',                          // Sustain
-      'protection-contre-le-mal-et-le-bien', // Protection fiélon/céleste
-      'détection-du-mal-et-du-bien',    // Détecter présence
-      'sanctuaire',                     // Protection individuelle
-      'immobilisation-de-personne',     // Paralysie (immunité morts-vivants?)
+      // N3 - Lumière et protection
+      'lumière-du-jour',                    // Désavantage morts-vivants - pas concentration
+      'lueur-despoir',                      // Dégâts radiants + heal - CONCENTRATION
+      'dissipation-de-la-magie',            // Annuler nécromancie - instantané
+      'retour-a-la-vie',                    // Contre la mort - instantané
+      // N2 - Heal et contrôle
+      'mot-de-guérison-de-groupe',          // Heal multi-cibles - instantané
+      'prière-de-guérison',                 // Heal - instantané
+      'immobilisation-de-personne',         // STOP vampire/nécromant - CONCENTRATION
+      'aide',                               // Buff PV - pas concentration
+      // N1 - Protection
+      'protection-contre-le-mal-et-le-bien', // Protection vs morts-vivants - CONCENTRATION
+      'soins',                              // Sustain - instantané
+      'sanctuaire',                         // Protection urgence - pas concentration
     ],
     isDefault: true,
   },
@@ -280,20 +294,22 @@ export const defaultPresets: SpellPreset[] = [
     id: 'support',
     name: '🛡️ Support & Buffs',
     icon: 'shield',
-    description: 'Maximiser les alliés : buffs, protection et avantages',
+    description: 'Maximiser les alliés : buffs, protection et avantages (Lanceur de Guerre: buffs concentrés viables)',
     spellIds: [
-      'lueur-despoir',             // Buff CA toute l\'équipe
-      'aide',                           // +5 PV max + avantage
-      'amélioration-de-caractéristique', // +2 caractéristique
-      'bénédiction',                    // Avantage attaques
-      'lien-de-protection',             // Protéger le carry
-      'protection-contre-le-poison',    // Immunité poison
-      'prière-de-guérison',             // Heal
-      'soins',                          // Heal rapide
-      'assistance',                     // +1d4 à un jet (tour de magie)
-      'résistance',                     // +1d4 sauvegarde (tour de magie)
-      'arme-magique',                   // +1 arme
-      'protection-contre-le-mal-et-le-bien', // Protection
+      // N3 - Buffs de groupe avec concentration (Lanceur de Guerre)
+      'lueur-despoir',                      // Buff CA équipe - CONCENTRATION
+      'bénédiction',                        // Avantage attaques équipe - CONCENTRATION
+      // N2 - Buffs sans concentration
+      'aide',                               // +5 PV max 8h - pas concentration
+      'lien-de-protection',                 // Protéger carry 1h - pas concentration
+      'protection-contre-le-poison',        // Immun poison 1h - pas concentration
+      'amélioration-de-caractéristique',    // +2 carac - CONCENTRATION (hors combat)
+      // Heal
+      'prière-de-guérison',                 // Heal zone - instantané
+      'soins',                              // Heal rapide - instantané
+      // Extras
+      'protection-contre-le-mal-et-le-bien', // Protection - CONCENTRATION
+      'mot-de-guérison',                    // Heal action bonus - instantané
     ],
     isDefault: true,
   },
@@ -303,19 +319,22 @@ export const defaultPresets: SpellPreset[] = [
     icon: 'compass',
     description: 'Détection, déplacement et utilitaires pour l\'aventure',
     spellIds: [
-      'communication-à-distance',       // Communication 500 miles
-      'détection-de-la-magie',          // Détecter pièges magiques
-      'augure',                         // Prédire danger (rituel)
-      'marche-sur-l-eau',               // Traverser eau/lave
-      'localisation-d-objet',           // Trouver objet
-      'sens-des-pièges',                // Détecter pièges
-      'aide',                           // Aider escalade/sauts
-      'prière-de-guérison',             // Heal entre combats
-      'détection-du-poison-et-des-maladies',
-      'purification-de-nourriture-et-d-eau',
-      'création-ou-destruction-d-eau',  // Créer eau
-      'lumière',                        // Éclairage (tour de magie)
-      'thaumaturgie',                   // Effets théâtraux (tour de magie)
+      // N3 - Communication et détection
+      'communication-à-distance',           // Communication 500 miles
+      'clairvoyance',                       // Vision à distance - CONCENTRATION (hors combat)
+      'localisation-d-objet',               // Trouver objet - CONCENTRATION (hors combat)
+      // N2 - Détection et mouvement
+      'augure',                             // Prédire danger - RITUEL (pas de slot)
+      'marche-sur-l-eau',                   // Traverser eau - pas concentration
+      'sens-des-pièges',                    // Détecter pièges - CONCENTRATION
+      'zone-de-vérité',                     // Interroger - CONCENTRATION (hors combat)
+      // N1 - Utilitaires
+      'détection-de-la-magie',              // Détecter pièges - CONCENTRATION + RITUEL
+      'détection-du-poison-et-des-maladies', // Détecter danger - CONCENTRATION + RITUEL
+      'aide',                               // Aider escalade - pas concentration
+      'prière-de-guérison',                 // Heal entre combats
+      'purification-de-nourriture-et-d-eau', // RITUEL
+      'création-ou-destruction-d-eau',      // Créer eau
     ],
     isDefault: true,
   },
@@ -323,20 +342,22 @@ export const defaultPresets: SpellPreset[] = [
     id: 'anti-mage',
     name: '📜 Anti-Mage',
     icon: 'scroll',
-    description: 'Contre les lanceurs de sorts et créatures magiques',
+    description: 'Contre les lanceurs de sorts (Lanceur de Guerre: silence et contrôle viables)',
     spellIds: [
-      'dissipation-de-la-magie',        // Annuler tout sort
-      'cercle-magique',                 // Protection invocation
-      'silence',                        // Zone d\'antimagie (ESSENTIEL)
-      'délivrance-des-malédictions',    // Retirer malédictions
-      'zone-de-vérité',                 // Interroger prisonnier
-      'retour-a-la-vie',                    // Sécurité
-      'lueur-despoir',             // Sustain combat
-      'prière-de-guérison',             // Heal
-      'protection-contre-une-énergie',  // Résistance sorts
-      'détection-de-la-magie',          // Détecter lanceurs
-      'protection-contre-le-mal-et-le-bien', // Protection invocations
-      'immobilisation-de-personne',     // Empêcher incantation
+      // N3 - Antimage
+      'silence',                            // ZONE ANTIMAGE - CONCENTRATION (Lanceur Guerre)
+      'dissipation-de-la-magie',            // Annuler tout sort - instantané
+      'lueur-despoir',                      // Sustain combat - CONCENTRATION
+      // N2 - Contrôle et protection
+      'immobilisation-de-personne',         // STOP lanceur - CONCENTRATION (Lanceur Guerre)
+      'zone-de-vérité',                     // Interroger prisonnier - CONCENTRATION
+      'délivrance-des-malédictions',        // Retirer malédictions - instantané
+      'prière-de-guérison',                 // Heal - instantané
+      // N1 - Protection
+      'protection-contre-une-énergie',      // Résistance sorts - CONCENTRATION
+      'protection-contre-le-mal-et-le-bien', // Protection invocations - CONCENTRATION
+      'cercle-magique',                     // Protection zone - pas concentration
+      'détection-de-la-magie',              // Détecter lanceurs - CONCENTRATION + RITUEL
     ],
     isDefault: true,
   },
@@ -429,23 +450,22 @@ export const generateOptimalPreset = (
 
 export const domainPresets: Record<string, SpellPreset[]> = {
   // Domaine de la Guerre - Focus sur les buffs offensifs et le combat
-  // NOTE: Les sorts de domaine (faveur-divine, bouclier-de-la-foi, arme-magique, 
-  // arme-spirituelle, aura-du-croisé) sont gratuits et toujours préparés
+  // NOTE: Avec Lanceur de Guerre, la concentration est viable (avantage JS CON)
   war: [
     {
       id: 'war-tactician',
       name: '⚔️ Tacticien de Guerre',
       icon: 'sword',
-      description: 'Buffs d\'armes et avantage pour dominer le champ de bataille (optimisé CON 10)',
+      description: 'Buffs d\'armes et contrôle (Lanceur de Guerre: buffs concentrés viables)',
       spellIds: [
-        // Sorts NON-DOMAINE prioritaires (les sorts de domaine sont gratuits)
+        // Sorts NON-DOMAINE avec concentration (Lanceur de Guerre)
+        'bénédiction',                    // Avantage attaques groupe - CONCENTRATION
+        'immobilisation-de-personne',     // PARALYSIE cible - CONCENTRATION (contrôle)
         'dissipation-de-la-magie',        // Annuler buffs - instantané
         'aide',                           // Buff PV 8h - pas concentration
         'éclair-guidé',                   // Dégâts + avantage - instantané
-        'bénédiction',                    // Avantage attaques - concentration essentiel
         'cécité-surdité',                 // Handicap - pas concentration
-        'injonction',                     // Contrôle - pas concentration
-        'sanctuaire',                     // Protection - pas concentration
+        'sanctuaire',                     // Protection urgence - pas concentration
         // Sorts de domaine (gratuits, toujours préparés)
         'faveur-divine',                  // +2d4 dégâts - SORT DOMAINE
         'bouclier-de-la-foi',             // +2 CA - SORT DOMAINE
@@ -458,16 +478,16 @@ export const domainPresets: Record<string, SpellPreset[]> = {
       id: 'war-divine-striker',
       name: '🔨 Frappe Divine',
       icon: 'hammer',
-      description: 'Maximiser les dégâts en mêlée (optimisé CON 10 - minimise concentration)',
+      description: 'Maximiser les dégâts en mêlée (Lanceur de Guerre: buffs concentrés viables)',
       spellIds: [
-        // Sorts NON-DOMAINE prioritaires
+        // Sorts NON-DOMAINE avec concentration (Lanceur de Guerre)
+        'bénédiction',                    // Avantage attaques - CONCENTRATION
+        'fléau',                          // Malus ennemis - CONCENTRATION
         'dissipation-de-la-magie',        // Contre protections - instantané
         'éclair-guidé',                   // Dégâts + setup - instantané
-        'cécité-surdité',                 // Handicap - PAS CONCENTRATION
+        'blessure',                       // Dégâts contact - instantané
         'aide',                           // Sustain 8h - pas concentration
         'lien-de-protection',             // Protection 1h - pas concentration
-        'blessure',                       // Dégâts contact - instantané
-        'bénédiction',                    // Avantage - concentration essentiel
         // Sorts de domaine (gratuits)
         'arme-spirituelle',               // Dégâts bonus - SORT DOMAINE
         'faveur-divine',                  // Dégâts radiants - SORT DOMAINE
