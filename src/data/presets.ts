@@ -11,7 +11,7 @@ import type { SpellPreset } from '@/types';
  */
 
 // Version du preset pour forcer la mise à jour des caches
-export const PRESET_VERSION = '2024-01-15-v2';
+export const PRESET_VERSION = '2024-01-15-v3';
 
 export const defaultPresets: SpellPreset[] = [
   {
