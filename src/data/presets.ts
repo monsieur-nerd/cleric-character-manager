@@ -10,12 +10,15 @@ import type { SpellPreset } from '@/types';
  * S'il peut préparer 10 sorts (Sag 20, niveau 5 = 10), il prend les 10 premiers.
  */
 
+// Version du preset pour forcer la mise à jour des caches
+export const PRESET_VERSION = '2024-01-15-v2';
+
 export const defaultPresets: SpellPreset[] = [
   {
     id: 'kimi-optimal',
     name: '⭐ Choix Optimal',
     icon: 'star',
-    description: 'Sélection équilibrée et optimisée : les sorts les plus puissants et polyvalents',
+    description: `Sélection équilibrée et optimisée : les sorts les plus puissants et polyvalents [${PRESET_VERSION}]`,
     // Ordre de priorité : sorts de survie d'abord, puis utilitaires
     spellIds: [
       // N3 - Priorité maximale (1 slot)

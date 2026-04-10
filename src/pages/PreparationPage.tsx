@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft, Check, RotateCcw, Sword, Flame, Skull, Compass, Shield, Star, Heart, Scroll, Sparkles, CloudLightning, Droplets, Snowflake, Zap, X, AlertTriangle, Sun, Leaf, BookOpen, Ghost, Hammer, Coffee, Users, Edit3, Save, Plus, Trash2, GripVertical, Edit } from 'lucide-react';
 import { useSpellStore, useCharacterStore, usePresetStore } from '@/stores';
 import { SpellCard } from '@/components/spells/SpellCard';
-import { defaultPresets, getKimiRecommendedSpells, getDomainPresets } from '@/data/presets';
+import { defaultPresets, getKimiRecommendedSpells, getDomainPresets, PRESET_VERSION } from '@/data/presets';
 import { CLERIC_DOMAINS, getMaxSpellLevelForCharacter } from '@/types';
 import type { Spell, SpellPreset } from '@/types';
 
@@ -134,6 +134,11 @@ export function PreparationPage() {
     ...(customPreset ? [customPreset] : []),
     ...domainPresets
   ];
+  
+  // Debug: vérifie que le preset est bien chargé
+  const optimalPreset = allPresets.find(p => p.id === 'kimi-optimal');
+  console.log('[PreparationPage] Preset version:', PRESET_VERSION);
+  console.log('[PreparationPage] Choix Optimal spells:', optimalPreset?.spellIds);
   
   const allSpells = useSpellStore((state) => state.allSpells);
   const preparedSpellIds = useSpellStore((state) => state.preparedSpellIds);
