@@ -9,6 +9,7 @@ import { getFeatById } from '@/types/feats';
 import type { Feat } from '@/types/feats';
 import { SpellCastAnimation } from '@/components/effects/SpellCastAnimation';
 import { SpellDetailModal } from '@/components/spells/SpellDetailModal';
+import { ConcentrationHelpModal } from '@/components/spells/ConcentrationHelpModal';
 import { CombatStatsCard } from '@/components/combat/CombatStatsCard';
 
 const castingTimeFilters = [
@@ -158,6 +159,7 @@ export function CombatPage() {
   const [showChannelDivinityInfo, setShowChannelDivinityInfo] = useState(false);
   const [showActionExplanation, setShowActionExplanation] = useState(false);
   const [showConcentrationExplanation, setShowConcentrationExplanation] = useState(false);
+  const [showConcentrationHelp, setShowConcentrationHelp] = useState(false);
   const [showCombatManeuvers, setShowCombatManeuvers] = useState(false);
   
   const character = useCharacterStore((state) => state.character);
@@ -945,10 +947,17 @@ export function CombatPage() {
                                   </span>
                                 )}
                                 {spell.concentration && (
-                                  <span className="flex items-center gap-1 text-royal-purple">
+                                  <button 
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setShowConcentrationHelp(true);
+                                    }}
+                                    className="flex items-center gap-1 text-royal-purple hover:text-royal-purple-dark hover:underline cursor-pointer"
+                                    title="Cliquer pour plus d'infos sur la concentration"
+                                  >
                                     <Focus className="w-3 h-3" />
                                     Conc.
-                                  </span>
+                                  </button>
                                 )}
                                 {missingComponent && (
                                   <span className="flex items-center gap-1 text-blood-red">
@@ -1019,6 +1028,12 @@ export function CombatPage() {
         isOpen={!!selectedSpell}
         onClose={() => setSelectedSpell(null)}
         isDomainSpell={selectedSpell ? currentDomainSpellIds.includes(selectedSpell.id) : false}
+      />
+      
+      {/* Modal aide concentration */}
+      <ConcentrationHelpModal
+        isOpen={showConcentrationHelp}
+        onClose={() => setShowConcentrationHelp(false)}
       />
     </div>
   );
