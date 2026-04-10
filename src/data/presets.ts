@@ -32,8 +32,8 @@ export const defaultPresets: SpellPreset[] = [
       // N1 - Priorité moyenne (4 slots)
       'soins',                          // Heal fiable
       'bénédiction',                    // Avantage attaques
-      'sanctuaire',                     // Protection urgente
       'éclair-guidé',                   // Dégâts + avantage prochaine attaque
+      'sanctuaire',                     // Protection urgente
       // Sorts supplémentaires pour haute Sagesse
       'mot-de-guérison-de-groupe',      // Heal multi-cibles
       'protection-contre-une-énergie',  // Résistance élémentaire
