@@ -458,7 +458,7 @@ export const useInventoryStore = create<InventoryState>()(
     }),
     {
       name: STORAGE_KEYS.INVENTORY,
-      version: 7, // Réinitialisation forcée pour corriger le poids
+      version: 8, // Suppression des doublons d'équipement
       migrate: (persistedState: unknown, version) => {
         // Force reset - on recharge tout depuis les données sources
         return { items: [] } as unknown as InventoryState;
