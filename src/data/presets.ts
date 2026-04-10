@@ -25,12 +25,12 @@ export const defaultPresets: SpellPreset[] = [
       // N2 - Priorité haute (3 slots)
       'aide',                           // Buff PV max + avantage jets
       'prière-de-guérison',             // Meilleur heal efficace
-      'lien-de-protection',             // Protéger les alliés
       'arme-spirituelle',               // Dégâts + contrôle zone
       // N1 - Priorité moyenne (4 slots)
       'soins',                          // Heal fiable
       'bénédiction',                    // Avantage attaques
       'sanctuaire',                     // Protection urgente
+      'éclair-guidé',                   // Dégâts + avantage prochaine attaque
       // Sorts supplémentaires pour haute Sagesse
       'mot-de-guérison-de-groupe',      // Heal multi-cibles
       'protection-contre-une-énergie',  // Résistance élémentaire
