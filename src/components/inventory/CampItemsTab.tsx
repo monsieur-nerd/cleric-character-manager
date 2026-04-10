@@ -4,11 +4,9 @@ import { formatWeight, formatPrice } from '@/utils/formatters';
 import type { EquipmentItem } from '@/types';
 
 export function CampItemsTab() {
-  const items = useInventoryStore((state) => state.items);
   const getCampItems = useInventoryStore((state) => state.getCampItems);
   const toggleAtCamp = useInventoryStore((state) => state.toggleAtCamp);
   const takeAllFromCamp = useInventoryStore((state) => state.takeAllFromCamp);
-  const getTotalWeight = useInventoryStore((state) => state.getTotalWeight);
 
   const campItems = getCampItems();
   const totalCampWeight = campItems.reduce((sum, item) => sum + (item.totalWeight || 0), 0);
@@ -22,31 +20,29 @@ export function CampItemsTab() {
 
   return (
     <div className="space-y-4 animate-fade-in">
-      {/* Header avec stats et bouton reprendre tout */}
-      <div className="card bg-divine-gold/5">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-divine-gold/20 flex items-center justify-center">
-              <Tent className="w-5 h-5 text-divine-gold-dark" />
-            </div>
-            <div>
-              <h3 className="font-display text-ink">Objets au camp</h3>
-              <p className="text-xs text-ink-muted">
-                {campItems.length} objet{campItems.length > 1 ? 's' : ''} • {formatWeight(totalCampWeight)}
-              </p>
-            </div>
+      {/* Header avec bouton reprendre tout */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-divine-gold/20 flex items-center justify-center">
+            <Tent className="w-5 h-5 text-divine-gold-dark" />
           </div>
-          
-          {campItems.length > 0 && (
-            <button
-              onClick={takeAllFromCamp}
-              className="btn-primary flex items-center gap-2 text-sm"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Reprendre tout
-            </button>
-          )}
+          <div>
+            <h3 className="font-display text-ink">Objets au camp</h3>
+            <p className="text-xs text-ink-muted">
+              {campItems.length} objet{campItems.length > 1 ? 's' : ''} • {formatWeight(totalCampWeight)} au total
+            </p>
+          </div>
         </div>
+        
+        {campItems.length > 0 && (
+          <button
+            onClick={takeAllFromCamp}
+            className="btn-primary flex items-center gap-2 text-sm"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Reprendre tout
+          </button>
+        )}
       </div>
 
       {/* Liste des items au camp */}

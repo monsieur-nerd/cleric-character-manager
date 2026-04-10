@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Check, RotateCcw, Sword, Flame, Skull, Compass, Shield, Star, Heart, Scroll, Sparkles, CloudLightning, Droplets, Snowflake, Zap, X, AlertTriangle, Sun, Leaf, BookOpen, Ghost, Hammer, Coffee, Users, Edit3, Save, Plus, Trash2, GripVertical, Edit } from 'lucide-react';
-import { useSpellStore, useCharacterStore, usePresetStore } from '@/stores';
+import { useSpellStore, useCharacterStore, usePresetStore, useChultStore } from '@/stores';
 import { SpellCard } from '@/components/spells/SpellCard';
 import { defaultPresets, getKimiRecommendedSpells, getDomainPresets, PRESET_VERSION } from '@/data/presets';
 import { CLERIC_DOMAINS, getMaxSpellLevelForCharacter } from '@/types';
@@ -42,6 +42,7 @@ const presetIcons: Record<string, React.ReactNode> = {
   'grave-keeper': <Coffee className="w-5 h-5 text-stone-600" />,
   'grave-death-watcher': <Skull className="w-5 h-5 text-stone-800" />,
   'social-investigation': <Users className="w-5 h-5 text-indigo-500" />,
+  'kimi-optimal-chult': <span className="text-xl">🌴</span>,
   'custom-user': <Edit3 className="w-5 h-5 text-pink-500" />,
 };
 
@@ -80,6 +81,7 @@ const presetColors: Record<string, string> = {
   'grave-keeper': 'border-stone-600 bg-stone-600/10',
   'grave-death-watcher': 'border-stone-800 bg-stone-800/10',
   'social-investigation': 'border-indigo-500 bg-indigo-500/10',
+  'kimi-optimal-chult': 'border-jungle-green bg-jungle-green/10',
   'custom-user': 'border-pink-500 bg-pink-500/10',
 };
 
@@ -343,6 +345,17 @@ export function PreparationPage() {
                         onReset={resetCustomPreset}
                         onApply={() => handleApplyPreset(preset)}
                         isActive={isActive}
+                      />
+                    ) : preset.id === 'kimi-optimal-chult' ? (
+                      /* Interface spéciale pour le preset Chult avec case à cocher */
+                      <ChultPresetDetails
+                        preset={preset}
+                        selectionCount={selectionCount}
+                        maxPrepared={maxPrepared}
+                        allSpells={allSpells}
+                        currentDomainSpellIds={currentDomainSpellIds}
+                        isActive={isActive}
+                        onApply={() => handleApplyPreset(preset)}
                       />
                     ) : (
                       <>
@@ -847,6 +860,93 @@ function CustomPresetEditor({
         className="w-full bg-divine-gold hover:bg-divine-gold-light active:bg-divine-gold-dark 
           disabled:opacity-50 disabled:cursor-not-allowed
           text-ink font-bold py-3 px-4 rounded-lg 
+          transform transition-all duration-100
+          hover:shadow-lg hover:scale-[1.02]
+          active:scale-[0.98] active:shadow-inner
+          flex items-center justify-center gap-2"
+      >
+        <Check className="w-4 h-4" />
+        {isActive ? '✓ Appliqué !' : `Appliquer ce préréglage (${selectionCount} sorts)`}
+      </button>
+    </div>
+  );
+}
+
+// Composant d'affichage du preset Chult avec case à cocher
+interface ChultPresetDetailsProps {
+  preset: SpellPreset;
+  selectionCount: number;
+  maxPrepared: number;
+  allSpells: Spell[];
+  currentDomainSpellIds: string[];
+  isActive: boolean;
+  onApply: () => void;
+}
+
+function ChultPresetDetails({
+  preset,
+  selectionCount,
+  maxPrepared,
+  allSpells,
+  currentDomainSpellIds,
+  isActive,
+  onApply,
+}: ChultPresetDetailsProps) {
+  const { isInChult, setInChult } = useChultStore();
+  
+  return (
+    <div className="space-y-3">
+      {/* Case à cocher Dans le Chult */}
+      <div className="bg-jungle-green/10 border border-jungle-green/30 rounded-lg p-3">
+        <label className="flex items-center gap-3 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={isInChult}
+            onChange={(e) => setInChult(e.target.checked)}
+            className="w-5 h-5 rounded border-parchment-dark text-jungle-green focus:ring-jungle-green"
+          />
+          <div className="flex-1">
+            <span className="font-display text-ink font-medium">Dans le Chult</span>
+            <p className="text-xs text-ink-muted">
+              Mode Chult activé : les composants de résurrection sont masqués dans la liste de courses
+            </p>
+          </div>
+          <span className="text-2xl">🌴</span>
+        </label>
+      </div>
+      
+      {/* Info sur le sort remplacé */}
+      <div className="bg-parchment-dark/20 rounded-lg p-2 text-xs">
+        <span className="text-ink-light">
+          <strong>Modification :</strong> <span className="line-through text-ink-muted">Retour à la vie</span> remplacé par <span className="text-forest font-medium">Esprits gardiens</span> (contrôle de zone)
+        </span>
+      </div>
+      
+      {/* Liste des sorts */}
+      <p className="text-xs text-ink-muted">
+        Sorts qui seront sélectionnés ({selectionCount} sur {maxPrepared}):
+      </p>
+      <div className="flex flex-wrap gap-1 mb-3">
+        {getSelectedSpellNames(preset.spellIds, maxPrepared, allSpells, currentDomainSpellIds).map((name, i) => (
+          <span 
+            key={i} 
+            className="text-xs bg-parchment-dark px-2 py-1 rounded text-ink"
+          >
+            {name}
+          </span>
+        ))}
+        {selectionCount < maxPrepared && (
+          <span className="text-xs bg-bronze/20 text-bronze px-2 py-1 rounded">
+            +{maxPrepared - selectionCount} sorts libres
+          </span>
+        )}
+      </div>
+      
+      {/* Bouton Appliquer */}
+      <button
+        onClick={onApply}
+        className="w-full bg-jungle-green hover:bg-jungle-green-light active:bg-jungle-green-dark 
+          text-white font-bold py-3 px-4 rounded-lg 
           transform transition-all duration-100
           hover:shadow-lg hover:scale-[1.02]
           active:scale-[0.98] active:shadow-inner

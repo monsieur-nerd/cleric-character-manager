@@ -34,6 +34,12 @@ export default {
         'forest': '#228B22',
         'royal-purple': '#663399',
         'bronze': '#CD7F32',
+        // Jungle (pour le Chult)
+        'jungle-green': {
+          DEFAULT: '#2D5016',
+          light: '#4A7C2A',
+          dark: '#1A3009',
+        },
       },
       fontFamily: {
         'display': ['Cinzel Decorative', 'serif'],

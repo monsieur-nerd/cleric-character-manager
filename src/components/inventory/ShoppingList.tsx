@@ -13,7 +13,7 @@ import {
   FlameKindling,
   Info
 } from 'lucide-react';
-import { useShoppingListStore, useInventoryStore, useSpellStore } from '@/stores';
+import { useShoppingListStore, useInventoryStore, useSpellStore, useChultStore, isResurrectionComponent } from '@/stores';
 import { formatPrice } from '@/utils/formatters';
 import type { ShoppingListItem, ShoppingPriority } from '@/types';
 import { priorityLabels, priorityColors, componentTypeLabels } from '@/stores/shoppingListStore';
@@ -71,6 +71,7 @@ export function ShoppingList() {
   const inventoryItems = useInventoryStore((state) => state.items);
   const updateQuantity = useInventoryStore((state) => state.updateQuantity);
   const getSpellById = useSpellStore((state) => state.getSpellById);
+  const isInChult = useChultStore((state) => state.isInChult);
   
   const [expandedSections, setExpandedSections] = useState<SectionState>({
     critical: true,
@@ -99,9 +100,14 @@ export function ShoppingList() {
         if (consumableFilter === 'reusable' && isConsumed) return false;
       }
       
+      // Mode Chult : filtrer les composants de résurrection
+      if (isInChult && isResurrectionComponent(item.itemId)) {
+        return false;
+      }
+      
       return true;
     });
-  }, [shoppingItems, classFilter, consumableFilter]);
+  }, [shoppingItems, classFilter, consumableFilter, isInChult]);
 
   // Regroupe les items par priorité
   const itemsByPriority = useMemo(() => {
@@ -270,18 +276,24 @@ export function ShoppingList() {
   return (
     <div className="space-y-4">
       {/* Header */}
-      <div className="card bg-divine-gold/10 border-divine-gold/30">
+      <div className={`card ${isInChult ? 'bg-jungle-green/10 border-jungle-green/30' : 'bg-divine-gold/10 border-divine-gold/30'}`}>
         <div className="flex items-center gap-3">
-          <ShoppingCart className="w-6 h-6 text-divine-gold" />
+          <ShoppingCart className={`w-6 h-6 ${isInChult ? 'text-jungle-green' : 'text-divine-gold'}`} />
           <div className="flex-1">
             <h3 className="font-display text-ink">Liste de courses</h3>
             <p className="text-xs text-ink-muted">
               {totalItemsToBuy > 0 
                 ? `${totalItemsToBuy} unité${totalItemsToBuy > 1 ? 's' : ''} à acheter` 
                 : 'Aucun achat en cours'} • {formatPrice(totalCost)} à dépenser
+              {isInChult && ' • 🌴 Mode Chult actif'}
             </p>
           </div>
-          {totalMissing > 0 && (
+          {isInChult && (
+            <span className="badge bg-jungle-green/20 text-jungle-green border-jungle-green">
+              🌴 Chult
+            </span>
+          )}
+          {totalMissing > 0 && !isInChult && (
             <span className="badge bg-blood-red/20 text-blood-red border-blood-red">
               {totalMissing} manquant
             </span>

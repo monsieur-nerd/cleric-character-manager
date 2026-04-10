@@ -112,6 +112,35 @@ export function InventoryPage() {
         )}
       </div>
       
+      {/* Stats card - always visible above tabs */}
+      <div className="card bg-divine-gold/5">
+        <div className="grid grid-cols-2 gap-4 text-center">
+          <div>
+            <div className="text-xs text-ink-muted">Poids total</div>
+            <div className={`font-display text-lg ${getEncumbranceColor()}`}>
+              {formatWeight(getCarriedWeight())}
+            </div>
+            <div className={`text-xs ${getEncumbranceColor()}`}>
+              {getEncumbranceText()}
+            </div>
+          </div>
+          <div>
+            <div className="text-xs text-ink-muted">Valeur</div>
+            <div className="font-display text-lg text-ink">
+              {formatPrice(getTotalValue())}
+            </div>
+          </div>
+        </div>
+        <div className="mt-2 text-xs text-center border-t border-parchment-dark pt-2">
+          <span className="text-ink-muted">Capacite: </span>
+          <span className="text-forest font-medium">{carryingCapacity.toFixed(1)} kg</span>
+          <span className="text-ink-muted mx-1">|</span>
+          <span className="text-bronze font-medium">{(carryingCapacity * 2).toFixed(1)} kg</span>
+          <span className="text-ink-muted mx-1">|</span>
+          <span className="text-blood-red font-medium">{(carryingCapacity * 3).toFixed(1)} kg</span>
+        </div>
+      </div>
+      
       <div className="flex gap-2 border-b border-parchment-dark">
         {tabs.map(tab => (
           <button
@@ -137,34 +166,6 @@ export function InventoryPage() {
         <CampItemsTab />
       ) : (
         <>
-          <div className="card bg-divine-gold/5">
-            <div className="grid grid-cols-2 gap-4 text-center">
-              <div>
-                <div className="text-xs text-ink-muted">Poids total</div>
-                <div className={`font-display text-lg ${getEncumbranceColor()}`}>
-                  {formatWeight(getCarriedWeight())}
-                </div>
-                <div className={`text-xs ${getEncumbranceColor()}`}>
-                  {getEncumbranceText()}
-                </div>
-              </div>
-              <div>
-                <div className="text-xs text-ink-muted">Valeur</div>
-                <div className="font-display text-lg text-ink">
-                  {formatPrice(getTotalValue())}
-                </div>
-              </div>
-            </div>
-            <div className="mt-2 text-xs text-center border-t border-parchment-dark pt-2">
-              <span className="text-ink-muted">Capacite: </span>
-              <span className="text-forest font-medium">{carryingCapacity.toFixed(1)} kg</span>
-              <span className="text-ink-muted mx-1">|</span>
-              <span className="text-bronze font-medium">{(carryingCapacity * 2).toFixed(1)} kg</span>
-              <span className="text-ink-muted mx-1">|</span>
-              <span className="text-blood-red font-medium">{(carryingCapacity * 3).toFixed(1)} kg</span>
-            </div>
-          </div>
-          
           <ActiveItemEffects 
             effects={activeEffects}
             onRemoveEffect={removeEffect}

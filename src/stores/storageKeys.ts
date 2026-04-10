@@ -12,6 +12,7 @@ export const STORAGE_KEYS = {
   INVENTORY: `${STORAGE_PREFIX}inventory-store-${STORAGE_VERSION}`,
   PRESET: `${STORAGE_PREFIX}preset-store-${STORAGE_VERSION}`,
   SHOPPING_LIST: `${STORAGE_PREFIX}shopping-list-store-${STORAGE_VERSION}`,
+  CHULT_MODE: `${STORAGE_PREFIX}chult-mode-${STORAGE_VERSION}`,
 } as const;
 
 /**

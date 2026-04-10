@@ -44,6 +44,36 @@ export const defaultPresets: SpellPreset[] = [
     isDefault: true,
   },
   {
+    id: 'kimi-optimal-chult',
+    name: '🌴 Choix Optimal dans le Chult',
+    icon: 'palm',
+    description: 'Version adaptée au Chult : sans résurrection (impossible dans cette région) mais avec Esprits gardiens pour le contrôle de zone',
+    // Ordre de priorité : sorts sans concentration d'abord (CON 10), puis utilitaires
+    // Remplace retour-a-la-vie par esprits-gardiens (contrôle de zone puissant)
+    spellIds: [
+      // N3 - Priorité maximale (instantanés ou pré-combat)
+      'esprits-gardiens',                   // Contrôle de zone + dégâts - CONCENTRATION (excellent dans la jungle)
+      'dissipation-de-la-magie',            // Annuler sorts ennemis - instantané
+      'lueur-despoir',                      // Heal zone + buff CA - concentration OK (loin combat)
+      // N2 - Priorité haute (sans concentration pour CON 10)
+      'prière-de-guérison',                 // Heal efficace - instantané
+      'aide',                               // Buff PV max 8h - pas concentration
+      'lien-de-protection',                 // Protection allié 1h - pas concentration
+      'arme-spirituelle',                   // Dégâts bonus - SORT DE DOMAINE (gratuit)
+      // N1 - Priorité moyenne
+      'soins',                              // Heal fiable - instantané
+      'éclair-guidé',                       // Dégâts + avantage - instantané
+      'bénédiction',                        // Avantage attaques - concentration mais essentiel
+      'sanctuaire',                         // Protection urgence 1 min - pas concentration
+      // Sorts supplémentaires pour haute Sagesse
+      'mot-de-guérison-de-groupe',          // Heal multi-cibles - instantané
+      'cécité-surdité',                     // Handicap ennemi - pas concentration
+      'protection-contre-une-énergie',      // Résistance 1h - concentration pré-combat
+      'délivrance-des-malédictions',        // Retirer malédictions - instantané
+    ],
+    isDefault: true,
+  },
+  {
     id: 'survie',
     name: '🏥 Mode Survie',
     icon: 'heart',
