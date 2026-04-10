@@ -119,47 +119,11 @@ function App() {
     }
   }, [isLoading, setDomain, setLevel]);
   
-  // Synchronise les sorts préparés une seule fois après le chargement initial
-  // Cela nettoie les IDs obsolètes sans créer de boucle infinie
-  // Utilise spellStore comme source de vérité (valeurs persistées)
-  const hasSyncedSpells = useRef(false);
-  useEffect(() => {
-    if (!isLoading && allSpells.length > 0 && !hasSyncedSpells.current) {
-      hasSyncedSpells.current = true;
-      
-      // Récupère les valeurs depuis spellStore (persistées)
-      const spellState = useSpellStore.getState();
-      const spellStoreDomainId = spellState.currentDomainId;
-      const spellStoreLevel = spellState.characterLevel;
-      
-      if (!spellStoreDomainId || !spellStoreLevel) {
-        console.log('[App] Pas de données spellStore pour filtrer les sorts');
-        return;
-      }
-      
-      const currentDomain = CLERIC_DOMAINS.find(d => d.id === spellStoreDomainId);
-      const currentDomainSpellIds = currentDomain?.spellIds || [];
-      const maxSpellLevel = Math.min(5, Math.floor((spellStoreLevel + 1) / 2));
-      
-      // Filtre les sorts préparés :
-      // 1. Supprime les IDs de sorts qui n'existent pas (obsolètes)
-      // 2. Supprime les sorts de domaine d'autres domaines
-      // 3. Supprime les sorts au-delà du niveau accessible
-      const validSpellIds = preparedSpellIds.filter(id => {
-        const spell = allSpells.find(s => s.id === id);
-        if (!spell) return false; // Sort inexistant (ID obsolète)
-        if (spell.isDomainSpell && !currentDomainSpellIds.includes(id)) return false; // Domaine différent
-        if (spell.level > maxSpellLevel) return false; // Niveau trop élevé
-        return true;
-      });
-      
-      // Si des changements sont nécessaires, met à jour
-      if (validSpellIds.length !== preparedSpellIds.length) {
-        console.log('[App] Nettoyage des sorts préparés:', preparedSpellIds.length, '->', validSpellIds.length);
-        prepareMultipleSpells(validSpellIds, character.maxPreparedSpells);
-      }
-    }
-  }, [isLoading, allSpells, preparedSpellIds, prepareMultipleSpells, character?.maxPreparedSpells]);
+  // NOTE: Le nettoyage automatique des sorts préparés a été désactivé car il causait
+  // la perte des données persistantes au rechargement de la page. Les données sont
+  // maintenant gérées directement par Zustand persist sans intervention au démarrage.
+  // Si un nettoyage est nécessaire (changement de domaine), il doit être fait manuellement
+  // ou via une action explicite de l'utilisateur.
   
   // Vérifie la migration une fois le chargement terminé
   useEffect(() => {
