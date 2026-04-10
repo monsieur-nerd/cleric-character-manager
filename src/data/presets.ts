@@ -47,15 +47,15 @@ export const defaultPresets: SpellPreset[] = [
     id: 'survie',
     name: '🏥 Mode Survie',
     icon: 'heart',
-    description: 'Maximum de soins et protection pour des combats difficiles (Lanceur de Guerre: avantage CON)',
+    description: 'Maximum de soins et protection pour des combats difficiles',
     spellIds: [
-      // N3 - Concentration puissante avec Lanceur de Guerre
+      // N3 - Concentration puissante
       'lueur-despoir',                      // Heal zone + buff CA - CONCENTRATION (75% réussite)
       'retour-a-la-vie',                    // Ultime recours - instantané
       'mot-de-guérison-de-groupe',          // Heal 6 cibles - instantané
       // N2 - Contrôle et protection
       'prière-de-guérison',                 // Heal zone efficace - instantané
-      'immobilisation-de-personne',         // PARALYSIE - CONCENTRATION (Lanceur de Guerre)
+      'immobilisation-de-personne',         // PARALYSIE - CONCENTRATION
       'aide',                               // Buff PV max 8h - pas concentration
       'protection-contre-le-poison',        // Immun poison 1h - pas concentration
       // N1 - Heal et protection
@@ -73,9 +73,9 @@ export const defaultPresets: SpellPreset[] = [
     id: 'combat-agressif',
     name: '⚔️ Combat Agressif',
     icon: 'sword',
-    description: 'Dégâts, contrôle et buffs offensifs (Lanceur de Guerre: concentration viable)',
+    description: 'Dégâts, contrôle et buffs offensifs pour éliminer les ennemis',
     spellIds: [
-      // N3 - Buffs de combat avec concentration (Lanceur de Guerre)
+      // N3 - Buffs de combat avec concentration
       'lueur-despoir',                      // Buff CA + heal zone - CONCENTRATION
       'dissipation-de-la-magie',            // Annuler buffs - instantané
       'retour-a-la-vie',                    // Sécurité - instantané
@@ -103,11 +103,11 @@ export const defaultPresets: SpellPreset[] = [
     id: 'vs-fire',
     name: '🔥 vs Feu',
     icon: 'flame',
-    description: 'Dragons de feu, démons, élémentaires de feu (Lanceur de Guerre: antimage viable)',
+    description: 'Dragons de feu, démons, élémentaires de feu, sorts de feu',
     spellIds: [
       // N3 - Protection et antimage
-      'protection-contre-une-énergie',      // Résistance feu - CONCENTRATION (Lanceur Guerre)
-      'silence',                            // ANTIFEU/ANTISOUFFLE - CONCENTRATION (Lanceur Guerre)
+      'protection-contre-une-énergie',      // Résistance feu - CONCENTRATION
+      'silence',                            // ANTIFEU/ANTISOUFFLE - CONCENTRATION
       'dissipation-de-la-magie',            // Annuler souffle - instantané
       'lueur-despoir',                      // Heal zone - CONCENTRATION
       'retour-a-la-vie',                    // Au cas où - instantané
@@ -127,7 +127,7 @@ export const defaultPresets: SpellPreset[] = [
     id: 'vs-cold',
     name: '❄️ vs Froid',
     icon: 'snowflake',
-    description: 'Dragons de glace, élémentaires de glace (Lanceur de Guerre: buffs viables)',
+    description: 'Dragons de glace, élémentaires de glace, sorts de froid, toundra',
     spellIds: [
       // N3 - Protection et buffs avec concentration
       'protection-contre-une-énergie',      // Résistance froid - CONCENTRATION
@@ -151,11 +151,11 @@ export const defaultPresets: SpellPreset[] = [
     id: 'vs-lightning',
     name: '⚡ vs Foudre',
     icon: 'zap',
-    description: 'Dragons bleus, tempêtes, élémentaires d\'air (Lanceur de Guerre: silence antimage viable)',
+    description: 'Dragons bleus, tempêtes, élémentaires d\'air, sorts électriques',
     spellIds: [
       // N3 - Protection et antimage
       'protection-contre-une-énergie',      // Résistance foudre - CONCENTRATION
-      'silence',                            // ANTIFOUDRE/ANTIMAGE - CONCENTRATION (Lanceur Guerre)
+      'silence',                            // ANTIFOUDRE/ANTIMAGE - CONCENTRATION
       'lueur-despoir',                      // Heal zone - CONCENTRATION
       'mot-de-guérison-de-groupe',          // Heal zone - instantané
       'dissipation-de-la-magie',            // Annuler foudre - instantané
@@ -175,7 +175,7 @@ export const defaultPresets: SpellPreset[] = [
     id: 'vs-acid',
     name: '🧪 vs Acide',
     icon: 'droplet',
-    description: 'Slimes, blobs noirs, dragons noirs (Lanceur de Guerre: immobilisation viable)',
+    description: 'Slimes, blobs noirs, dragons noirs, vers de pourriture, sorts d\'acide',
     spellIds: [
       // N3 - Protection et buffs
       'protection-contre-une-énergie',      // Résistance acide - CONCENTRATION
@@ -199,11 +199,11 @@ export const defaultPresets: SpellPreset[] = [
     id: 'vs-thunder',
     name: '🔊 vs Tonnerre',
     icon: 'cloud-lightning',
-    description: 'Géants des tempêtes, élémentaires d\'air (Lanceur de Guerre: silence antimage viable)',
+    description: 'Géants des tempêtes, élémentaires d\'air, sorts de tonnerre, vibrations',
     spellIds: [
       // N3 - Protection et antimage
       'protection-contre-une-énergie',      // Résistance tonnerre - CONCENTRATION
-      'silence',                            // ANTITONNERRE - CONCENTRATION (Lanceur Guerre)
+      'silence',                            // ANTITONNERRE - CONCENTRATION
       'lueur-despoir',                      // Heal zone + buff CA - CONCENTRATION
       'dissipation-de-la-magie',            // Annuler tonnerre - instantané
       'retour-a-la-vie',                    // Au cas où - instantané
@@ -223,7 +223,7 @@ export const defaultPresets: SpellPreset[] = [
     id: 'vs-poison',
     name: '☠️ vs Poison',
     icon: 'venom',
-    description: 'Insectes géants, araignées, serpents (Lanceur de Guerre: buffs viables)',
+    description: 'Insectes géants, araignées, serpents, plantes carnivores, assassins',
     spellIds: [
       // N2 - Immunités (pas de concentration)
       'protection-contre-le-poison',        // Immunité poison - PAS CONCENTRATION
@@ -247,7 +247,7 @@ export const defaultPresets: SpellPreset[] = [
     id: 'vs-elements',
     name: '🛡️ vs Multi-Éléments',
     icon: 'shield',
-    description: 'Environnements variés, élémentaires multiples (Lanceur de Guerre: silence viable)',
+    description: 'Environnements variés, élémentaires multiples, sorts divers',
     spellIds: [
       // N3 - Protection et antimage
       'protection-contre-une-énergie',      // Résistance choix - CONCENTRATION
@@ -271,7 +271,7 @@ export const defaultPresets: SpellPreset[] = [
     id: 'vs-undead',
     name: '💀 vs Morts-Vivants',
     icon: 'skull',
-    description: 'Lumière, protection et soins contre nécromanciens (Lanceur de Guerre: contrôle viable)',
+    description: 'Lumière, protection et soins contre nécromanciens et morts-vivants',
     spellIds: [
       // N3 - Lumière et protection
       'lumière-du-jour',                    // Désavantage morts-vivants - pas concentration
@@ -294,9 +294,9 @@ export const defaultPresets: SpellPreset[] = [
     id: 'support',
     name: '🛡️ Support & Buffs',
     icon: 'shield',
-    description: 'Maximiser les alliés : buffs, protection et avantages (Lanceur de Guerre: buffs concentrés viables)',
+    description: 'Maximiser les alliés : buffs, protection et avantages',
     spellIds: [
-      // N3 - Buffs de groupe avec concentration (Lanceur de Guerre)
+      // N3 - Buffs de groupe avec concentration
       'lueur-despoir',                      // Buff CA équipe - CONCENTRATION
       'bénédiction',                        // Avantage attaques équipe - CONCENTRATION
       // N2 - Buffs sans concentration
@@ -342,14 +342,14 @@ export const defaultPresets: SpellPreset[] = [
     id: 'anti-mage',
     name: '📜 Anti-Mage',
     icon: 'scroll',
-    description: 'Contre les lanceurs de sorts (Lanceur de Guerre: silence et contrôle viables)',
+    description: 'Contre les lanceurs de sorts et créatures magiques',
     spellIds: [
       // N3 - Antimage
-      'silence',                            // ZONE ANTIMAGE - CONCENTRATION (Lanceur Guerre)
+      'silence',                            // ZONE ANTIMAGE - CONCENTRATION
       'dissipation-de-la-magie',            // Annuler tout sort - instantané
       'lueur-despoir',                      // Sustain combat - CONCENTRATION
       // N2 - Contrôle et protection
-      'immobilisation-de-personne',         // STOP lanceur - CONCENTRATION (Lanceur Guerre)
+      'immobilisation-de-personne',         // STOP lanceur - CONCENTRATION
       'zone-de-vérité',                     // Interroger prisonnier - CONCENTRATION
       'délivrance-des-malédictions',        // Retirer malédictions - instantané
       'prière-de-guérison',                 // Heal - instantané
@@ -450,15 +450,15 @@ export const generateOptimalPreset = (
 
 export const domainPresets: Record<string, SpellPreset[]> = {
   // Domaine de la Guerre - Focus sur les buffs offensifs et le combat
-  // NOTE: Avec Lanceur de Guerre, la concentration est viable (avantage JS CON)
+  // NOTE: Les sorts de domaine sont gratuits et toujours préparés
   war: [
     {
       id: 'war-tactician',
       name: '⚔️ Tacticien de Guerre',
       icon: 'sword',
-      description: 'Buffs d\'armes et contrôle (Lanceur de Guerre: buffs concentrés viables)',
+      description: 'Buffs d\'armes et avantage pour dominer le champ de bataille',
       spellIds: [
-        // Sorts NON-DOMAINE avec concentration (Lanceur de Guerre)
+        // Sorts NON-DOMAINE avec concentration
         'bénédiction',                    // Avantage attaques groupe - CONCENTRATION
         'immobilisation-de-personne',     // PARALYSIE cible - CONCENTRATION (contrôle)
         'dissipation-de-la-magie',        // Annuler buffs - instantané
@@ -478,9 +478,9 @@ export const domainPresets: Record<string, SpellPreset[]> = {
       id: 'war-divine-striker',
       name: '🔨 Frappe Divine',
       icon: 'hammer',
-      description: 'Maximiser les dégâts en mêlée (Lanceur de Guerre: buffs concentrés viables)',
+      description: 'Maximiser les dégâts en mêlée avec armes spirituelles',
       spellIds: [
-        // Sorts NON-DOMAINE avec concentration (Lanceur de Guerre)
+        // Sorts NON-DOMAINE avec concentration
         'bénédiction',                    // Avantage attaques - CONCENTRATION
         'fléau',                          // Malus ennemis - CONCENTRATION
         'dissipation-de-la-magie',        // Contre protections - instantané
