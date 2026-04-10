@@ -135,10 +135,12 @@ export function PreparationPage() {
     ...domainPresets
   ];
   
-  // Debug: vérifie que le preset est bien chargé
+  // Debug: vérifie que le preset est bien chargé (développement uniquement)
   const optimalPreset = allPresets.find(p => p.id === 'kimi-optimal');
-  console.log('[PreparationPage] Preset version:', PRESET_VERSION);
-  console.log('[PreparationPage] Choix Optimal spells:', optimalPreset?.spellIds);
+  if (import.meta.env.DEV) {
+    console.log('[PreparationPage] Preset version:', PRESET_VERSION);
+    console.log('[PreparationPage] Choix Optimal spells:', optimalPreset?.spellIds);
+  }
   
   const allSpells = useSpellStore((state) => state.allSpells);
   const preparedSpellIds = useSpellStore((state) => state.preparedSpellIds);

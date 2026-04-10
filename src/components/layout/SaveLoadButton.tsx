@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useCallback, useEffect } from 'react';
 import { Download, Upload, Check, AlertCircle, X } from 'lucide-react';
 import { getAllStorageKeys, STORAGE_VERSION } from '@/stores/storageKeys';
 import { syncStoresAfterRestore } from '@/stores';
@@ -16,15 +16,25 @@ interface ImportConfirm {
 
 export function SaveLoadButton() {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const toastTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [toast, setToast] = useState<Toast | null>(null);
   const [importConfirm, setImportConfirm] = useState<ImportConfirm | null>(null);
 
-  const showToast = (message: string, type: Toast['type'] = 'success', duration = 3000) => {
-    setToast({ message, type });
-    if (duration > 0) {
-      setTimeout(() => setToast(null), duration);
+  const showToast = useCallback((message: string, type: Toast['type'] = 'success', duration = 3000) => {
+    // Clear previous timeout if exists
+    if (toastTimeoutRef.current) {
+      clearTimeout(toastTimeoutRef.current);
     }
-  };
+    
+    setToast({ message, type });
+    
+    if (duration > 0) {
+      toastTimeoutRef.current = setTimeout(() => {
+        setToast(null);
+        toastTimeoutRef.current = null;
+      }, duration);
+    }
+  }, []);
 
   // Export avec métadonnées
   const handleExport = () => {
@@ -192,6 +202,15 @@ export function SaveLoadButton() {
     setImportConfirm(null);
     showToast('Import annulé', 'warning');
   };
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (toastTimeoutRef.current) {
+        clearTimeout(toastTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="relative flex items-center gap-1">

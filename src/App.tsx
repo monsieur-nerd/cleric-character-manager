@@ -110,29 +110,34 @@ function App() {
     }
   }, [isLoading])
   
-  // Synchronise le domaine et le niveau du spellStore vers characterStore au démarrage
-  // C'est le spellStore qui a les valeurs persistantes (après refresh)
-  const hasSyncedFromSpellStore = useRef(false);
+  // Synchronisation unifiée des stores - le characterStore est la source de vérité
+  // Cette synchronisation ne s'exécute qu'une seule fois après le chargement
+  const hasSynced = useRef(false);
   useEffect(() => {
-    if (!hasSyncedFromSpellStore.current && !isLoading) {
-      hasSyncedFromSpellStore.current = true;
-      
-      // Récupère les valeurs directement depuis le store (pas via hooks réactifs)
-      const spellState = useSpellStore.getState();
-      const charState = useCharacterStore.getState();
-      
-      // Synchronise vers characterStore si différent
-      if (spellState.currentDomainId && spellState.currentDomainId !== charState.character.domain?.id) {
-        console.log('[App] Synchronisation domaine depuis spellStore:', spellState.currentDomainId);
-        setDomain(spellState.currentDomainId);
-      }
-      
-      if (spellState.characterLevel && spellState.characterLevel !== charState.character.level) {
-        console.log('[App] Synchronisation niveau depuis spellStore:', spellState.characterLevel);
-        setLevel(spellState.characterLevel);
-      }
+    if (hasSynced.current || isLoading) return;
+    hasSynced.current = true;
+    
+    // Récupère les valeurs actuelles
+    const charState = useCharacterStore.getState();
+    const spellState = useSpellStore.getState();
+    
+    // Synchronise characterStore → spellStore (source de vérité: characterStore)
+    if (charState.character.domain?.id !== spellState.currentDomainId) {
+      spellState.setCurrentDomain(charState.character.domain?.id || null);
     }
-  }, [isLoading, setDomain, setLevel]);
+    
+    if (charState.character.level !== spellState.characterLevel) {
+      spellState.setCharacterLevel(charState.character.level);
+    }
+    
+    // Log de debug uniquement en développement
+    if (import.meta.env.DEV) {
+      console.log('[App] Stores synchronisés:', {
+        domain: charState.character.domain?.id,
+        level: charState.character.level
+      });
+    }
+  }, [isLoading]);
   
   // NOTE: Le nettoyage automatique des sorts préparés a été désactivé car il causait
   // la perte des données persistantes au rechargement de la page. Les données sont
@@ -158,13 +163,15 @@ function App() {
       const isWrongWeight = character.weight !== CHARACTER_IDENTITY.weight;
       const isWrongAvatar = character.avatar !== CHARACTER_IDENTITY.avatar;
       
-      console.log('Migration check:', { 
-        name: character.name, 
-        isWrongName, 
-        isWrongLevel, 
-        isWrongWisdom,
-        expectedName: CHARACTER_IDENTITY.name 
-      });
+      if (import.meta.env.DEV) {
+        console.log('Migration check:', { 
+          name: character.name, 
+          isWrongName, 
+          isWrongLevel, 
+          isWrongWisdom,
+          expectedName: CHARACTER_IDENTITY.name 
+        });
+      }
       
       if (isWrongName || isWrongLevel || isWrongWisdom || isWrongAge || isWrongWeight || isWrongAvatar) {
         setNeedsMigration(true);
