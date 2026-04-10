@@ -458,10 +458,10 @@ export const useInventoryStore = create<InventoryState>()(
     }),
     {
       name: STORAGE_KEYS.INVENTORY,
-      version: 5, // Incrémenté pour corriger le calcul du poids (exclure montures) et réinitialiser les items
+      version: 6, // Incrémenté pour supprimer les doublons d'équipement
       migrate: (persistedState: unknown, version) => {
         // Si la version est ancienne, on réinitialise les items (ils seront rechargés depuis App.tsx)
-        if (version < 5) {
+        if (version < 6) {
           return { items: [] } as unknown as InventoryState;
         }
         return persistedState as InventoryState;
