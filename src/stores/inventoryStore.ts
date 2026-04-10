@@ -458,13 +458,10 @@ export const useInventoryStore = create<InventoryState>()(
     }),
     {
       name: STORAGE_KEYS.INVENTORY,
-      version: 6, // Incrémenté pour supprimer les doublons d'équipement
+      version: 7, // Réinitialisation forcée pour corriger le poids
       migrate: (persistedState: unknown, version) => {
-        // Si la version est ancienne, on réinitialise les items (ils seront rechargés depuis App.tsx)
-        if (version < 6) {
-          return { items: [] } as unknown as InventoryState;
-        }
-        return persistedState as InventoryState;
+        // Force reset - on recharge tout depuis les données sources
+        return { items: [] } as unknown as InventoryState;
       },
       partialize: (state) => ({
         items: state.items,
