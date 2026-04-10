@@ -388,7 +388,7 @@ export const STARTING_EQUIPMENT: Partial<EquipmentItem>[] = [
     totalPrice: 750,
     unitWeight: 20,
     totalWeight: 20,
-    isCarried: true,
+    isCarried: false,
     isEquipped: false,
     armorClass: 15,
     armorType: 'intermédiaire',
@@ -468,7 +468,7 @@ export const STARTING_EQUIPMENT: Partial<EquipmentItem>[] = [
     totalPrice: 12,
     unitWeight: 12,
     totalWeight: 12,
-    isCarried: true,
+    isCarried: false,
   },
   {
     id: 'bougies',

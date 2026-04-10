@@ -458,7 +458,7 @@ export const useInventoryStore = create<InventoryState>()(
     }),
     {
       name: STORAGE_KEYS.INVENTORY,
-      version: 8, // Suppression des doublons d'équipement
+      version: 9, // Armure lourde et paquetage laissés au camp
       migrate: (persistedState: unknown, version) => {
         // Force reset - on recharge tout depuis les données sources
         return { items: [] } as unknown as InventoryState;
