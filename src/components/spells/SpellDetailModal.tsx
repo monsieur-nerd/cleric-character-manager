@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import { X, Clock, Target, Sparkles, BookOpen, Zap, Shield, AlertCircle, Mic } from 'lucide-react';
 import type { Spell } from '@/types';
 import { useInventoryStore } from '@/stores';
 import { useSpellIncantation, useCanHaveIncantation } from '@/hooks/useSpellIncantation';
+import { ConcentrationHelpModal } from './ConcentrationHelpModal';
 
 interface SpellDetailModalProps {
   spell: Spell;
@@ -20,6 +22,7 @@ export function SpellDetailModal({
   onTogglePrepare,
   isDomainSpell,
 }: SpellDetailModalProps) {
+  const [showConcentrationHelp, setShowConcentrationHelp] = useState(false);
   const hasComponent = useInventoryStore((state) => state.hasComponentForSpell(spell.id));
   const componentData = useInventoryStore((state) => state.getComponentForSpell(spell.id));
   const incantation = useSpellIncantation(spell);
@@ -112,9 +115,13 @@ export function SpellDetailModal({
               </span>
             )}
             {spell.concentration && (
-              <span className="badge bg-bronze/20 text-bronze border border-bronze">
+              <button
+                onClick={() => setShowConcentrationHelp(true)}
+                className="badge bg-bronze/20 text-bronze border border-bronze hover:bg-bronze/30 transition-colors cursor-pointer"
+                title="Cliquez pour voir les règles de concentration"
+              >
                 Concentration
-              </span>
+              </button>
             )}
           </div>
 
@@ -280,6 +287,12 @@ export function SpellDetailModal({
           )}
         </div>
       </div>
+      
+      {/* Modal d'aide concentration */}
+      <ConcentrationHelpModal
+        isOpen={showConcentrationHelp}
+        onClose={() => setShowConcentrationHelp(false)}
+      />
     </div>
   );
 }

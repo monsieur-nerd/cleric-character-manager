@@ -3,6 +3,7 @@ import { Check, Sparkles, Clock, Focus, AlertCircle, Shield } from 'lucide-react
 import type { Spell } from '@/types';
 import { useInventoryStore } from '@/stores';
 import { SpellDetailModal } from './SpellDetailModal';
+import { ConcentrationHelpModal } from './ConcentrationHelpModal';
 import { formatCastingTimeShort } from '@/utils/formatters';
 
 interface SpellCardProps {
@@ -21,6 +22,7 @@ export function SpellCard({
   isDomainSpell,
 }: SpellCardProps) {
   const [showDetail, setShowDetail] = useState(false);
+  const [showConcentrationHelp, setShowConcentrationHelp] = useState(false);
   const hasComponent = useInventoryStore((state) => state.hasComponentForSpell(spell.id));
   const summary = spell.summary;
   
@@ -146,13 +148,17 @@ export function SpellCard({
               )}
               
               {spell.concentration && (
-                <span 
-                  className="flex items-center gap-1 text-royal-purple"
-                  title="Concentration - Le sort se termine si vous lancez un autre sort de concentration ou subissez des dégâts"
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowConcentrationHelp(true);
+                  }}
+                  className="flex items-center gap-1 text-royal-purple hover:text-blood-red transition-colors cursor-pointer"
+                  title="Cliquez pour voir les règles de concentration"
                 >
                   <Focus className="w-3 h-3" />
                   Conc.
-                </span>
+                </button>
               )}
               
               {missingComponent && (
@@ -195,6 +201,12 @@ export function SpellCard({
         isPrepared={isPrepared}
         onTogglePrepare={showActions ? onTogglePrepare : undefined}
         isDomainSpell={isDomain}
+      />
+      
+      {/* Modal d'aide concentration */}
+      <ConcentrationHelpModal
+        isOpen={showConcentrationHelp}
+        onClose={() => setShowConcentrationHelp(false)}
       />
     </>
   );
