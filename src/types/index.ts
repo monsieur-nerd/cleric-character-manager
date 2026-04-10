@@ -157,6 +157,7 @@ export interface EquipmentItem {
   // État
   isCarried: boolean;
   isEquipped?: boolean;
+  isAtCamp?: boolean;
   
   // Pour composantes
   isComponent?: boolean;

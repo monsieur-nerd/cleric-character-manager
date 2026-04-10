@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Package, Plus, Minus, AlertCircle, ShoppingCart, PlusCircle, Sword, CheckCircle2 } from 'lucide-react';
+import { Package, Plus, Minus, AlertCircle, ShoppingCart, PlusCircle, Sword, CheckCircle2, Tent, ArrowRight, ArrowLeft, MapPin } from 'lucide-react';
 import { useInventoryStore } from '@/stores';
 import { useCharacterStore } from '@/stores';
 import { formatWeight, formatPrice } from '@/utils/formatters';
@@ -8,6 +8,7 @@ import { AddItemModal } from '@/components/inventory/AddItemModal';
 import { CombatEquipmentTab } from '@/components/inventory/CombatEquipmentTab';
 
 import { ActiveItemEffects } from '@/components/inventory/ActiveItemEffects';
+import { CampItemsTab } from '@/components/inventory/CampItemsTab';
 import { useItemEffects } from '@/hooks/useItemEffects';
 import type { EquipmentItem } from '@/types';
 
@@ -28,12 +29,13 @@ const categories = [
 const tabs = [
   { id: 'inventory', label: 'Inventaire', icon: Package },
   { id: 'combat', label: 'Armement', icon: Sword },
+  { id: 'camp', label: 'Au camp', icon: Tent },
   { id: 'shopping', label: 'A acheter', icon: ShoppingCart },
 ];
 
 export function InventoryPage() {
   const [selectedCategory, setSelectedCategory] = useState('Tous');
-  const [activeTab, setActiveTab] = useState<'inventory' | 'combat' | 'shopping'>('inventory');
+  const [activeTab, setActiveTab] = useState<'inventory' | 'combat' | 'camp' | 'shopping'>('inventory');
   const [showAddModal, setShowAddModal] = useState(false);
 
   
@@ -42,6 +44,7 @@ export function InventoryPage() {
   
   const items = useInventoryStore((state) => state.items);
   const updateQuantity = useInventoryStore((state) => state.updateQuantity);
+  const toggleAtCamp = useInventoryStore((state) => state.toggleAtCamp);
   const getTotalValue = useInventoryStore((state) => state.getTotalValue);
   const getCarriedWeight = useInventoryStore((state) => state.getCarriedWeight);
   const equippedItems = useInventoryStore((state) => state.getEquippedItems());
@@ -113,7 +116,7 @@ export function InventoryPage() {
         {tabs.map(tab => (
           <button
             key={tab.id}
-            onClick={() => setActiveTab(tab.id as 'inventory' | 'combat' | 'shopping')}
+            onClick={() => setActiveTab(tab.id as 'inventory' | 'combat' | 'camp' | 'shopping')}
             className={`flex items-center gap-2 px-4 py-2 font-ui text-sm border-b-2 transition-colors ${
               activeTab === tab.id
                 ? 'border-divine-gold text-ink'
@@ -130,6 +133,8 @@ export function InventoryPage() {
         <ShoppingList />
       ) : activeTab === 'combat' ? (
         <CombatEquipmentTab />
+      ) : activeTab === 'camp' ? (
+        <CampItemsTab />
       ) : (
         <>
           <div className="card bg-divine-gold/5">
@@ -213,16 +218,27 @@ export function InventoryPage() {
                 
                 <div className="space-y-2">
                   {typeItems.map((item: EquipmentItem) => (
-                    <div key={item.id} className={`card p-3 ${item.isEquipped ? 'border-forest/30 bg-forest/5' : ''}`}>
+                    <div 
+                      key={item.id} 
+                      className={`card p-3 ${item.isEquipped ? 'border-forest/30 bg-forest/5' : ''} ${item.isAtCamp ? 'opacity-60 bg-parchment-dark/20' : ''}`}
+                    >
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="flex items-center gap-2 min-w-0">
-                            <span className="font-display text-ink break-words">{item.name}</span>
+                            <span className={`font-display break-words ${item.isAtCamp ? 'text-ink-muted' : 'text-ink'}`}>
+                              {item.name}
+                            </span>
                             {item.isEquipped && (
                               <span className="badge badge-success text-xs flex-shrink-0">Equipe</span>
                             )}
                             {item.isComponent && (
                               <span className="badge badge-type text-xs flex-shrink-0">Comp.</span>
+                            )}
+                            {item.isAtCamp && (
+                              <span className="badge bg-parchment-dark/50 text-ink-muted text-xs flex-shrink-0 flex items-center gap-1">
+                                <MapPin className="w-3 h-3" />
+                                Au camp
+                              </span>
                             )}
                           </div>
                           
@@ -266,7 +282,27 @@ export function InventoryPage() {
                         <span className="text-xs text-ink-muted">
                           Total: {formatPrice(item.totalPrice)} - {formatWeight(item.totalWeight)}
                         </span>
-
+                        
+                        <button
+                          onClick={() => toggleAtCamp(item.id)}
+                          className={`flex items-center gap-1 px-2 py-1 rounded text-xs transition-colors
+                            ${item.isAtCamp 
+                              ? 'text-forest border border-forest/30 hover:bg-forest/10' 
+                              : 'text-blood-red border border-blood-red/30 hover:bg-blood-red/10'
+                            }`}
+                        >
+                          {item.isAtCamp ? (
+                            <>
+                              <ArrowLeft className="w-3 h-3" />
+                              Reprendre
+                            </>
+                          ) : (
+                            <>
+                              <ArrowRight className="w-3 h-3" />
+                              Laisser
+                            </>
+                          )}
+                        </button>
                       </div>
                     </div>
                   ))}

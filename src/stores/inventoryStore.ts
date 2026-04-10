@@ -19,6 +19,11 @@ interface InventoryState {
   equipItem: (itemId: string) => { success: boolean; message?: string; unequippedItems?: string[] };
   unequipItem: (itemId: string) => void;
   
+  // Système "Au camp"
+  toggleAtCamp: (itemId: string) => void;
+  takeAllFromCamp: () => void;
+  getCampItems: () => EquipmentItem[];
+  
   // Sélecteurs
   getItemById: (id: string) => EquipmentItem | undefined;
   getItemsByType: (type: string) => EquipmentItem[];
@@ -452,13 +457,33 @@ export const useInventoryStore = create<InventoryState>()(
       
       getCarriedWeight: () => {
         return get().items
-          .filter(item => item.isCarried && item.type !== 'Monture')
+          .filter(item => item.isCarried && item.type !== 'Monture' && !item.isAtCamp)
           .reduce((sum, item) => sum + (item.totalWeight || 0), 0);
+      },
+      
+      toggleAtCamp: (itemId: string) => {
+        set((state) => ({
+          items: state.items.map((item) =>
+            item.id === itemId ? { ...item, isAtCamp: !item.isAtCamp } : item
+          ),
+        }));
+      },
+      
+      takeAllFromCamp: () => {
+        set((state) => ({
+          items: state.items.map((item) =>
+            item.isAtCamp ? { ...item, isAtCamp: false } : item
+          ),
+        }));
+      },
+      
+      getCampItems: () => {
+        return get().items.filter((item) => item.isAtCamp);
       },
     }),
     {
       name: STORAGE_KEYS.INVENTORY,
-      version: 9, // Armure lourde et paquetage laissés au camp
+      version: 10, // Ajout système "Au camp"
       migrate: (persistedState: unknown, version) => {
         // Force reset - on recharge tout depuis les données sources
         return { items: [] } as unknown as InventoryState;
