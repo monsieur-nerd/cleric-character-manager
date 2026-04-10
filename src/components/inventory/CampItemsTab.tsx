@@ -20,29 +20,31 @@ export function CampItemsTab() {
 
   return (
     <div className="space-y-4 animate-fade-in">
-      {/* Header avec bouton reprendre tout */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-divine-gold/20 flex items-center justify-center">
-            <Tent className="w-5 h-5 text-divine-gold-dark" />
+      {/* Carte synthétique des objets au camp */}
+      <div className="card bg-divine-gold/5">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-divine-gold/20 flex items-center justify-center">
+              <Tent className="w-5 h-5 text-divine-gold-dark" />
+            </div>
+            <div>
+              <h3 className="font-display text-ink">Objets au camp</h3>
+              <p className="text-xs text-ink-muted">
+                {campItems.length} objet{campItems.length > 1 ? 's' : ''} • {formatWeight(totalCampWeight)} laissé au camp
+              </p>
+            </div>
           </div>
-          <div>
-            <h3 className="font-display text-ink">Objets au camp</h3>
-            <p className="text-xs text-ink-muted">
-              {campItems.length} objet{campItems.length > 1 ? 's' : ''} • {formatWeight(totalCampWeight)} au total
-            </p>
-          </div>
+          
+          {campItems.length > 0 && (
+            <button
+              onClick={takeAllFromCamp}
+              className="btn-primary flex items-center gap-2 text-sm"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Reprendre tout
+            </button>
+          )}
         </div>
-        
-        {campItems.length > 0 && (
-          <button
-            onClick={takeAllFromCamp}
-            className="btn-primary flex items-center gap-2 text-sm"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Reprendre tout
-          </button>
-        )}
       </div>
 
       {/* Liste des items au camp */}
