@@ -4,6 +4,8 @@ import { Sparkles, Zap, Brain, AlertCircle, Shield, Edit3, Sword, Stars, User, C
 import { useSpellStore, useCharacterStore, useModalStore } from '@/stores';
 import { useItemEffects } from '@/hooks';
 import { SkillsFeatsModal } from '@/components/skills/SkillsFeatsModal';
+import { SavingThrowHelpModal } from '@/components/character/SavingThrowHelpModal';
+import { CollapsibleSection } from '@/components/ui/CollapsibleSection';
 import { BACKGROUND_TRAITS } from '@/data/characterConfig';
 import { SpellSlotBar } from '@/components/spells/SpellSlotBar';
 import { DomainRadarChart, DomainRadarCompare } from '@/components/character/DomainRadarChart';
@@ -1334,20 +1336,13 @@ export function Dashboard() {
   const _editorInitialTab = useModalStore((state) => state.editorInitialTab);
   const openCharacterEditor = useModalStore((state) => state.openCharacterEditor);
   const [showSkillsFeatsModal, setShowSkillsFeatsModal] = useState(false);
-  const [isSkillsExpanded, setIsSkillsExpanded] = useState(true);
-  const [isTraitsExpanded, setIsTraitsExpanded] = useState(true);
-  const [isFeatsExpanded, setIsFeatsExpanded] = useState(true);
-  // États individuels pour chaque sous-section
-  const [isSkillsSectionExpanded, setIsSkillsSectionExpanded] = useState(true);
-  const [isTraitsSectionExpanded, setIsTraitsSectionExpanded] = useState(true);
-  const [isFeatsSectionExpanded, setIsFeatsSectionExpanded] = useState(true);
+const [showSavingThrowHelp, setShowSavingThrowHelp] = useState(false);
   
   // Synchronise la divinité au chargement pour mettre à jour le symbole
   const syncDeity = useCharacterStore((state) => state.syncDeity);
   useEffect(() => {
     syncDeity();
   }, [syncDeity]);
-
 
   const character = useCharacterStore((state) => state.character);
   const getSaveBonus = useCharacterStore((state) => state.getSaveBonus);
@@ -1519,7 +1514,13 @@ export function Dashboard() {
           
           {/* Légende des jets de sauvegarde */}
           <div className="mt-2 flex items-center justify-center gap-4 text-[10px] text-ink-muted">
-            <span>JS = Jet de sauvegarde</span>
+            <button 
+              onClick={() => setShowSavingThrowHelp(true)}
+              className="hover:text-divine-gold hover:underline cursor-pointer transition-colors flex items-center gap-1"
+            >
+              <Shield className="w-3 h-3" />
+              JS = Jet de sauvegarde
+            </button>
             <span className="text-divine-gold">★ = Maîtrise de classe (+{profBonus})</span>
           </div>
           
@@ -1667,258 +1668,149 @@ export function Dashboard() {
         </section>
       )}
       
-      {/* Talents, traits et compétences - Mode condensé avec déploiement */}
+      {/* Talents, traits et compétences */}
       <section className="card">
         <div className="flex items-center justify-between">
           <h3 className="font-display text-lg text-ink flex items-center gap-2">
             <GraduationCap className="w-5 h-5 text-divine-gold" />
             Talents, traits et compétences
           </h3>
-          <div className="flex items-center gap-2">
-            <button 
-              onClick={() => setShowSkillsFeatsModal(true)}
-              className="p-1.5 text-ink-muted hover:text-divine-gold transition-colors"
-              title="Éditer les talents et compétences"
-            >
-              <Edit3 className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => setIsSkillsExpanded(!isSkillsExpanded)}
-              className="p-1.5 text-ink-muted hover:text-divine-gold transition-colors"
-              title={isSkillsExpanded ? 'Réduire' : 'Déployer'}
-            >
-              {isSkillsExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
-            </button>
-          </div>
         </div>
         
-        {/* Vue condensée */}
-        {!isSkillsExpanded && (
-          <div className="mt-3 space-y-2">
-            {/* Résumé compétences */}
-            <div className="flex items-center justify-between p-2 bg-parchment-dark/30 rounded">
-              <span className="text-sm text-ink-light flex items-center gap-2">
-                <Check className="w-4 h-4 text-forest" />
-                Compétences maîtrisées
-              </span>
-              <span className="font-display text-ink">{(character.masteredSkills || []).length}</span>
-            </div>
-            
-            {/* Résumé traits */}
-            <div className="flex items-center justify-between p-2 bg-parchment-dark/30 rounded">
-              <span className="text-sm text-ink-light flex items-center gap-2">
-                <Scroll className="w-4 h-4 text-royal-purple" />
-                Traits
-              </span>
-              <span className="font-display text-ink">{BACKGROUND_TRAITS.length}</span>
-            </div>
-            
-            {/* Résumé talents */}
-            <div className="flex items-center justify-between p-2 bg-parchment-dark/30 rounded">
-              <span className="text-sm text-ink-light flex items-center gap-2">
-                <Stars className="w-4 h-4 text-divine-gold" />
-                Talents
-              </span>
-              <span className="font-display text-ink">{(character.feats || []).length}</span>
-            </div>
-            
-            {/* Aperçu des compétences maîtrisées (noms seulement) */}
-            {(character.masteredSkills || []).length > 0 && (
-              <div className="mt-3">
-                <p className="text-xs text-ink-muted mb-2">Aperçu :</p>
-                <div className="flex flex-wrap gap-1">
-                  {(character.masteredSkills || []).slice(0, 5).map(skillId => {
-                    const skill = getSkillById(skillId);
-                    if (!skill) return null;
-                    return (
-                      <span key={skillId} className="text-xs bg-forest/10 text-forest px-2 py-1 rounded">
-                        {skill.name}
-                      </span>
-                    );
-                  })}
-                  {(character.masteredSkills || []).length > 5 && (
-                    <span className="text-xs text-ink-muted px-2 py-1">
-                      +{(character.masteredSkills || []).length - 5} autres
-                    </span>
-                  )}
-                </div>
+        <div className="mt-4 space-y-4">
+          {/* Compétences maîtrisées - Cartes détaillées */}
+          <CollapsibleSection
+            title="Compétences maîtrisées"
+            icon={Check}
+            defaultExpanded={false}
+            persistKey="cleric-cm-dashboard-skills"
+            badge={(character.masteredSkills || []).length}
+          >
+            {(character.masteredSkills || []).length > 0 ? (
+              <div className="space-y-3">
+                {(character.masteredSkills || []).map(skillId => {
+                  const skill = getSkillById(skillId);
+                  if (!skill) return null;
+                  
+                  // Mapping AbilityScore -> propriété Character
+                  const abilityMap: Record<string, keyof typeof character> = {
+                    'STR': 'strength',
+                    'DEX': 'dexterity', 
+                    'CON': 'constitution',
+                    'INT': 'intelligence',
+                    'WIS': 'wisdom',
+                    'CHA': 'charisma'
+                  };
+                  
+                  // Calcule le bonus total
+                  const abilityValue = character[abilityMap[skill.abilityScore]] as number;
+                  const abilityMod = Math.floor((abilityValue - 10) / 2);
+                  const profBonus = Math.floor((character.level - 1) / 4) + 2;
+                  const totalBonus = abilityMod + profBonus;
+                  
+                  return (
+                    <div key={skillId} className="bg-parchment-dark/30 rounded-lg p-3 border-l-4 border-forest">
+                      <div className="flex items-start justify-between mb-1">
+                        <h5 className="font-bold text-ink">{skill.name}</h5>
+                        <span className="text-xs font-bold text-forest bg-forest/10 px-2 py-0.5 rounded">
+                          +{totalBonus}
+                        </span>
+                      </div>
+                      <p className="text-xs text-ink-light mb-2">{skill.description}</p>
+                      <div className="flex items-center gap-2 text-xs">
+                        <span className="text-ink-muted">
+                          Carac: <strong className="text-ink">{ABILITY_SCORES[skill.abilityScore].name}</strong>
+                        </span>
+                        <span className="text-ink-muted">•</span>
+                        <span className="text-ink-muted">
+                          Mod: {abilityMod >= 0 ? '+' : ''}{abilityMod}
+                        </span>
+                        <span className="text-ink-muted">•</span>
+                        <span className="text-divine-gold-dark font-medium">
+                          Maîtrise: +{profBonus}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
+            ) : (
+              <p className="text-sm text-ink-muted italic">Aucune compétence maîtrisée</p>
             )}
-            
-            <button
-              onClick={() => setIsSkillsExpanded(true)}
-              className="w-full mt-3 py-2 text-sm text-divine-gold-dark hover:text-divine-gold border border-divine-gold/30 rounded-lg hover:bg-divine-gold/10 transition-colors flex items-center justify-center gap-2"
-            >
-              <ChevronDown className="w-4 h-4" />
-              Voir tout le détail
-            </button>
-          </div>
-        )}
-        
-        {/* Vue détaillée (déployée) */}
-        {isSkillsExpanded && (
-          <div className="mt-4 space-y-4">
-            {/* Compétences maîtrisées - Cartes détaillées */}
-        <div className="mb-4">
-          <button
-            onClick={() => setIsSkillsSectionExpanded(!isSkillsSectionExpanded)}
-            className="w-full flex items-center justify-between text-sm font-medium text-ink-light mb-3 hover:text-ink transition-colors"
-          >
-            <span className="flex items-center gap-2">
-              <Check className="w-4 h-4 text-forest" />
-              Compétences maîtrisées ({(character.masteredSkills || []).length})
-            </span>
-            {isSkillsSectionExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-          </button>
+          </CollapsibleSection>
           
-          {isSkillsSectionExpanded && ((character.masteredSkills || []).length > 0 ? (
+          {/* Séparateur */}
+          <div className="border-t border-parchment-dark/50 my-4"></div>
+          
+          {/* Traits - Cartes détaillées */}
+          <CollapsibleSection
+            title="Traits"
+            icon={Scroll}
+            defaultExpanded={false}
+            persistKey="cleric-cm-dashboard-traits"
+            badge={BACKGROUND_TRAITS.length}
+          >
             <div className="space-y-3">
-              {(character.masteredSkills || []).map(skillId => {
-                const skill = getSkillById(skillId);
-                if (!skill) return null;
-                
-                // Mapping AbilityScore -> propriété Character
-                const abilityMap: Record<string, keyof typeof character> = {
-                  'STR': 'strength',
-                  'DEX': 'dexterity', 
-                  'CON': 'constitution',
-                  'INT': 'intelligence',
-                  'WIS': 'wisdom',
-                  'CHA': 'charisma'
-                };
-                
-                // Calcule le bonus total
-                const abilityValue = character[abilityMap[skill.abilityScore]] as number;
-                const abilityMod = Math.floor((abilityValue - 10) / 2);
-                const profBonus = Math.floor((character.level - 1) / 4) + 2;
-                const totalBonus = abilityMod + profBonus;
-                
-                return (
-                  <div key={skillId} className="bg-parchment-dark/30 rounded-lg p-3 border-l-4 border-forest">
-                    <div className="flex items-start justify-between mb-1">
-                      <h5 className="font-bold text-ink">{skill.name}</h5>
-                      <span className="text-xs font-bold text-forest bg-forest/10 px-2 py-0.5 rounded">
-                        +{totalBonus}
-                      </span>
-                    </div>
-                    <p className="text-xs text-ink-light mb-2">{skill.description}</p>
-                    <div className="flex items-center gap-2 text-xs">
-                      <span className="text-ink-muted">
-                        Carac: <strong className="text-ink">{ABILITY_SCORES[skill.abilityScore].name}</strong>
-                      </span>
-                      <span className="text-ink-muted">•</span>
-                      <span className="text-ink-muted">
-                        Mod: {abilityMod >= 0 ? '+' : ''}{abilityMod}
-                      </span>
-                      <span className="text-ink-muted">•</span>
-                      <span className="text-divine-gold-dark font-medium">
-                        Maîtrise: +{profBonus}
-                      </span>
-                    </div>
+              {BACKGROUND_TRAITS.map(trait => (
+                <div key={trait.id} className={`rounded-lg p-3 border-l-4 ${
+                  trait.type === 'background' 
+                    ? 'bg-royal-purple/10 border-royal-purple' 
+                    : 'bg-blood-red/10 border-blood-red'
+                }`}>
+                  <div className="flex items-center gap-2 mb-1">
+                    <h5 className="font-bold text-ink">{trait.name}</h5>
+                    <span className={`text-xs px-2 py-0.5 rounded-full ${
+                      trait.type === 'background'
+                        ? 'bg-royal-purple/20 text-royal-purple'
+                        : 'bg-blood-red/20 text-blood-red'
+                    }`}>
+                      {trait.type === 'background' ? 'Background' : 'Classe'}
+                    </span>
                   </div>
-                );
-              })}
-            </div>
-          ) : (
-            <p className="text-sm text-ink-muted italic">Aucune compétence maîtrisée</p>
-          ))}
-        </div>
-        
-        {/* Séparateur */}
-        <div className="border-t border-parchment-dark/50 my-4"></div>
-        
-        {/* Traits - Cartes détaillées */}
-        <div className="mb-4">
-          <button
-            onClick={() => setIsTraitsSectionExpanded(!isTraitsSectionExpanded)}
-            className="w-full flex items-center justify-between text-sm font-medium text-ink-light mb-3 hover:text-ink transition-colors"
-          >
-            <span className="flex items-center gap-2">
-              <Scroll className="w-4 h-4 text-royal-purple" />
-              Traits ({BACKGROUND_TRAITS.length})
-            </span>
-            {isTraitsSectionExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-          </button>
-          
-          {isTraitsSectionExpanded && (
-          
-          <div className="space-y-3">
-            {BACKGROUND_TRAITS.map(trait => (
-              <div key={trait.id} className={`rounded-lg p-3 border-l-4 ${
-                trait.type === 'background' 
-                  ? 'bg-royal-purple/10 border-royal-purple' 
-                  : 'bg-blood-red/10 border-blood-red'
-              }`}>
-                <div className="flex items-center gap-2 mb-1">
-                  <h5 className="font-bold text-ink">{trait.name}</h5>
-                  <span className={`text-xs px-2 py-0.5 rounded-full ${
-                    trait.type === 'background'
-                      ? 'bg-royal-purple/20 text-royal-purple'
-                      : 'bg-blood-red/20 text-blood-red'
-                  }`}>
-                    {trait.type === 'background' ? 'Background' : 'Classe'}
-                  </span>
+                  <p className="text-xs text-ink-light">{trait.description}</p>
+                  <p className="text-xs text-divine-gold-dark mt-2 font-medium">
+                    Effet: {trait.effect}
+                  </p>
                 </div>
-                <p className="text-xs text-ink-light">{trait.description}</p>
-                <p className="text-xs text-divine-gold-dark mt-2 font-medium">
-                  Effet: {trait.effect}
-                </p>
-              </div>
-            ))}
-          </div>
-          )}
-        </div>
-        
-        {/* Séparateur */}
-        <div className="border-t border-parchment-dark/50 my-4"></div>
-        
-        {/* Talents - Cartes détaillées */}
-        <div>
-          <button
-            onClick={() => setIsFeatsSectionExpanded(!isFeatsSectionExpanded)}
-            className="w-full flex items-center justify-between text-sm font-medium text-ink-light mb-3 hover:text-ink transition-colors"
-          >
-            <span className="flex items-center gap-2">
-              <Stars className="w-4 h-4 text-divine-gold" />
-              Talents ({(character.feats || []).length})
-            </span>
-            {isFeatsSectionExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-          </button>
-          
-          {isFeatsSectionExpanded && ((character.feats || []).length > 0 ? (
-            <div className="space-y-3">
-              {(character.feats || []).map(featId => {
-                const feat = getFeatById(featId);
-                if (!feat) return null;
-                
-                return (
-                  <div key={featId} className="bg-divine-gold/10 rounded-lg p-3 border-l-4 border-divine-gold">
-                    <h5 className="font-bold text-ink mb-1">{feat.name}</h5>
-                    <p className="text-xs text-ink-light">{feat.description}</p>
-                    {feat.effect && (
-                      <p className="text-xs text-divine-gold-dark mt-2 font-medium">
-                        Effet: {feat.effect}
-                      </p>
-                    )}
-                  </div>
-                );
-              })}
+              ))}
             </div>
-          ) : (
-            <p className="text-sm text-ink-muted italic">Aucun talent sélectionné</p>
-          ))}
+          </CollapsibleSection>
+          
+          {/* Séparateur */}
+          <div className="border-t border-parchment-dark/50 my-4"></div>
+          
+          {/* Talents - Cartes détaillées */}
+          <CollapsibleSection
+            title="Talents"
+            icon={Stars}
+            defaultExpanded={false}
+            persistKey="cleric-cm-dashboard-feats"
+            badge={(character.feats || []).length}
+          >
+            {(character.feats || []).length > 0 ? (
+              <div className="space-y-3">
+                {(character.feats || []).map(featId => {
+                  const feat = getFeatById(featId);
+                  if (!feat) return null;
+                  
+                  return (
+                    <div key={featId} className="bg-divine-gold/10 rounded-lg p-3 border-l-4 border-divine-gold">
+                      <h5 className="font-bold text-ink mb-1">{feat.name}</h5>
+                      <p className="text-xs text-ink-light">{feat.description}</p>
+                      {feat.effect && (
+                        <p className="text-xs text-divine-gold-dark mt-2 font-medium">
+                          Effet: {feat.effect}
+                        </p>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <p className="text-sm text-ink-muted italic">Aucun talent sélectionné</p>
+            )}
+          </CollapsibleSection>
         </div>
-        
-        {/* Bouton réduire */}
-        <button
-          onClick={() => setIsSkillsExpanded(false)}
-          className="w-full mt-4 py-2 text-sm text-ink-muted hover:text-ink border border-parchment-dark/50 rounded-lg hover:bg-parchment-dark/20 transition-colors flex items-center justify-center gap-2"
-        >
-          <ChevronUp className="w-4 h-4" />
-          Réduire
-        </button>
-          </div>
-        )}
       </section>
       
       {/* Actions rapides */}
@@ -1936,6 +1828,11 @@ export function Dashboard() {
       <SkillsFeatsModal
         isOpen={showSkillsFeatsModal}
         onClose={() => setShowSkillsFeatsModal(false)}
+      />
+      
+      <SavingThrowHelpModal
+        isOpen={showSavingThrowHelp}
+        onClose={() => setShowSavingThrowHelp(false)}
       />
 
     </div>

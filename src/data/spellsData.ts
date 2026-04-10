@@ -820,7 +820,7 @@ export const spellsData: Spell[] = [
       "type": "concentration",
       "value": "concentration, jusqu'à 1 heure"
     },
-    "concentration": false,
+    "concentration": true,
     "ritual": false,
     "description": "Vous touchez une arme non magique. Jusqu'à la fin du sort, l'arme est considérée comme étant une arme magique avec un bonus de +1 aux jets d'attaque et aux dégâts. Aux niveaux supérieurs. Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 4 ou supérieur, le bonus augmente à +2. Lorsque vous utilisez un emplacement de sort de niveau 6 ou supérieur, le bonus augmente à +3.",
     "descriptionShort": "Vous touchez une arme non magique. Jusqu'à la fin du sort, l'arme est considérée comme étant une arme magique avec un bonus de +1 aux jets d'attaque et aux dégâts. Aux niveaux supérieurs. Lorsque vous...",
@@ -974,7 +974,7 @@ export const spellsData: Spell[] = [
       "type": "concentration",
       "value": "concentration, jusqu'à 1 minute"
     },
-    "concentration": false,
+    "concentration": true,
     "ritual": false,
     "description": "Choisissez un humanoïde visible dans la portée du sort. La cible doit réussir un jet de sauvegarde de Sagesse ou être paralysée pour la durée du sort. À la fin de chacun de ses tours, la cible peut faire un autre jet de sauvegarde de Sagesse. Si elle réussit, le sort prend fin. Aux niveaux supérieurs. Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 3 ou supérieur, vous pouvez cibler un humanoïde supplémentaire pour chaque niveau d'emplacement au-delà du niveau 2. Les humanoïdes doivent être situés à 9 mètres ou moins les uns des autres.",
     "descriptionShort": "Choisissez un humanoïde visible dans la portée du sort. La cible doit réussir un jet de sauvegarde de Sagesse ou être paralysée pour la durée du sort. À la fin de chacun de ses tours, la cible peut fa...",
@@ -1036,7 +1036,7 @@ export const spellsData: Spell[] = [
       "type": "concentration",
       "value": "concentration, jusqu'à 10 minutes"
     },
-    "concentration": false,
+    "concentration": true,
     "ritual": false,
     "description": "Décrivez ou nommez un objet qui vous est familier. Vous ressentez la direction de la position de l'objet, tant que cet objet se trouve à 300 mètres de vous maximum. Si l'objet est en déplacement, vous apprenez la direction de son mouvement. Ce sort peut localiser un objet spécifique que vous connaissez, à condition que vous l'ayez déjà vu de près (à 9 mètres ou moins de vous) au moins une fois. Vous pouvez sinon faire en sorte que le sort localise l'objet le plus proche d'un type particulier, comme un type spécifique de vêtement, de bijoux, de meuble, d'objet ou d'arme. Ce sort ne peut pas localiser un objet si une épaisseur de plomb, même une mince feuille, s'interpose sur la ligne de mire qui vous sépare vous et l'objet.",
     "descriptionShort": "Décrivez ou nommez un objet qui vous est familier. Vous ressentez la direction de la position de l'objet, tant que cet objet se trouve à 300 mètres de vous maximum. Si l'objet est en déplacement, vous...",
@@ -1219,7 +1219,7 @@ export const spellsData: Spell[] = [
       "type": "concentration",
       "value": "concentration, jusqu'à 10 minutes"
     },
-    "concentration": false,
+    "concentration": true,
     "ritual": true,
     "description": "Pour la durée du sort, aucun son ne peut être créé au sein (ou passer à travers) d'une sphère de 6 mètres de rayon centrée sur le point que vous choisissez dans la portée du sort. Toute créature ou objet se trouvant entièrement à l'intérieur de la sphère est immunisé contre les dégâts de tonnerre et les créatures sont en plus assourdies. Lancer un sort qui comprend une composante verbale à l'intérieur de la sphère est impossible.",
     "descriptionShort": "Pour la durée du sort, aucun son ne peut être créé au sein (ou passer à travers) d'une sphère de 6 mètres de rayon centrée sur le point que vous choisissez dans la portée du sort. Toute créature ou ob...",

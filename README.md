@@ -37,12 +37,38 @@ Assistant de gestion de sorts pour clerc de **Torm** (D&D 5e) - Domaine de la Gu
 - Adapte automatiquement le nombre de sorts préparables
 - Mise à jour en temps réel
 
-## 🚀 Utilisation
+## 📱 Interface
 
-1. Ouvre l'application
-2. Clique sur ton **score de Sagesse** pour le modifier
-3. Va dans **"Préparer les sorts"** pour choisir tes sorts du jour
-4. Utilise le **Mode Combat** pendant les sessions
+### Dashboard Principal
+Le dashboard présente une vue d'ensemble de votre personnage :
+
+- **En-tête** : Avatar, nom, niveau, divinité (Torm ⚔️) et points de vie
+- **Ressources** : Emplacements de sorts disponibles/utilisés
+- **Talents, traits et compétences** : Sections repliables avec persistance
+  - Cliquez sur chaque section pour déplier/replier
+  - L'état est sauvegardé automatiquement entre les sessions
+  - Les compteurs indiquent le nombre d'éléments dans chaque catégorie
+- **Actions rapides** : Accès direct à l'édition des compétences et talents
+
+### Navigation
+L'application comporte 4 onglets principaux :
+1. **🏠 Dashboard** : Vue d'ensemble du personnage
+2. **📖 Préparation** : Choix des sorts du jour avec filtres
+3. **⚔️ Combat** : Interface optimisée pour les sessions (sans distractions)
+4. **🎒 Inventaire** : Gestion de l'équipement et objets
+
+## 🚀 Guide rapide
+
+1. **Ouvrez** l'application
+2. **Modifiez** votre score de Sagesse en cliquant dessus
+3. **Préparez vos sorts** dans l'onglet "Préparer les sorts"
+4. **Consultez** vos compétences sur le Dashboard (sections dépliables)
+5. **Utilisez le Mode Combat** pendant vos sessions de jeu
+
+### 💡 Astuces
+- Les sections du Dashboard se replient/déplient pour garder l'interface épurée
+- Vos préférences d'affichage sont sauvegardées automatiquement
+- Le Mode Combat affiche uniquement les informations essentielles
 
 ## 📱 Développement local
 

@@ -23,3 +23,5 @@ export {
   useSpellIncantation,
   useCanHaveIncantation,
 } from './useSpellIncantation';
+
+export { usePersistentState } from './usePersistentState';
