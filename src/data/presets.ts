@@ -18,7 +18,7 @@ export const defaultPresets: SpellPreset[] = [
     id: 'kimi-optimal',
     name: '⭐ Choix Optimal',
     icon: 'star',
-    description: `Sélection équilibrée et optimisée : les sorts les plus puissants et polyvalents [${PRESET_VERSION}]`,
+    description: 'Sélection équilibrée et optimisée : les sorts les plus puissants et polyvalents',
     // Ordre de priorité : sorts sans concentration d'abord (CON 10), puis utilitaires
     spellIds: [
       // N3 - Priorité maximale (instantanés ou pré-combat)
