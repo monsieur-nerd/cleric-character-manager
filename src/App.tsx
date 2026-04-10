@@ -8,6 +8,7 @@ import { CombatPage } from '@/pages/CombatPage';
 import { InventoryPage } from '@/pages/InventoryPage';
 import { PreparationPage } from '@/pages/PreparationPage';
 import { Layout } from '@/components/layout/Layout';
+import { ScrollToTop } from '@/components/layout/ScrollToTop';
 import { spellsData } from '@/data/spellsData';
 import { equipmentData } from '@/data/equipmentData';
 import { componentMappingData } from '@/data/componentMappingData';
@@ -268,6 +269,7 @@ function App() {
 
   return (
     <Router basename="/cleric-character-manager">
+      <ScrollToTop />
       <RedirectHandler />
       <MigrationBanner />
       <div className={needsMigration ? 'pt-20' : ''}>
