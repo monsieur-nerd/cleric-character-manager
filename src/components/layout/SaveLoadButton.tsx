@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { Download, Upload, Check, AlertCircle } from 'lucide-react';
 import { getAllStorageKeys } from '@/stores/storageKeys';
+import { syncStoresAfterRestore } from '@/stores';
 
 export function SaveLoadButton() {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -66,7 +67,11 @@ export function SaveLoadButton() {
           throw new Error('Aucune donnée de jeu trouvée dans ce fichier');
         }
 
-        showToast('Données restaurées. Rechargement...', 'success');
+        showToast('Données restaurées. Synchronisation...', 'success');
+        
+        // Synchronise les stores après import avant le rechargement
+        syncStoresAfterRestore();
+        
         setTimeout(() => {
           window.location.reload();
         }, 800);

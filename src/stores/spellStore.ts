@@ -340,10 +340,12 @@ export const useSpellStore = create<SpellState>()(
     {
       name: STORAGE_KEYS.SPELL,
       partialize: (state) => ({
-        // Persiste les sorts préparés et les emplacements
-        // Ces données sont essentielles pour conserver l'état entre les rafraîchissements
+        // Persiste tous les champs d'état essentiels
+        // Ces données sont critiques pour conserver l'état entre les rafraîchissements
         preparedSpellIds: state.preparedSpellIds,
         spellSlots: state.spellSlots,
+        currentDomainId: state.currentDomainId,
+        characterLevel: state.characterLevel,
       }),
     }
   )

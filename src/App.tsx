@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
-import { useSpellStore, useInventoryStore, useCharacterStore } from '@/stores';
+import { useSpellStore, useInventoryStore, useCharacterStore, syncStoresAfterRestore, logStoreSyncStatus } from '@/stores';
 import type { EquipmentItem } from '@/types';
 import { Dashboard } from '@/pages/Dashboard';
 import { SpellListPage } from '@/pages/SpellListPage';
@@ -79,6 +79,12 @@ function App() {
       ];
       loadItems(allEquipment);
       loadComponentMapping(componentMappingData);
+      
+      // Synchronise les stores après restauration des données persistées
+      // Cela garantit que spellStore et characterStore sont cohérents
+      syncStoresAfterRestore();
+      logStoreSyncStatus();
+      
       setIsLoading(false);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erreur de chargement');
