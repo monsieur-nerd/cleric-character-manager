@@ -156,6 +156,9 @@ export function PreparationPage() {
   const [activePresetId, setActivePresetId] = useState<string | null>(null);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   
+  // État pour le mode Chult (utilisé dans le preset Chult)
+  const { isInChult, setInChult } = useChultStore();
+  
   // Get domain spell IDs for the current character's domain (from CLERIC_DOMAINS to avoid stale IDs)
   const currentDomain = CLERIC_DOMAINS.find(d => d.id === character.domain?.id);
   const currentDomainSpellIds = currentDomain?.spellIds || [];
@@ -348,15 +351,67 @@ export function PreparationPage() {
                       />
                     ) : preset.id === 'kimi-optimal-chult' ? (
                       /* Interface spéciale pour le preset Chult avec case à cocher */
-                      <ChultPresetDetails
-                        preset={preset}
-                        selectionCount={selectionCount}
-                        maxPrepared={maxPrepared}
-                        allSpells={allSpells}
-                        currentDomainSpellIds={currentDomainSpellIds}
-                        isActive={isActive}
-                        onApply={() => handleApplyPreset(preset)}
-                      />
+                      <div className="space-y-3">
+                        {/* Case à cocher Dans le Chult */}
+                        <div className="bg-jungle-green/10 border border-jungle-green/30 rounded-lg p-3">
+                          <label className="flex items-center gap-3 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={isInChult}
+                              onChange={(e) => setInChult(e.target.checked)}
+                              className="w-5 h-5 rounded border-parchment-dark text-jungle-green focus:ring-jungle-green"
+                            />
+                            <div className="flex-1">
+                              <span className="font-display text-ink font-medium">Dans le Chult</span>
+                              <p className="text-xs text-ink-muted">
+                                Mode Chult activé : les composants de résurrection sont masqués dans la liste de courses
+                              </p>
+                            </div>
+                            <span className="text-2xl">🌴</span>
+                          </label>
+                        </div>
+                        
+                        {/* Info sur le sort remplacé */}
+                        <div className="bg-parchment-dark/20 rounded-lg p-2 text-xs">
+                          <span className="text-ink-light">
+                            <strong>Modification :</strong> <span className="line-through text-ink-muted">Retour à la vie</span> remplacé par <span className="text-forest font-medium">Esprits gardiens</span> (contrôle de zone)
+                          </span>
+                        </div>
+                        
+                        {/* Liste des sorts */}
+                        <p className="text-xs text-ink-muted">
+                          Sorts qui seront sélectionnés ({selectionCount} sur {maxPrepared}):
+                        </p>
+                        <div className="flex flex-wrap gap-1 mb-3">
+                          {getSelectedSpellNames(preset.spellIds, maxPrepared, allSpells, currentDomainSpellIds).map((name, i) => (
+                            <span 
+                              key={i} 
+                              className="text-xs bg-parchment-dark px-2 py-1 rounded text-ink"
+                            >
+                              {name}
+                            </span>
+                          ))}
+                          {selectionCount < maxPrepared && (
+                            <span className="text-xs bg-bronze/20 text-bronze px-2 py-1 rounded">
+                              +{maxPrepared - selectionCount} sorts libres
+                            </span>
+                          )}
+                        </div>
+                        
+                        {/* Bouton Appliquer */}
+                        <button
+                          onClick={() => handleApplyPreset(preset)}
+                          className="w-full bg-jungle-green hover:bg-jungle-green-light active:bg-jungle-green-dark 
+                            text-white font-bold py-3 px-4 rounded-lg 
+                            transform transition-all duration-100
+                            hover:shadow-lg hover:scale-[1.02]
+                            active:scale-[0.98] active:shadow-inner
+                            flex items-center justify-center gap-2"
+                        >
+                          <Check className="w-4 h-4" />
+                          {isActive ? '✓ Appliqué !' : `Appliquer ce préréglage (${selectionCount} sorts)`}
+                        </button>
+                      </div>
                     ) : (
                       <>
                         <p className="text-xs text-ink-muted mb-2">
@@ -872,89 +927,4 @@ function CustomPresetEditor({
   );
 }
 
-// Composant d'affichage du preset Chult avec case à cocher
-interface ChultPresetDetailsProps {
-  preset: SpellPreset;
-  selectionCount: number;
-  maxPrepared: number;
-  allSpells: Spell[];
-  currentDomainSpellIds: string[];
-  isActive: boolean;
-  onApply: () => void;
-}
 
-function ChultPresetDetails({
-  preset,
-  selectionCount,
-  maxPrepared,
-  allSpells,
-  currentDomainSpellIds,
-  isActive,
-  onApply,
-}: ChultPresetDetailsProps) {
-  const { isInChult, setInChult } = useChultStore();
-  
-  return (
-    <div className="space-y-3">
-      {/* Case à cocher Dans le Chult */}
-      <div className="bg-jungle-green/10 border border-jungle-green/30 rounded-lg p-3">
-        <label className="flex items-center gap-3 cursor-pointer">
-          <input
-            type="checkbox"
-            checked={isInChult}
-            onChange={(e) => setInChult(e.target.checked)}
-            className="w-5 h-5 rounded border-parchment-dark text-jungle-green focus:ring-jungle-green"
-          />
-          <div className="flex-1">
-            <span className="font-display text-ink font-medium">Dans le Chult</span>
-            <p className="text-xs text-ink-muted">
-              Mode Chult activé : les composants de résurrection sont masqués dans la liste de courses
-            </p>
-          </div>
-          <span className="text-2xl">🌴</span>
-        </label>
-      </div>
-      
-      {/* Info sur le sort remplacé */}
-      <div className="bg-parchment-dark/20 rounded-lg p-2 text-xs">
-        <span className="text-ink-light">
-          <strong>Modification :</strong> <span className="line-through text-ink-muted">Retour à la vie</span> remplacé par <span className="text-forest font-medium">Esprits gardiens</span> (contrôle de zone)
-        </span>
-      </div>
-      
-      {/* Liste des sorts */}
-      <p className="text-xs text-ink-muted">
-        Sorts qui seront sélectionnés ({selectionCount} sur {maxPrepared}):
-      </p>
-      <div className="flex flex-wrap gap-1 mb-3">
-        {getSelectedSpellNames(preset.spellIds, maxPrepared, allSpells, currentDomainSpellIds).map((name, i) => (
-          <span 
-            key={i} 
-            className="text-xs bg-parchment-dark px-2 py-1 rounded text-ink"
-          >
-            {name}
-          </span>
-        ))}
-        {selectionCount < maxPrepared && (
-          <span className="text-xs bg-bronze/20 text-bronze px-2 py-1 rounded">
-            +{maxPrepared - selectionCount} sorts libres
-          </span>
-        )}
-      </div>
-      
-      {/* Bouton Appliquer */}
-      <button
-        onClick={onApply}
-        className="w-full bg-jungle-green hover:bg-jungle-green-light active:bg-jungle-green-dark 
-          text-white font-bold py-3 px-4 rounded-lg 
-          transform transition-all duration-100
-          hover:shadow-lg hover:scale-[1.02]
-          active:scale-[0.98] active:shadow-inner
-          flex items-center justify-center gap-2"
-      >
-        <Check className="w-4 h-4" />
-        {isActive ? '✓ Appliqué !' : `Appliquer ce préréglage (${selectionCount} sorts)`}
-      </button>
-    </div>
-  );
-}

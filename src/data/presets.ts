@@ -15,14 +15,15 @@ export const PRESET_VERSION = '2024-01-15-v5-war-caster';
 
 export const defaultPresets: SpellPreset[] = [
   {
-    id: 'kimi-optimal',
-    name: '⭐ Choix Optimal',
-    icon: 'star',
-    description: 'Sélection équilibrée et optimisée : les sorts les plus puissants et polyvalents',
+    id: 'kimi-optimal-chult',
+    name: '🌴 Choix Optimal dans le Chult',
+    icon: 'palm',
+    description: 'Version adaptée au Chult : sans résurrection (impossible dans cette région) mais avec Esprits gardiens pour le contrôle de zone',
     // Ordre de priorité : sorts sans concentration d'abord (CON 10), puis utilitaires
+    // Remplace retour-a-la-vie par esprits-gardiens (contrôle de zone puissant)
     spellIds: [
       // N3 - Priorité maximale (instantanés ou pré-combat)
-      'retour-a-la-vie',                    // Ramener un allié à la vie - instantané
+      'esprits-gardiens',                   // Contrôle de zone + dégâts - CONCENTRATION (excellent dans la jungle)
       'dissipation-de-la-magie',            // Annuler sorts ennemis - instantané
       'lueur-despoir',                      // Heal zone + buff CA - concentration OK (loin combat)
       // N2 - Priorité haute (sans concentration pour CON 10)
@@ -44,15 +45,14 @@ export const defaultPresets: SpellPreset[] = [
     isDefault: true,
   },
   {
-    id: 'kimi-optimal-chult',
-    name: '🌴 Choix Optimal dans le Chult',
-    icon: 'palm',
-    description: 'Version adaptée au Chult : sans résurrection (impossible dans cette région) mais avec Esprits gardiens pour le contrôle de zone',
+    id: 'kimi-optimal',
+    name: '⭐ Choix Optimal',
+    icon: 'star',
+    description: 'Sélection équilibrée et optimisée : les sorts les plus puissants et polyvalents',
     // Ordre de priorité : sorts sans concentration d'abord (CON 10), puis utilitaires
-    // Remplace retour-a-la-vie par esprits-gardiens (contrôle de zone puissant)
     spellIds: [
       // N3 - Priorité maximale (instantanés ou pré-combat)
-      'esprits-gardiens',                   // Contrôle de zone + dégâts - CONCENTRATION (excellent dans la jungle)
+      'retour-a-la-vie',                    // Ramener un allié à la vie - instantané
       'dissipation-de-la-magie',            // Annuler sorts ennemis - instantané
       'lueur-despoir',                      // Heal zone + buff CA - concentration OK (loin combat)
       // N2 - Priorité haute (sans concentration pour CON 10)
