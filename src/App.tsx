@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useSpellStore, useInventoryStore, useCharacterStore } from '@/stores';
 import type { EquipmentItem } from '@/types';
@@ -96,10 +96,13 @@ function App() {
     }
   }, [character?.domain?.id, character?.level, setCurrentDomain, setCharacterLevel]);
   
-  // Synchronise les sorts préparés après le chargement des sorts
-  // Cela nettoie les IDs obsolètes et s'assure que les sorts de domaine sont corrects
+  // Synchronise les sorts préparés une seule fois après le chargement initial
+  // Cela nettoie les IDs obsolètes sans créer de boucle infinie
+  const hasSyncedSpells = useRef(false);
   useEffect(() => {
-    if (!isLoading && allSpells.length > 0 && character?.domain?.id) {
+    if (!isLoading && allSpells.length > 0 && character?.domain?.id && !hasSyncedSpells.current) {
+      hasSyncedSpells.current = true;
+      
       const currentDomain = CLERIC_DOMAINS.find(d => d.id === character.domain?.id);
       const currentDomainSpellIds = currentDomain?.spellIds || [];
       const maxSpellLevel = Math.min(5, Math.floor((character.level + 1) / 2));
@@ -121,7 +124,7 @@ function App() {
         prepareMultipleSpells(validSpellIds, character.maxPreparedSpells);
       }
     }
-  }, [isLoading, allSpells, character, preparedSpellIds, prepareMultipleSpells]);
+  }, [isLoading, allSpells, character?.domain?.id, character?.level, character?.maxPreparedSpells, preparedSpellIds, prepareMultipleSpells]);
   
   // Vérifie la migration une fois le chargement terminé
   useEffect(() => {
