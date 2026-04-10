@@ -58,8 +58,11 @@ function App() {
   const setLanguages = useCharacterStore((state) => state.setLanguages);
   const setAvatar = useCharacterStore((state) => state.setAvatar);
   const longRest = useCharacterStore((state) => state.longRest);
+  const setDomain = useCharacterStore((state) => state.setDomain);
   const setCurrentDomain = useSpellStore((state) => state.setCurrentDomain);
   const setCharacterLevel = useSpellStore((state) => state.setCharacterLevel);
+  const spellStoreCurrentDomain = useSpellStore((state) => state.currentDomainId);
+  const spellStoreCharacterLevel = useSpellStore((state) => state.characterLevel);
   const preparedSpellIds = useSpellStore((state) => state.preparedSpellIds);
   const allSpells = useSpellStore((state) => state.allSpells);
   const prepareMultipleSpells = useSpellStore((state) => state.prepareMultipleSpells);
@@ -92,26 +95,51 @@ function App() {
     }
   }, [loadSpells, loadItems, loadComponentMapping]);
   
-  // Synchronise le domaine et le niveau du personnage avec le spellStore au démarrage
+  // Synchronise le domaine et le niveau du spellStore vers characterStore au démarrage
+  // C'est le spellStore qui a les valeurs persistantes (après refresh)
+  const hasSyncedFromSpellStore = useRef(false);
   useEffect(() => {
-    if (character?.domain?.id) {
-      setCurrentDomain(character.domain.id);
+    if (!hasSyncedFromSpellStore.current && !isLoading) {
+      hasSyncedFromSpellStore.current = true;
+      
+      // Récupère les valeurs directement depuis le store (pas via hooks réactifs)
+      const spellState = useSpellStore.getState();
+      const charState = useCharacterStore.getState();
+      
+      // Synchronise vers characterStore si différent
+      if (spellState.currentDomainId && spellState.currentDomainId !== charState.character.domain?.id) {
+        console.log('[App] Synchronisation domaine depuis spellStore:', spellState.currentDomainId);
+        setDomain(spellState.currentDomainId);
+      }
+      
+      if (spellState.characterLevel && spellState.characterLevel !== charState.character.level) {
+        console.log('[App] Synchronisation niveau depuis spellStore:', spellState.characterLevel);
+        setLevel(spellState.characterLevel);
+      }
     }
-    if (character?.level) {
-      setCharacterLevel(character.level);
-    }
-  }, [character?.domain?.id, character?.level, setCurrentDomain, setCharacterLevel]);
+  }, [isLoading, setDomain, setLevel]);
   
   // Synchronise les sorts préparés une seule fois après le chargement initial
   // Cela nettoie les IDs obsolètes sans créer de boucle infinie
+  // Utilise spellStore comme source de vérité (valeurs persistées)
   const hasSyncedSpells = useRef(false);
   useEffect(() => {
-    if (!isLoading && allSpells.length > 0 && character?.domain?.id && !hasSyncedSpells.current) {
+    if (!isLoading && allSpells.length > 0 && !hasSyncedSpells.current) {
       hasSyncedSpells.current = true;
       
-      const currentDomain = CLERIC_DOMAINS.find(d => d.id === character.domain?.id);
+      // Récupère les valeurs depuis spellStore (persistées)
+      const spellState = useSpellStore.getState();
+      const spellStoreDomainId = spellState.currentDomainId;
+      const spellStoreLevel = spellState.characterLevel;
+      
+      if (!spellStoreDomainId || !spellStoreLevel) {
+        console.log('[App] Pas de données spellStore pour filtrer les sorts');
+        return;
+      }
+      
+      const currentDomain = CLERIC_DOMAINS.find(d => d.id === spellStoreDomainId);
       const currentDomainSpellIds = currentDomain?.spellIds || [];
-      const maxSpellLevel = Math.min(5, Math.floor((character.level + 1) / 2));
+      const maxSpellLevel = Math.min(5, Math.floor((spellStoreLevel + 1) / 2));
       
       // Filtre les sorts préparés :
       // 1. Supprime les IDs de sorts qui n'existent pas (obsolètes)
@@ -127,10 +155,11 @@ function App() {
       
       // Si des changements sont nécessaires, met à jour
       if (validSpellIds.length !== preparedSpellIds.length) {
+        console.log('[App] Nettoyage des sorts préparés:', preparedSpellIds.length, '->', validSpellIds.length);
         prepareMultipleSpells(validSpellIds, character.maxPreparedSpells);
       }
     }
-  }, [isLoading, allSpells, character?.domain?.id, character?.level, character?.maxPreparedSpells, preparedSpellIds, prepareMultipleSpells]);
+  }, [isLoading, allSpells, preparedSpellIds, prepareMultipleSpells, character?.maxPreparedSpells]);
   
   // Vérifie la migration une fois le chargement terminé
   useEffect(() => {
