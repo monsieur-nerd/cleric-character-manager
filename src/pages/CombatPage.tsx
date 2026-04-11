@@ -505,11 +505,19 @@ export function CombatPage() {
               </p>
             </div>
             <div className="bg-forest/10 p-2 rounded border border-forest/30">
-              <p className="font-bold text-forest">✅ Le combo optimal</p>
+              <p className="font-bold text-forest">✅ Le combo optimal (Clerc de Guerre)</p>
               <p className="text-ink-light">
                 <strong>Action :</strong> Attaque (arme principale)<br/>
                 <strong>Action bonus :</strong> Clerc de Guerre (arme secondaire)<br/>
                 → Les 2 attaques ont le modificateur de dégâts !
+              </p>
+            </div>
+            <div className="bg-divine-gold/10 p-2 rounded border border-divine-gold/30">
+              <p className="font-bold text-divine-gold-dark">✨ Le combo optimal (Clerc Caster)</p>
+              <p className="text-ink-light">
+                <strong>Action :</strong> Attaque ou Sort<br/>
+                <strong>Action bonus :</strong> Sort rapide (ex: <em>Arme spirituelle</em>, <em>Flamme sacrée</em> en action bonus via métamagie)<br/>
+                → Certains sorts se lancent en action bonus ! Consultez la fiche de votre sort.
               </p>
             </div>
           </div>
