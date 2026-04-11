@@ -50,7 +50,7 @@ export const clericLevel2Spells: Spell[] = [
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": "un poil ou une plume d'une bête",
+      "material": "un poil* ou une plume* de bête",
       "materialConsumed": false
     },
     "duration": {

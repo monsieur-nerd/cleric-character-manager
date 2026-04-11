@@ -763,7 +763,7 @@ export const spellsData: Spell[] = [
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": "le poil ou la plume d'une bête",
+      "material": "un poil* ou une plume* de bête",
       "materialConsumed": false
     },
     "duration": {
