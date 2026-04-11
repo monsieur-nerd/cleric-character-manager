@@ -276,11 +276,16 @@ export function ShoppingList() {
     }));
   };
   
-  const handleSpellClick = (spellId: string) => {
+  const handleSpellClick = (spellId: string, spellName?: string) => {
     const spell = getSpellById(spellId);
     if (spell) {
       setSelectedSpell(spell);
       setIsSpellModalOpen(true);
+    } else {
+      // Le sort n'existe pas dans spellsData.ts
+      console.warn(`Sort non trouvé: ${spellId} (${spellName || 'nom inconnu'})`);
+      // Optionnel: afficher une notification à l'utilisateur
+      alert(`Les détails du sort "${spellName || spellId}" ne sont pas encore disponibles.`);
     }
   };
 
@@ -789,7 +794,7 @@ export function ShoppingList() {
                               return (
                                 <button
                                   key={spell.spellId}
-                                  onClick={() => handleSpellClick(spell.spellId)}
+                                  onClick={() => handleSpellClick(spell.spellId, spell.spellName)}
                                   className={`inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full border cursor-pointer hover:opacity-80 transition-opacity ${
                                     spell.consumed 
                                       ? 'bg-blood-red/10 text-blood-red border-blood-red/20'
@@ -1120,7 +1125,7 @@ export function ShoppingList() {
                                   return (
                                     <button
                                       key={spell.spellId}
-                                      onClick={() => handleSpellClick(spell.spellId)}
+                                      onClick={() => handleSpellClick(spell.spellId, spell.spellName)}
                                       className={`inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full border cursor-pointer hover:opacity-80 transition-opacity ${
                                         spell.consumed 
                                           ? 'bg-blood-red/10 text-blood-red border-blood-red/20'
