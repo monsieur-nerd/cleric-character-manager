@@ -111,7 +111,7 @@ export const clericLevel6Spells: Spell[] = [
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": "de l'encens rare",
+      "material": "de l'encens rare* - *anciennement: encens de Vision de l'ombre",
       "materialConsumed": false
     },
     "duration": {
@@ -172,7 +172,7 @@ export const clericLevel6Spells: Spell[] = [
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": "de l'eau bénite et des herbes rares",
+      "material": "de l'eau bénite* et des herbes* - *anciennement: eau bénite et herbes d'Interdiction",
       "materialConsumed": true
     },
     "duration": {
@@ -233,7 +233,7 @@ export const clericLevel6Spells: Spell[] = [
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": "de l'encens et une plume",
+      "material": "de l'encens* et une plume* - *anciennement: encens et plume de Trou de mémoire",
       "materialConsumed": false
     },
     "duration": {

@@ -80,7 +80,7 @@ export const clericLevel5Spells: Spell[] = [
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": "de l'encens et une offrande sacrificielle d'une valeur d'au moins 25 po",
+      "material": "de l'encens* et une offrande* (25 po) - *anciennement: encens et offrande de Communion",
       "materialConsumed": true
     },
     "duration": {
@@ -110,7 +110,7 @@ export const clericLevel5Spells: Spell[] = [
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": "de l'eau bénite et de l'argent",
+      "material": "de l'eau bénite* et de l'argent* - *anciennement: eau bénite et argent de Dissipation",
       "materialConsumed": false
     },
     "duration": {
@@ -172,7 +172,7 @@ export const clericLevel5Spells: Spell[] = [
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": "des diamants d'une valeur d'au moins 1000 po",
+      "material": "des diamants d'infini* (1000 po) - *anciennement: diamants 1000po",
       "materialConsumed": true
     },
     "duration": {
@@ -233,7 +233,7 @@ export const clericLevel5Spells: Spell[] = [
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": "un miroir ou un récipient d'eau d'une valeur d'au moins 1000 po",
+      "material": "un miroir* ou un récipient d'eau (1000 po) - *anciennement: miroir de Scrutation",
       "materialConsumed": false
     },
     "duration": {

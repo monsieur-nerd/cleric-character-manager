@@ -81,7 +81,7 @@ export const clericLevel7Spells: Spell[] = [
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": "de l'encens et de l'eau bénite",
+      "material": "de l'encens de brume* et de l'eau pure* - *anciennement: encens et eau de Contrôle du climat",
       "materialConsumed": false
     },
     "duration": {
@@ -112,7 +112,7 @@ export const clericLevel7Spells: Spell[] = [
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": "de l'encens et de la poudre d'os d'une valeur totale d'au moins 500 po",
+      "material": "de l'encens de sang de dragon* et de la poudre d'os (500 po) - *anciennement: encens de Dessin du profane",
       "materialConsumed": true
     },
     "duration": {
@@ -143,7 +143,7 @@ export const clericLevel7Spells: Spell[] = [
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": "de l'eau bénite",
+      "material": "de l'eau bénite* - *anciennement: eau bénite standard",
       "materialConsumed": false
     },
     "duration": {

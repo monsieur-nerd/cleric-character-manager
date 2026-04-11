@@ -49,7 +49,7 @@ export const clericLevel3Spells: Spell[] = [
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": "de l'eau bénite OU de la poudre d'argent d'une valeur d'au moins 100 po",
+      "material": "de l'eau bénite* OU de la poudre d'argent (100 po)",
       "materialConsumed": true
     },
     "duration": {
@@ -111,7 +111,7 @@ export const clericLevel3Spells: Spell[] = [
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": "de l'encens brûlant",
+      "material": "de l'encens brûlant* - *anciennement: encens de communication",
       "materialConsumed": true
     },
     "duration": {
@@ -297,7 +297,7 @@ export const clericLevel3Spells: Spell[] = [
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": "des diamants d'une valeur d'au moins 300 po",
+      "material": "des diamants d'âme* (300 po) - *anciennement: diamants 300po",
       "materialConsumed": true
     },
     "duration": {
