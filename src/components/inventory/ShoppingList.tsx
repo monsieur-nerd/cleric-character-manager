@@ -177,9 +177,18 @@ export function ShoppingList() {
         return false;
       }
       
-      // Masquer les items avec stock >= quantité idéale (stock complet)
+      // Masquer les items déjà achetés selon leur type
       const stock = getCurrentStock(item.itemId);
-      if (stock >= item.quantityIdeal) return false;
+      const isConsumed = item.componentType === 'consumed_per_cast' || item.componentType === 'consumed_per_use';
+      
+      if (isConsumed) {
+        // Consommables : masquer quand on a atteint le stock idéal (3)
+        // Réapparaissent automatiquement si on consomme et descend en dessous
+        if (stock >= item.quantityIdeal) return false;
+      } else {
+        // Réutilisables : masquer dès qu'on en a un (on n'en a besoin qu'une fois)
+        if (stock >= 1) return false;
+      }
       
       return true;
     });
