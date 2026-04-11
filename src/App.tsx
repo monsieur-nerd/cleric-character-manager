@@ -11,7 +11,7 @@ import { Layout } from '@/components/layout/Layout';
 import { ScrollToTop } from '@/components/layout/ScrollToTop';
 import { spellsData } from '@/data/spellsData';
 import { equipmentData } from '@/data/equipmentData';
-import { componentMappingData } from '@/data/componentMappingData';
+import { allSpellComponentMappings } from '@/data/spellComponentMappings';
 import { CHARACTER_IDENTITY, CHARACTER_ABILITIES, STARTING_EQUIPMENT } from '@/data/characterConfig';
 import { CLERIC_DOMAINS } from '@/types';
 import '@/utils/debugStorage'; // Import pour exposer debug tools dans la console
@@ -83,7 +83,7 @@ function App() {
         })) as EquipmentItem[],
       ];
       loadItems(allEquipment);
-      loadComponentMapping(componentMappingData);
+      loadComponentMapping(allSpellComponentMappings);
       
       // Synchronise les stores après restauration des données persistées
       // Cela garantit que spellStore et characterStore sont cohérents

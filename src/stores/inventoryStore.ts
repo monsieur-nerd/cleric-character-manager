@@ -1,15 +1,16 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { EquipmentItem, ComponentRequirement, EquipmentSlot } from '@/types';
+import type { EquipmentItem, EquipmentSlot, SpellComponentMapping } from '@/types';
 import { STORAGE_KEYS } from './storageKeys';
+import { getComponentsForSpell, allSpellComponentMappings } from '@/data/spellComponentMappings';
 
 interface InventoryState {
   items: EquipmentItem[];
-  componentMapping: ComponentRequirement[];
+  componentMapping: SpellComponentMapping[];
   
   // Actions
   loadItems: (items: EquipmentItem[]) => void;
-  loadComponentMapping: (mapping: ComponentRequirement[]) => void;
+  loadComponentMapping: (mapping: SpellComponentMapping[]) => void;
   
   // Gestion des items
   addItem: (item: EquipmentItem) => void;
@@ -28,7 +29,7 @@ interface InventoryState {
   getItemById: (id: string) => EquipmentItem | undefined;
   getItemsByType: (type: string) => EquipmentItem[];
   getComponents: () => EquipmentItem[];
-  getComponentForSpell: (spellId: string) => { item: EquipmentItem; required: ComponentRequirement } | null;
+  getComponentForSpell: (spellId: string) => { item: EquipmentItem; required: SpellComponentMapping } | null;
   hasComponentForSpell: (spellId: string) => boolean;
   getMissingComponents: () => { spellId: string; spellName: string; itemName: string; required: number; has: number }[];
   
@@ -101,7 +102,7 @@ export const useInventoryStore = create<InventoryState>()(
         set({ items: itemsWithComponentFlag });
       },
       
-      loadComponentMapping: (mapping) => {
+      loadComponentMapping: (mapping: SpellComponentMapping[]) => {
         set({ componentMapping: mapping });
       },
       
@@ -407,42 +408,163 @@ export const useInventoryStore = create<InventoryState>()(
       
       getComponentForSpell: (spellId) => {
         const { componentMapping, items } = get();
-        const mapping = componentMapping.find(m => m.spellId === spellId);
         
-        if (!mapping) return null;
+        // Récupère tous les composants pour ce sort (y compris les alternatives)
+        const mappings = componentMapping.filter(m => m.spellId === spellId);
         
-        const item = items.find(i => i.id === mapping.itemId);
-        if (!item) return null;
+        if (mappings.length === 0) return null;
         
-        return { item, required: mapping };
+        // Regroupe les composants par groupe d'alternatives
+        const groups = new Map<string | undefined, SpellComponentMapping[]>();
+        mappings.forEach(m => {
+          const groupId = m.alternativeGroupId;
+          if (!groups.has(groupId)) {
+            groups.set(groupId, []);
+          }
+          groups.get(groupId)!.push(m);
+        });
+        
+        // Pour chaque groupe, trouve le premier composant disponible
+        for (const [groupId, groupMappings] of groups) {
+          if (groupId === undefined) {
+            // Composant requis (pas d'alternative) - prend le premier
+            const mapping = groupMappings[0];
+            const item = items.find(i => i.id === mapping.itemId);
+            if (item && item.quantity >= mapping.quantity) {
+              return { item, required: mapping };
+            }
+          } else {
+            // Groupe d'alternatives - retourne le premier disponible
+            for (const mapping of groupMappings) {
+              const item = items.find(i => i.id === mapping.itemId);
+              if (item && item.quantity >= mapping.quantity) {
+                return { item, required: mapping };
+              }
+            }
+            // Aucune alternative disponible, retourne la première pour l'affichage
+            const firstMapping = groupMappings[0];
+            const firstItem = items.find(i => i.id === firstMapping.itemId);
+            if (firstItem) {
+              return { item: firstItem, required: firstMapping };
+            }
+          }
+        }
+        
+        // Aucun composant trouvé, retourne le premier mapping avec un item null
+        const firstMapping = mappings[0];
+        const item = items.find(i => i.id === firstMapping.itemId);
+        if (item) {
+          return { item, required: firstMapping };
+        }
+        
+        return null;
       },
       
       hasComponentForSpell: (spellId) => {
-        const result = get().getComponentForSpell(spellId);
-        if (!result) return true; // Pas de composante requise
+        const { componentMapping, items } = get();
         
-        return result.item.quantity >= result.required.quantity;
+        // Récupère tous les composants pour ce sort
+        const mappings = componentMapping.filter(m => m.spellId === spellId);
+        
+        if (mappings.length === 0) return true; // Pas de composante requise
+        
+        // Regroupe les composants par groupe d'alternatives
+        const groups = new Map<string | undefined, SpellComponentMapping[]>();
+        mappings.forEach(m => {
+          const groupId = m.alternativeGroupId;
+          if (!groups.has(groupId)) {
+            groups.set(groupId, []);
+          }
+          groups.get(groupId)!.push(m);
+        });
+        
+        // Vérifie chaque groupe
+        for (const [groupId, groupMappings] of groups) {
+          if (groupId === undefined) {
+            // Composant requis (pas d'alternative)
+            const mapping = groupMappings[0];
+            const item = items.find(i => i.id === mapping.itemId);
+            if (!item || item.quantity < mapping.quantity) {
+              return false;
+            }
+          } else {
+            // Groupe d'alternatives - au moins une doit être disponible
+            const hasAlternative = groupMappings.some(mapping => {
+              const item = items.find(i => i.id === mapping.itemId);
+              return item && item.quantity >= mapping.quantity;
+            });
+            if (!hasAlternative) {
+              return false;
+            }
+          }
+        }
+        
+        return true;
       },
       
       getMissingComponents: () => {
         const { componentMapping, items } = get();
         const missing: { spellId: string; spellName: string; itemName: string; required: number; has: number }[] = [];
         
-        // Nécessite une référence aux sorts - on va retourner les IDs pour l'instant
+        // Regroupe les composants par sort et par groupe d'alternatives
+        const spellGroups = new Map<string, Map<string | undefined, SpellComponentMapping[]>>();
+        
         componentMapping.forEach(mapping => {
-          const item = items.find(i => i.id === mapping.itemId);
-          const hasQty = item ? item.quantity : 0;
-          
-          if (hasQty < mapping.quantity) {
-            missing.push({
-              spellId: mapping.spellId,
-              spellName: mapping.spellId, // Sera remplacé par le vrai nom côté composant
-              itemName: item?.name || mapping.itemId,
-              required: mapping.quantity,
-              has: hasQty,
-            });
+          if (!spellGroups.has(mapping.spellId)) {
+            spellGroups.set(mapping.spellId, new Map());
           }
+          const spellGroup = spellGroups.get(mapping.spellId)!;
+          const groupId = mapping.alternativeGroupId;
+          
+          if (!spellGroup.has(groupId)) {
+            spellGroup.set(groupId, []);
+          }
+          spellGroup.get(groupId)!.push(mapping);
         });
+        
+        // Vérifie chaque groupe pour chaque sort
+        for (const [spellId, groups] of spellGroups) {
+          for (const [groupId, groupMappings] of groups) {
+            if (groupId === undefined) {
+              // Composant requis (pas d'alternative)
+              const mapping = groupMappings[0];
+              const item = items.find(i => i.id === mapping.itemId);
+              const hasQty = item ? item.quantity : 0;
+              
+              if (hasQty < mapping.quantity) {
+                missing.push({
+                  spellId: mapping.spellId,
+                  spellName: mapping.spellName,
+                  itemName: item?.name || mapping.itemName,
+                  required: mapping.quantity,
+                  has: hasQty,
+                });
+              }
+            } else {
+              // Groupe d'alternatives - vérifie si au moins une est disponible
+              const hasAlternative = groupMappings.some(mapping => {
+                const item = items.find(i => i.id === mapping.itemId);
+                return item && item.quantity >= mapping.quantity;
+              });
+              
+              // Si aucune alternative n'est disponible, ajoute toutes les alternatives comme manquantes
+              if (!hasAlternative) {
+                groupMappings.forEach(mapping => {
+                  const item = items.find(i => i.id === mapping.itemId);
+                  const hasQty = item ? item.quantity : 0;
+                  
+                  missing.push({
+                    spellId: mapping.spellId,
+                    spellName: mapping.spellName,
+                    itemName: item?.name || mapping.itemName,
+                    required: mapping.quantity,
+                    has: hasQty,
+                  });
+                });
+              }
+            }
+          }
+        }
         
         return missing;
       },

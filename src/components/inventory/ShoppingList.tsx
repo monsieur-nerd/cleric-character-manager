@@ -18,9 +18,10 @@ import {
 } from 'lucide-react';
 import { useShoppingListStore, useInventoryStore, useSpellStore, useChultStore, useCharacterStore, isResurrectionComponent } from '@/stores';
 import { formatPrice } from '@/utils/formatters';
-import type { ShoppingListItem, ShoppingPriority, ComponentAlternative } from '@/types';
+import type { ShoppingListItem, ShoppingPriority, ComponentAlternative, Spell } from '@/types';
 import { priorityLabels, priorityColors, componentTypeLabels } from '@/stores/shoppingListStore';
 import { allSpellComponentMappings, getMaxSpellLevelForCharacter } from '@/data/spellComponentMappings';
+import { SpellDetailModal } from '@/components/spells/SpellDetailModal';
 
 // Prix des composants (depuis les mappings)
 const knownPrices: Record<string, number> = {};
@@ -84,6 +85,10 @@ export function ShoppingList() {
     low: false,
     none: false,
   });
+  
+  // État pour la modale de détail du sort
+  const [selectedSpell, setSelectedSpell] = useState<Spell | null>(null);
+  const [isSpellModalOpen, setIsSpellModalOpen] = useState(false);
   
   // Filtres
   const [classFilter, setClassFilter] = useState<ClassFilter>('all');
@@ -210,12 +215,16 @@ export function ShoppingList() {
   }, [accessibleItems]);
 
   // Nombre d'items manquants (stock < quantité idéale) - uniquement accessibles
+  // Exclut les composants qui sont satisfaits par une alternative
   const totalMissing = useMemo(() => {
     return accessibleItems.filter(item => {
       const inventoryItem = inventoryItems.find(i => i.id === item.itemId);
       const currentStock = inventoryItem?.quantity || 0;
-      return currentStock < item.quantityIdeal;
+      // Si le composant est déjà satisfait par une alternative, ne le compte pas comme manquant
+      const satisfiedByAlt = isSatisfiedByAlternative(item);
+      return currentStock < item.quantityIdeal && !satisfiedByAlt;
     }).length;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accessibleItems, inventoryItems]);
 
   // Stats pour les items futurs
@@ -242,6 +251,14 @@ export function ShoppingList() {
       ...prev,
       [priority]: !prev[priority],
     }));
+  };
+  
+  const handleSpellClick = (spellId: string) => {
+    const spell = getSpellById(spellId);
+    if (spell) {
+      setSelectedSpell(spell);
+      setIsSpellModalOpen(true);
+    }
   };
 
   const handleQuantityChange = (itemId: string, quantity: number) => {
@@ -283,6 +300,41 @@ export function ShoppingList() {
     if (item.componentType === 'reusable_focus' || item.componentType === 'permanent') {
       useShoppingListStore.getState().removeFromShoppingList(item.itemId);
     }
+  };
+
+  // Handler spécifique pour les composants futurs - ne remet pas quantityToBuy à 0
+  const handlePlanPurchase = (item: ShoppingListItem) => {
+    if (item.quantityToBuy <= 0) return;
+    
+    const price = knownPrices[item.itemId] || 0;
+    const inventoryItem = inventoryItems.find(i => i.id === item.itemId);
+    
+    if (inventoryItem) {
+      updateQuantity(item.itemId, inventoryItem.quantity + item.quantityToBuy);
+    } else {
+      const newItem = {
+        id: item.itemId,
+        name: getItemDisplayName(item.itemId),
+        type: getItemType(item.category),
+        description: componentDescriptions[item.itemId] || item.notes || '',
+        quantity: item.quantityToBuy,
+        unitPrice: price,
+        totalPrice: price * item.quantityToBuy,
+        unitWeight: null,
+        totalWeight: 0,
+        isCarried: true,
+        isComponent: item.category === 'component',
+        shoppingPriority: item.priority,
+        componentType: item.componentType,
+        relatedSpells: item.relatedSpells,
+        classSource: item.classSource,
+      };
+      
+      useInventoryStore.getState().addItem(newItem);
+    }
+    
+    // Ne remet PAS quantityToBuy à 0 pour garder la planification active
+    // et permettre d'acheter à nouveau plus tard si besoin
   };
 
   const getItemDisplayName = (itemId: string): string => {
@@ -732,21 +784,22 @@ export function ShoppingList() {
                               const spellInfo = getSpellById(spell.spellId);
                               const spellClass = (spell as { classSource?: 'cleric' | 'wizard' }).classSource || item.classSource;
                               return (
-                                <span 
+                                <button
                                   key={spell.spellId}
-                                  className={`inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full border ${
+                                  onClick={() => handleSpellClick(spell.spellId)}
+                                  className={`inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full border cursor-pointer hover:opacity-80 transition-opacity ${
                                     spell.consumed 
                                       ? 'bg-blood-red/10 text-blood-red border-blood-red/20'
                                       : 'bg-forest/10 text-forest border-forest/20'
                                   }`}
-                                  title={spell.consumed ? 'Composant consommé' : 'Composant réutilisable'}
+                                  title={`Cliquez pour voir les détails de ${spell.spellName}`}
                                 >
                                   {spell.consumed ? <Flame className="w-3 h-3" /> : <Recycle className="w-3 h-3" />}
                                   {spell.spellName}
                                   {spellClass && (
                                     <span className="opacity-60">({classSourceLabels[spellClass]})</span>
                                   )}
-                                </span>
+                                </button>
                               );
                             })}
                           </div>
@@ -843,7 +896,7 @@ export function ShoppingList() {
         </div>
       )}
 
-      {/* Section Composants pour niveaux futurs */}
+      {/* Section Composants à acquérir plus tard */}
       {futureItems.length > 0 && (
         <div className="mt-6 pt-6 border-t-2 border-dashed border-parchment-dark">
           {/* Header de la section futur */}
@@ -851,7 +904,7 @@ export function ShoppingList() {
             <div className="flex items-center gap-3">
               <Clock className="w-6 h-6 text-arcane-purple" />
               <div className="flex-1">
-                <h3 className="font-display text-ink">Composants pour niveaux futurs</h3>
+                <h3 className="font-display text-ink">Composants à acquérir plus tard</h3>
                 <p className="text-xs text-ink-muted">
                   {futureTotalItemsToBuy > 0 
                     ? `${futureTotalItemsToBuy} unité${futureTotalItemsToBuy > 1 ? 's' : ''} à prévoir` 
@@ -946,6 +999,14 @@ export function ShoppingList() {
                                   }`}>
                                     {getItemDisplayName(item.itemId)}
                                   </span>
+                                  
+                                  {/* Badge À prévoir */}
+                                  {item.quantityToBuy > 0 && (
+                                    <span className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded bg-arcane-purple/20 text-arcane-purple border border-arcane-purple/30 font-medium">
+                                      <Clock className="w-3 h-3" />
+                                      À prévoir
+                                    </span>
+                                  )}
                                   
                                   {/* Badge niveau du sort */}
                                   {spellLevel !== undefined && (
@@ -1054,21 +1115,22 @@ export function ShoppingList() {
                                   const spellInfo = getSpellById(spell.spellId);
                                   const spellClass = (spell as { classSource?: 'cleric' | 'wizard' }).classSource || item.classSource;
                                   return (
-                                    <span 
+                                    <button
                                       key={spell.spellId}
-                                      className={`inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full border ${
+                                      onClick={() => handleSpellClick(spell.spellId)}
+                                      className={`inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full border cursor-pointer hover:opacity-80 transition-opacity ${
                                         spell.consumed 
                                           ? 'bg-blood-red/10 text-blood-red border-blood-red/20'
                                           : 'bg-forest/10 text-forest border-forest/20'
                                       }`}
-                                      title={spell.consumed ? 'Composant consommé' : 'Composant réutilisable'}
+                                      title={`Cliquez pour voir les détails de ${spell.spellName}`}
                                     >
                                       {spell.consumed ? <Flame className="w-3 h-3" /> : <Recycle className="w-3 h-3" />}
                                       {spell.spellName}
                                       {spellClass && (
                                         <span className="opacity-60">({classSourceLabels[spellClass]})</span>
                                       )}
-                                    </span>
+                                    </button>
                                   );
                                 })}
                               </div>
@@ -1097,19 +1159,19 @@ export function ShoppingList() {
                                 )}
                               </div>
                               
-                              {/* Bouton Acheter */}
+                              {/* Bouton Acheter (même style que les composants accessibles) */}
                               <button
-                                onClick={() => handlePurchase(item)}
+                                onClick={() => handlePlanPurchase(item)}
                                 disabled={item.quantityToBuy <= 0}
                                 className={`btn btn-sm ${
                                   item.quantityToBuy > 0 
-                                    ? 'btn-secondary' 
+                                    ? 'btn-primary' 
                                     : 'bg-parchment-dark text-ink-muted cursor-not-allowed'
                                 }`}
                               >
                                 {isComplete && !isConsumed
                                   ? 'Possédé'
-                                  : 'Prévoir'}
+                                  : 'Acheter'}
                               </button>
                             </div>
                           </div>
@@ -1126,7 +1188,7 @@ export function ShoppingList() {
           <div className="card bg-arcane-purple/5 border-arcane-purple/20 mt-4">
             <h4 className="font-display text-sm text-ink mb-2 flex items-center gap-2">
               <Sparkle className="w-4 h-4 text-arcane-purple" />
-              Résumé composants futurs
+              Résumé composants à acquérir
             </h4>
             <div className="grid grid-cols-2 gap-3 text-sm">
               <div>
@@ -1144,6 +1206,15 @@ export function ShoppingList() {
             </div>
           </div>
         </div>
+      )}
+      
+      {/* Modale de détail du sort */}
+      {selectedSpell && (
+        <SpellDetailModal
+          spell={selectedSpell}
+          isOpen={isSpellModalOpen}
+          onClose={() => setIsSpellModalOpen(false)}
+        />
       )}
     </div>
   );

@@ -1,9 +1,10 @@
-import { useState } from 'react';
-import { X, Clock, Target, Sparkles, BookOpen, Zap, Shield, AlertCircle, Mic } from 'lucide-react';
+import { useState, useMemo } from 'react';
+import { X, Clock, Target, Sparkles, BookOpen, Zap, Shield, AlertCircle, Mic, Check, GitBranch } from 'lucide-react';
 import type { Spell } from '@/types';
 import { useInventoryStore } from '@/stores';
 import { useSpellIncantation, useCanHaveIncantation } from '@/hooks/useSpellIncantation';
 import { ConcentrationHelpModal } from './ConcentrationHelpModal';
+import { getComponentsForSpell } from '@/data/spellComponentMappings';
 
 interface SpellDetailModalProps {
   spell: Spell;
@@ -25,6 +26,7 @@ export function SpellDetailModal({
   const [showConcentrationHelp, setShowConcentrationHelp] = useState(false);
   const hasComponent = useInventoryStore((state) => state.hasComponentForSpell(spell.id));
   const componentData = useInventoryStore((state) => state.getComponentForSpell(spell.id));
+  const inventoryItems = useInventoryStore((state) => state.items);
   const incantation = useSpellIncantation(spell);
   const canHaveIncantation = useCanHaveIncantation(spell);
   
@@ -33,6 +35,36 @@ export function SpellDetailModal({
   const isDomain = isDomainSpell ?? spell.isDomainSpell;
   const isAlwaysPrepared = isDomain || isCantrip;
   const isPreparedEffective = isPrepared || isAlwaysPrepared;
+
+  // Récupère les détails des composants pour ce sort
+  const componentDetails = useMemo(() => {
+    const mappings = getComponentsForSpell(spell.id);
+    if (mappings.length === 0) return null;
+
+    // Regroupe par groupe d'alternatives
+    const groups = new Map<string | undefined, typeof mappings>();
+    mappings.forEach(m => {
+      const groupId = m.alternativeGroupId;
+      if (!groups.has(groupId)) {
+        groups.set(groupId, []);
+      }
+      groups.get(groupId)!.push(m);
+    });
+
+    return Array.from(groups.entries()).map(([groupId, groupMappings]) => ({
+      isAlternative: groupId !== undefined,
+      groupId,
+      components: groupMappings.map(m => {
+        const item = inventoryItems.find(i => i.id === m.itemId);
+        const hasQty = item ? item.quantity : 0;
+        return {
+          ...m,
+          currentQty: hasQty,
+          isAvailable: hasQty >= m.quantity,
+        };
+      }),
+    }));
+  }, [spell.id, inventoryItems]);
 
   if (!isOpen) return null;
 
@@ -187,7 +219,76 @@ export function SpellDetailModal({
           </div>
 
           {/* Alerte composante */}
-          {spell.components.material && (
+          {spell.components.material && componentDetails && (
+            <div className={`p-3 rounded-lg ${
+              hasComponent ? 'bg-forest/10 border border-forest/30' : 'bg-blood-red/10 border border-blood-red/30'
+            }`}>
+              <div className="flex items-start gap-2 mb-2">
+                <AlertCircle className={`w-5 h-5 flex-shrink-0 mt-0.5 ${hasComponent ? 'text-forest' : 'text-blood-red'}`} />
+                <p className={`text-sm font-medium ${hasComponent ? 'text-forest' : 'text-blood-red'}`}>
+                  {hasComponent 
+                    ? '✓ Composantes disponibles'
+                    : '✗ Composantes manquantes'
+                  }
+                </p>
+              </div>
+              
+              {/* Liste détaillée des composants */}
+              <div className="space-y-2 mt-2">
+                {componentDetails.map((group, groupIndex) => (
+                  <div 
+                    key={group.groupId || `required-${groupIndex}`}
+                    className={`p-2 rounded ${group.isAlternative ? 'bg-arcane-purple/5 border border-arcane-purple/20' : 'bg-parchment/50'}`}
+                  >
+                    {group.isAlternative && (
+                      <p className="text-xs text-arcane-purple mb-1 flex items-center gap-1">
+                        <GitBranch className="w-3 h-3" />
+                        Alternative (une seule nécessaire)
+                      </p>
+                    )}
+                    <div className="space-y-1">
+                      {group.components.map(comp => (
+                        <div 
+                          key={comp.itemId}
+                          className={`flex items-center justify-between text-sm ${
+                            comp.isAvailable ? 'text-forest' : 'text-blood-red'
+                          }`}
+                        >
+                          <div className="flex items-center gap-2">
+                            {comp.isAvailable ? (
+                              <Check className="w-4 h-4" />
+                            ) : (
+                              <AlertCircle className="w-4 h-4" />
+                            )}
+                            <span className={comp.isAvailable ? '' : 'font-medium'}>
+                              {comp.itemName}
+                            </span>
+                            {comp.consumed && (
+                              <span className="text-[10px] px-1.5 py-0.5 rounded bg-blood-red/10 text-blood-red">
+                                Consommé
+                              </span>
+                            )}
+                          </div>
+                          <span className="text-xs">
+                            {comp.currentQty}/{comp.quantity}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              {spell.components.materialConsumed && (
+                <p className="text-xs text-ink-muted mt-2 pt-2 border-t border-ink/10">
+                  Certains composants sont consommés lors du lancement du sort.
+                </p>
+              )}
+            </div>
+          )}
+          
+          {/* Fallback si pas de mapping mais composante textuelle */}
+          {spell.components.material && !componentDetails && (
             <div className={`p-3 rounded-lg flex items-start gap-2 ${
               hasComponent ? 'bg-forest/10 border border-forest/30' : 'bg-blood-red/10 border border-blood-red/30'
             }`}>
