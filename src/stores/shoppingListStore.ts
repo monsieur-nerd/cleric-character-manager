@@ -598,7 +598,7 @@ export const useShoppingListStore = create<ShoppingListStore>()(
     }),
     {
       name: STORAGE_KEYS.SHOPPING_LIST,
-      version: 3,
+      version: 4,
       partialize: (state) => ({
         shoppingItems: state.shoppingItems,
         notifications: state.notifications,
@@ -607,7 +607,7 @@ export const useShoppingListStore = create<ShoppingListStore>()(
       }),
       migrate: (persistedState: unknown, version: number) => {
         // Migration pour nettoyer les anciens items avec IDs combinés
-        if (version < 3) {
+        if (version < 4) {
           const state = persistedState as ShoppingListStore;
           const validItemIds = new Set(allSpellComponentMappings.map(m => m.itemId));
           
@@ -616,7 +616,8 @@ export const useShoppingListStore = create<ShoppingListStore>()(
             'encens-offrande', 'encens-or', 'eau-argent', 'eau-herbes',
             'encens-eau', 'encens-poudre', 'jaspe-perle', 'encens-herbes',
             'encens-perle', 'encens-communion', 'offrande-communion',
-            'eau-bénite-argent', 'eau-bénite-herbes', 'encens-poudre-os'
+            'eau-bénite-argent', 'eau-bénite-herbes', 'encens-poudre-os',
+            'poil-plume-bete'
           ];
           
           const isObsoleteId = (itemId: string): boolean => {
@@ -631,7 +632,7 @@ export const useShoppingListStore = create<ShoppingListStore>()(
             item => !isObsoleteId(item.itemId)
           );
           
-          console.log(`[Migration v3] Supprimé ${(state.shoppingItems || []).length - cleanedItems.length} items obsolètes`);
+          console.log(`[Migration v4] Supprimé ${(state.shoppingItems || []).length - cleanedItems.length} items obsolètes`);
           
           return {
             ...state,
