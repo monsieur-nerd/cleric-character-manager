@@ -516,8 +516,8 @@ export function CombatPage() {
               <p className="font-bold text-divine-gold-dark">✨ Le combo optimal (Clerc Caster)</p>
               <p className="text-ink-light">
                 <strong>Action :</strong> Attaque ou Sort<br/>
-                <strong>Action bonus :</strong> Sort rapide (ex: <em>Arme spirituelle</em>, <em>Flamme sacrée</em> en action bonus via métamagie)<br/>
-                → Certains sorts se lancent en action bonus ! Consultez la fiche de votre sort.
+                <strong>Action bonus :</strong> Sort rapide (ex: <em>Santuaire</em>, <em>Arme spirituelle</em>)<br/>
+                → Certains sorts se lancent en action bonus ! Consultez l'incantation sur la fiche du sort.
               </p>
             </div>
           </div>

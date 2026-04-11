@@ -759,6 +759,72 @@ export const INCANTATION_TEMPLATES: Record<string, Record<SpellCategory, string[
     ],
   },
   
+  // ===== SÉLUNÉ - Déesse de la lune =====
+  'selune': {
+    healing: [
+      'Séluné, Dame d\'Argent, que ta lumière guérisse !',
+      'Par le clair de lune, que la vie revienne !',
+      'Que la lune veille sur ton rétablissement !',
+    ],
+    protection: [
+      'Séluné, enveloppe-moi de ta lueur protectrice !',
+      'Par la lumière de la lune, sois protégé !',
+      'Aucun mal ne passe sous le regard de la lune !',
+    ],
+    attack: [
+      'Séluné frappe par le froid de la nuit !',
+      'Que le rayon lunaire brûle l\'ennemi !',
+      'Par la colère de la lune, sois puni !',
+    ],
+    buff: [
+      'Séluné te bénit de sa clarté !',
+      'Que la lune te guide et te fortifie !',
+      'Par la lumière argentée, deviens plus fort !',
+    ],
+    detection: [
+      'Séluné voit tout dans la nuit !',
+      'Par la clairvoyance lunaire, révèle !',
+      'Aucun secret n\'échappe à la lune !',
+    ],
+    control: [
+      'Séluné apaise les esprits agités !',
+      'Par la sérénité de la nuit, calme-toi !',
+      'Que la lune endorme ta volonté !',
+    ],
+    movement: [
+      'Par les rayons de la lune, voyage !',
+      'Séluné ouvre la voie dans l\'obscurité !',
+      'Que la lune te porte !',
+    ],
+    necromancy: [
+      'Séluné rappelle les âmes errantes !',
+      'Par le cycle lunaire, retourne à la vie !',
+      'La lune veille même sur les morts !',
+    ],
+    utility: [
+      'Séluné façonne la nuit !',
+      'Par la magie lunaire, soit !',
+      'Que la lune accomplisse ton désir !',
+    ],
+    conjuration: [
+      'Séluné appelle ses serviteurs célestes !',
+      'Que les créatures de la nuit répondent !',
+      'Par la lumière de la pleine lune, viens !',
+    ],
+    evocation: [
+      'Par le rayon lunaire, frappe !',
+      'Séluné déchaine la puissance de la lune !',
+    ],
+    abjuration: [
+      'Par la barrière d\'argent, repousse !',
+      'Séluné dissipe la magie !',
+    ],
+    transmutation: [
+      'Par le cycle lunaire, transforme !',
+      'Séluné change comme les phases de la lune !',
+    ],
+  },
+  
   // ===== AZUTH - Dieu des mages =====
   'azuth': {
     healing: [

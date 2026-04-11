@@ -39,7 +39,7 @@ export const spellsData: Spell[] = [
     "description": "Vous touchez une créature consentante. Une fois avant la fin du sort, la cible peut lancer un d4 et ajouter le résultat du dé à un jet de caractéristique de son choix. Elle peut lancer le dé avant ou après avoir effectué son jet de caractéristique. Le sort prend alors fin.",
     "descriptionShort": "Vous touchez une créature consentante. Une fois avant la fin du sort, la cible peut lancer un d4 et ajouter le résultat du dé à un jet de caractéristique de son choix. Elle peut lancer le dé avant ou ...",
     "higherLevels": null,
-    "incantation": "Alga Ul que l’esprit de Tarn guident tes actions.",
+    "incantation": "Alga Ul que l’esprit de {deity} guident tes actions.",
     "recommendation": null,
     "source": "core",
     "summary": "+1d4 jet"
@@ -69,7 +69,7 @@ export const spellsData: Spell[] = [
     "description": "Un rayonnement semblable à des flammes descend sur une créature que vous pouvez voir dans la portée du sort. La cible doit réussir un jet de sauvegarde de Dextérité ou subir 1d8 dégâts radiants. La cible ne gagne aucun bénéfice d'abri pour ce jet de sauvegarde. Les dégâts du sort augmentent de 1d8 lorsque vous atteignez le niveau 5 (2d8), le niveau 11 (3d8), et le niveau 17 (4d8).",
     "descriptionShort": "Un rayonnement semblable à des flammes descend sur une créature que vous pouvez voir dans la portée du sort. La cible doit réussir un jet de sauvegarde de Dextérité ou subir 1d8 dégâts radiants. La ci...",
     "higherLevels": "Effets par niveau de clerc",
-    "incantation": "Gaiunga, que l’être que j’ai devant moi se consumme dans tes flammes Ô Seigneur Tarn. ",
+    "incantation": "Gaiunga, que l’être que j’ai devant moi se consumme dans tes flammes Ô Seigneur {deity}. ",
     "recommendation": null,
     "source": "core",
     "summary": "1d8 radiants"
@@ -375,7 +375,7 @@ export const spellsData: Spell[] = [
     "description": "Pour la durée du sort, vous percevez la présence de magie à 9 mètres ou moins de vous. Si vous percevez de la magie de cette manière, vous pouvez utiliser votre action pour discerner une faible aura enveloppant une créature ou un objet visible dans la zone qui présente de la magie. Vous déterminez aussi l'école de magie, le cas échéant. Le sort peut outrepasser la plupart des obstacles mais il est bloqué par 30 cm de pierre, 2,50 cm de métal ordinaire, une mince feuille de plomb ou 90 cm de bois ou de terre.",
     "descriptionShort": "Pour la durée du sort, vous percevez la présence de magie à 9 mètres ou moins de vous. Si vous percevez de la magie de cette manière, vous pouvez utiliser votre action pour discerner une faible aura e...",
     "higherLevels": null,
-    "incantation": "Magicae divinaris, Seigneur Tarn, montre-moi la vérité au-delà du voile de la réalité. Que les choses m’apparaissent telles qu’elles sont.",
+    "incantation": "Magicae divinaris, Seigneur {deity}, montre-moi la vérité au-delà du voile de la réalité. Que les choses m’apparaissent telles qu’elles sont.",
     "recommendation": null,
     "source": "core",
     "summary": "Détecte magie 9m"
@@ -560,7 +560,7 @@ export const spellsData: Spell[] = [
     "description": "Une créature visible de votre choix récupère des points de vie à hauteur de 1d4 + le modificateur de votre caractéristique d'incantation (bonus de sagesse pour le clerc). Ce sort n'a pas d'effet sur les morts-vivants et les créatures artificielles. Aux niveaux supérieurs. Lorsque vous lancez ce sort en utilisant un emplacement de sort de niveau 2 ou plus, les points de vie récupérés augmentent de 1d4 pour chaque niveau d'emplacement supérieur au niveau 1.",
     "descriptionShort": "Une créature visible de votre choix récupère des points de vie à hauteur de 1d4 + le modificateur de votre caractéristique d'incantation (bonus de sagesse pour le clerc). Ce sort n'a pas d'effet sur l...",
     "higherLevels": "Effets par niveau de sort",
-    "incantation": "Guerio Fortitus, sens le fluide vital qui s’écoule à nouveau dans tes veines par la grâce de Tarn.  ",
+    "incantation": "Guerio Fortitus, sens le fluide vital qui s’écoule à nouveau dans tes veines par la grâce de {deity}.  ",
     "recommendation": null,
     "source": "core",
     "summary": "1d4+SAG PV"
@@ -652,7 +652,7 @@ export const spellsData: Spell[] = [
     "description": "Vous protégez une créature dans la portée du sort contre les attaques. Jusqu'à ce que le sort se termine, toute créature qui cible la créature protégée avec une attaque ou un sort offensif doit d'abord effectuer un jet de sauvegarde de Sagesse. En cas d'échec, la créature doit choisir une nouvelle cible ou perdre son attaque ou son sort. Ce sort ne protège pas la créature protégée contre les sorts à zone d'effet, tel que l'explosion d'une boule de feu. Si la créature protégée fait une attaque ou lance un sort qui affecte une créature ennemie, ce sort se termine.",
     "descriptionShort": "Vous protégez une créature dans la portée du sort contre les attaques. Jusqu'à ce que le sort se termine, toute créature qui cible la créature protégée avec une attaque ou un sort offensif doit d'abor...",
     "higherLevels": null,
-    "incantation": "Sanctuaris Ultimae, appaise toi auprès de Tarn et soigne-toi. ",
+    "incantation": "Sanctuaris Ultimae, appaise-toi auprès de {deity} et sois protégé.",
     "recommendation": null,
     "source": "core",
     "summary": "Protège cible"

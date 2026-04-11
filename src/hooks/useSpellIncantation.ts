@@ -19,13 +19,16 @@ export function useSpellIncantation(spell: Spell | null | undefined): string | n
       return null;
     }
     
+    // Récupérer la divinité du personnage
+    const deity = character.deity;
+    
     // Si une incantation spécifique existe déjà dans le sort, l'utiliser
+    // en remplaçant {deity} par le nom du dieu actuel
     if (spell.incantation) {
-      return spell.incantation;
+      return spell.incantation.replace(/{deity}/g, deity?.name || 'divinité');
     }
     
     // Sinon, générer une incantation selon le dieu
-    const deity = character.deity;
     if (!deity) {
       return null;
     }
