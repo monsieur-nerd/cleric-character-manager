@@ -57,6 +57,7 @@ interface ShoppingListActions {
     newComponents: SpellComponentMapping[];
   };
   addComponentsForNewSpells: (spellIds: string[], classSource: 'cleric' | 'wizard') => void;
+  syncComponentsWithKnownSpells: (knownSpellIds: string[], classSource?: 'cleric' | 'wizard') => void;
   getItemsByClassSource: (classSource: 'cleric' | 'wizard' | 'all') => ShoppingListItem[];
   getCriticalComponents: () => ShoppingListItem[];
   setItemClassSource: (itemId: string, classSource: 'cleric' | 'wizard') => void;
@@ -518,6 +519,23 @@ export const useShoppingListStore = create<ShoppingListStore>()(
         });
       },
       
+      // Synchronise les composants avec les sorts connus (utile après migration)
+      syncComponentsWithKnownSpells: (knownSpellIds: string[], classSource: 'cleric' | 'wizard' = 'cleric') => {
+        const { shoppingItems, addComponentsForNewSpells } = get();
+        const validItemIds = new Set(allSpellComponentMappings.map(m => m.itemId));
+        
+        // Supprime les items obsolètes qui ne correspondent à aucun mapping valide
+        const obsoleteItems = shoppingItems.filter(item => !validItemIds.has(item.itemId));
+        obsoleteItems.forEach(item => {
+          get().removeFromShoppingList(item.itemId);
+        });
+        
+        // Ajoute les composants pour tous les sorts connus
+        addComponentsForNewSpells(knownSpellIds, classSource);
+        
+        console.log(`[Sync] Composants synchronisés pour ${knownSpellIds.length} sorts connus`);
+      },
+      
       // Multiclassage - filtre par classe
       getItemsByClassSource: (classSource) => {
         const { shoppingItems } = get();
@@ -580,13 +598,48 @@ export const useShoppingListStore = create<ShoppingListStore>()(
     }),
     {
       name: STORAGE_KEYS.SHOPPING_LIST,
-      version: 2,
+      version: 3,
       partialize: (state) => ({
         shoppingItems: state.shoppingItems,
         notifications: state.notifications,
         globalRestockConfig: state.globalRestockConfig,
         multiclassConfig: state.multiclassConfig,
       }),
+      migrate: (persistedState: unknown, version: number) => {
+        // Migration pour nettoyer les anciens items avec IDs combinés
+        if (version < 3) {
+          const state = persistedState as ShoppingListStore;
+          const validItemIds = new Set(allSpellComponentMappings.map(m => m.itemId));
+          
+          // IDs combinés obsolètes à supprimer
+          const obsoletePatterns = [
+            'encens-offrande', 'encens-or', 'eau-argent', 'eau-herbes',
+            'encens-eau', 'encens-poudre', 'jaspe-perle', 'encens-herbes',
+            'encens-perle', 'encens-communion', 'offrande-communion',
+            'eau-bénite-argent', 'eau-bénite-herbes', 'encens-poudre-os'
+          ];
+          
+          const isObsoleteId = (itemId: string): boolean => {
+            // Si l'ID n'existe pas dans les mappings valides
+            if (!validItemIds.has(itemId)) return true;
+            // Ou s'il correspond à un pattern obsolète
+            return obsoletePatterns.some(pattern => itemId.includes(pattern));
+          };
+          
+          // Filtrer les items obsolètes
+          const cleanedItems = (state.shoppingItems || []).filter(
+            item => !isObsoleteId(item.itemId)
+          );
+          
+          console.log(`[Migration v3] Supprimé ${(state.shoppingItems || []).length - cleanedItems.length} items obsolètes`);
+          
+          return {
+            ...state,
+            shoppingItems: cleanedItems,
+          };
+        }
+        return persistedState as ShoppingListStore;
+      },
     }
   )
 );

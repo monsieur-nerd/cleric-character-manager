@@ -70,6 +70,7 @@ export function ShoppingList() {
   const setQuantityToBuy = useShoppingListStore((state) => state.setQuantityToBuy);
   const addComponentForSpell = useShoppingListStore((state) => state.addComponentForSpell);
   const addComponentsForNewSpells = useShoppingListStore((state) => state.addComponentsForNewSpells);
+  const syncComponentsWithKnownSpells = useShoppingListStore((state) => state.syncComponentsWithKnownSpells);
   const getCriticalComponents = useShoppingListStore((state) => state.getCriticalComponents);
   
   const inventoryItems = useInventoryStore((state) => state.items);
@@ -523,9 +524,23 @@ export function ShoppingList() {
       {/* Filtres */}
       {shoppingItems.length > 0 && (
         <div className="card bg-parchment-light border-parchment-dark">
-          <div className="flex items-center gap-2 mb-3">
-            <Filter className="w-4 h-4 text-ink-muted" />
-            <span className="text-sm font-medium text-ink">Filtres</span>
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <Filter className="w-4 h-4 text-ink-muted" />
+              <span className="text-sm font-medium text-ink">Filtres</span>
+            </div>
+            <button
+              onClick={() => {
+                const knownSpellIds = useCharacterStore.getState().character.knownSpellIds;
+                if (knownSpellIds.length > 0) {
+                  syncComponentsWithKnownSpells(knownSpellIds, 'cleric');
+                }
+              }}
+              className="text-xs px-2 py-1 rounded border bg-forest/10 text-forest border-forest/30 hover:bg-forest/20 transition-colors"
+              title="Synchronise les composants avec les sorts connus (supprime les items obsolètes)"
+            >
+              🔄 Sync composants
+            </button>
           </div>
           <div className="flex flex-wrap gap-3">
             {/* Filtre par classe */}
