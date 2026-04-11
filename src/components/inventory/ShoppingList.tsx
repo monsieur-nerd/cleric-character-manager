@@ -326,22 +326,23 @@ export function ShoppingList() {
   };
 
   const handlePurchase = (item: ShoppingListItem) => {
-    if (item.quantityToBuy <= 0) return;
+    // Utilise quantityToBuy si > 0, sinon achète 1 par défaut
+    const qtyToPurchase = item.quantityToBuy > 0 ? item.quantityToBuy : 1;
     
     const price = knownPrices[item.itemId] || 0;
     const inventoryItem = inventoryItems.find(i => i.id === item.itemId);
     
     if (inventoryItem) {
-      updateQuantity(item.itemId, inventoryItem.quantity + item.quantityToBuy);
+      updateQuantity(item.itemId, inventoryItem.quantity + qtyToPurchase);
     } else {
       const newItem = {
         id: item.itemId,
         name: getItemDisplayName(item.itemId),
         type: getItemType(item.category),
         description: componentDescriptions[item.itemId] || item.notes || '',
-        quantity: item.quantityToBuy,
+        quantity: qtyToPurchase,
         unitPrice: price,
-        totalPrice: price * item.quantityToBuy,
+        totalPrice: price * qtyToPurchase,
         unitWeight: null,
         totalWeight: 0,
         isCarried: true,
@@ -364,22 +365,23 @@ export function ShoppingList() {
 
   // Handler spécifique pour les composants futurs - ne remet pas quantityToBuy à 0
   const handlePlanPurchase = (item: ShoppingListItem) => {
-    if (item.quantityToBuy <= 0) return;
+    // Utilise quantityToBuy si > 0, sinon achète 1 par défaut
+    const qtyToPurchase = item.quantityToBuy > 0 ? item.quantityToBuy : 1;
     
     const price = knownPrices[item.itemId] || 0;
     const inventoryItem = inventoryItems.find(i => i.id === item.itemId);
     
     if (inventoryItem) {
-      updateQuantity(item.itemId, inventoryItem.quantity + item.quantityToBuy);
+      updateQuantity(item.itemId, inventoryItem.quantity + qtyToPurchase);
     } else {
       const newItem = {
         id: item.itemId,
         name: getItemDisplayName(item.itemId),
         type: getItemType(item.category),
         description: componentDescriptions[item.itemId] || item.notes || '',
-        quantity: item.quantityToBuy,
+        quantity: qtyToPurchase,
         unitPrice: price,
-        totalPrice: price * item.quantityToBuy,
+        totalPrice: price * qtyToPurchase,
         unitWeight: null,
         totalWeight: 0,
         isCarried: true,
@@ -904,7 +906,6 @@ export function ShoppingList() {
                           {/* Bouton Acheter */}
                           <button
                             onClick={() => handlePurchase(item)}
-                            disabled={item.quantityToBuy <= 0}
                             className="btn btn-sm btn-primary"
                           >
                             Acheter
@@ -1236,7 +1237,6 @@ export function ShoppingList() {
                               {/* Bouton Acheter (même style que les composants accessibles) */}
                               <button
                                 onClick={() => handlePlanPurchase(item)}
-                                disabled={item.quantityToBuy <= 0}
                                 className="btn btn-sm btn-primary"
                               >
                                 Acheter
