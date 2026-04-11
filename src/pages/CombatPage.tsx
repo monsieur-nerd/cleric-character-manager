@@ -51,7 +51,7 @@ function ReactionsCard({ character, preparedSpells }: { character: Character; pr
   if (domainId === 'war') {
     domainReactions.push({
       icon: <Target className="w-4 h-4 text-bronze" />,
-      title: 'Guided Strike (timing)',
+      title: 'Frappe guidée (timing)',
       desc: "Action Conduit divin utilisée après avoir vu le résultat d'un jet d'attaque. Pas une réaction, mais un timing très rapide.",
     });
   }
@@ -812,7 +812,7 @@ export function CombatPage() {
               </p>
               
               <div className="bg-royal-purple/10 p-2 rounded">
-                <p className="font-bold text-royal-purple">⚔️ Clerc de Guerre (Guided Strike)</p>
+                <p className="font-bold text-royal-purple">⚔️ Clerc de Guerre (Frappe guidée)</p>
                 <p className="text-ink-light">
                   Après avoir vu le résultat d'une attaque : <strong>+10 au jet d'attaque</strong>
                 </p>
