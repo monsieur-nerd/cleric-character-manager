@@ -524,9 +524,15 @@ export const useShoppingListStore = create<ShoppingListStore>()(
         const { shoppingItems, addComponentsForNewSpells } = get();
         const validItemIds = new Set(allSpellComponentMappings.map(m => m.itemId));
         
+        console.log('[Sync] Shopping items:', shoppingItems.map(i => i.itemId));
+        console.log('[Sync] Valid item IDs:', Array.from(validItemIds).filter(id => id.includes('poil') || id.includes('plume')));
+        
         // Supprime les items obsolètes qui ne correspondent à aucun mapping valide
         const obsoleteItems = shoppingItems.filter(item => !validItemIds.has(item.itemId));
+        console.log('[Sync] Obsolete items found:', obsoleteItems.map(i => i.itemId));
+        
         obsoleteItems.forEach(item => {
+          console.log('[Sync] Removing obsolete item:', item.itemId);
           get().removeFromShoppingList(item.itemId);
         });
         
