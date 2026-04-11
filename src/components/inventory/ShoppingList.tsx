@@ -124,10 +124,26 @@ export function ShoppingList() {
 
   // Détermine si un composant est pour un niveau accessible maintenant
   const isComponentAccessibleNow = (item: ShoppingListItem): boolean => {
-    // Vérifie si au moins un sort lié est accessible
-    if (!item.relatedSpells || item.relatedSpells.length === 0) return true;
+    // Cherche tous les mappings pour ce composant (même itemId peut servir pour plusieurs sorts)
+    const mappings = allSpellComponentMappings.filter(m => m.itemId === item.itemId);
+    
+    // Si on trouve des mappings, vérifie si au moins un est accessible
+    if (mappings.length > 0) {
+      return mappings.some(m => m.spellLevel <= maxAccessibleSpellLevel);
+    }
+    
+    // Fallback : vérifie via relatedSpells si pas de mapping direct
+    if (!item.relatedSpells || item.relatedSpells.length === 0) {
+      // Si pas de mapping et pas de relatedSpells, considère comme accessible
+      return true;
+    }
     
     return item.relatedSpells.some(spell => {
+      // Si le spellLevel est déjà stocké dans relatedSpells, l'utiliser
+      if (spell.spellLevel !== undefined) {
+        return spell.spellLevel <= maxAccessibleSpellLevel;
+      }
+      
       const mapping = allSpellComponentMappings.find(m => 
         m.spellId === spell.spellId && m.itemId === item.itemId
       );
@@ -671,6 +687,14 @@ export function ShoppingList() {
                     const satisfiedByAlt = hasAlternatives && isSatisfiedByAlternative(item);
                     const isAltOwned = hasAlternatives && isOwnedAlternative(item);
                     
+                    // Récupère le niveau du sort pour cet item
+                    const relatedSpell = item.relatedSpells?.[0];
+                    const spellLevel = relatedSpell
+                      ? (relatedSpell.spellLevel !== undefined 
+                          ? relatedSpell.spellLevel 
+                          : allSpellComponentMappings.find(m => m.spellId === relatedSpell.spellId)?.spellLevel)
+                      : undefined;
+                    
                     return (
                       <div 
                         key={item.itemId}
@@ -691,6 +715,13 @@ export function ShoppingList() {
                               }`}>
                                 {getItemDisplayName(item.itemId)}
                               </span>
+                              
+                              {/* Badge niveau du sort */}
+                              {spellLevel !== undefined && (
+                                <span className="text-[10px] px-1.5 py-0.5 rounded bg-arcane-purple/10 text-arcane-purple border border-arcane-purple/20">
+                                  {spellLevel === 0 ? 'Sort mineur' : `Sort niv. ${spellLevel}`}
+                                </span>
+                              )}
                               
                               {/* Badge alternative */}
                               {hasAlternatives && (
@@ -983,8 +1014,12 @@ export function ShoppingList() {
                         const isAltOwned = hasAlternatives && isOwnedAlternative(item);
                         
                         // Récupère le niveau du sort pour cet item
-                        const spellLevel = item.relatedSpells?.[0] 
-                          ? allSpellComponentMappings.find(m => m.spellId === item.relatedSpells![0].spellId)?.spellLevel 
+                        // Priorité : spellLevel dans relatedSpells, sinon recherche dans mappings
+                        const relatedSpell = item.relatedSpells?.[0];
+                        const spellLevel = relatedSpell
+                          ? (relatedSpell.spellLevel !== undefined 
+                              ? relatedSpell.spellLevel 
+                              : allSpellComponentMappings.find(m => m.spellId === relatedSpell.spellId)?.spellLevel)
                           : undefined;
                         
                         return (

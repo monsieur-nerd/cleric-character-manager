@@ -111,7 +111,7 @@ export function SpellDetailModal({
           <div className="min-w-0">
             <div className="flex items-center gap-2 mb-1">
               <span className="text-2xl flex-shrink-0">{getSchoolIcon(spell.school)}</span>
-              <h2 className="font-display text-lg sm:text-xl text-ink break-words leading-tight">{spell.name} {spell.level === 0 ? '(M)' : `(${spell.level})`}</h2>
+              <h2 className="font-display text-lg sm:text-xl text-ink break-words leading-tight">{spell.name}</h2>
             </div>
             {spell.nameEn && (
               <p className="text-sm text-ink-muted italic">{spell.nameEn}</p>
@@ -128,12 +128,9 @@ export function SpellDetailModal({
         <div className="p-4 space-y-4">
           {/* Badges */}
           <div className="flex flex-wrap gap-2">
-            <span 
-              className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-gradient-to-br from-steel-blue to-blue-900 text-white font-bold text-sm shadow-md"
-              style={{ fontFamily: "'Cinzel', serif" }}
-              title={spell.level === 0 ? 'Tour de magie (Mineur)' : `Sort de niveau ${spell.level}`}
-            >
-              {spell.level === 0 ? 'M' : spell.level}
+            {/* Badge niveau du sort - style cohérent avec les composants */}
+            <span className="text-[10px] px-1.5 py-0.5 rounded bg-arcane-purple/10 text-arcane-purple border border-arcane-purple/20">
+              {spell.level === 0 ? 'Sort mineur' : `Sort niv. ${spell.level}`}
             </span>
             <span className="badge bg-steel-blue/20 text-steel-blue border border-steel-blue">
               {getSchoolName(spell.school)}

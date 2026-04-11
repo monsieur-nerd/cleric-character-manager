@@ -41,7 +41,7 @@ interface ShoppingListActions {
     addedToInventory: boolean;
     message?: string;
   };
-  addComponentForSpell: (spellId: string, spellName: string, itemId: string, itemName: string, consumed: boolean, priority?: ShoppingPriority, classSource?: 'cleric' | 'wizard') => void;
+  addComponentForSpell: (spellId: string, spellName: string, itemId: string, itemName: string, consumed: boolean, priority?: ShoppingPriority, classSource?: 'cleric' | 'wizard', spellLevel?: number) => void;
   getComponentsForSpell: (spellId: string) => ShoppingListItem[];
   checkRestockNeeds: () => string[];
   autoRestock: () => void;
@@ -290,7 +290,7 @@ export const useShoppingListStore = create<ShoppingListStore>()(
         };
       },
       
-      addComponentForSpell: (spellId, spellName, itemId, _itemName, consumed, priority = 'medium', classSource = 'cleric') => {
+      addComponentForSpell: (spellId, spellName, itemId, _itemName, consumed, priority = 'medium', classSource = 'cleric', spellLevel) => {
         const { shoppingItems, addToShoppingList } = get();
         
         const existingItem = shoppingItems.find(i => i.itemId === itemId);
@@ -299,6 +299,7 @@ export const useShoppingListStore = create<ShoppingListStore>()(
           spellName, 
           consumed,
           classSource,
+          spellLevel,
         };
         
         if (existingItem) {
@@ -510,7 +511,8 @@ export const useShoppingListStore = create<ShoppingListStore>()(
               comp.itemName,
               comp.consumed,
               comp.priority,
-              classSource
+              classSource,
+              comp.spellLevel
             );
           });
         });

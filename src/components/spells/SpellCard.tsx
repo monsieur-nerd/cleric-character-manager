@@ -111,12 +111,9 @@ export function SpellCard({
                     Domaine
                   </span>
                 )}
-                <span 
-                  className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-gradient-to-br from-steel-blue to-blue-900 text-white font-bold text-sm shadow-md"
-                  style={{ fontFamily: "'Cinzel', serif" }}
-                  title={spell.level === 0 ? 'Tour de magie (Mineur)' : `Sort de niveau ${spell.level}`}
-                >
-                  {spell.level === 0 ? 'M' : spell.level}
+                {/* Badge niveau du sort - style cohérent */}
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-arcane-purple/10 text-arcane-purple border border-arcane-purple/20">
+                  {spell.level === 0 ? 'Sort mineur' : `Sort niv. ${spell.level}`}
                 </span>
               </div>
             </div>

@@ -104,6 +104,7 @@ export interface RelatedSpellInfo {
   spellId: string;
   spellName: string;
   consumed: boolean;
+  spellLevel?: number;
 }
 
 export interface ShoppingListItem {
