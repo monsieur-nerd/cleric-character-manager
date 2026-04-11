@@ -111,7 +111,7 @@ export function SpellDetailModal({
           <div className="min-w-0">
             <div className="flex items-center gap-2 mb-1">
               <span className="text-2xl flex-shrink-0">{getSchoolIcon(spell.school)}</span>
-              <h2 className="font-display text-lg sm:text-xl text-ink break-words leading-tight">{spell.name}</h2>
+              <h2 className="font-display text-lg sm:text-xl text-ink break-words leading-tight">{spell.name} {spell.level === 0 ? '(M)' : `(${spell.level})`}</h2>
             </div>
             {spell.nameEn && (
               <p className="text-sm text-ink-muted italic">{spell.nameEn}</p>

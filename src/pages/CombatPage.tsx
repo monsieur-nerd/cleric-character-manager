@@ -162,6 +162,11 @@ export function CombatPage() {
   const [showConcentrationHelp, setShowConcentrationHelp] = useState(false);
   const [showCombatManeuvers, setShowCombatManeuvers] = useState(false);
   const [showLongRestConfirm, setShowLongRestConfirm] = useState(false);
+  const [showNoSlotsModal, setShowNoSlotsModal] = useState<{isOpen: boolean; spellName: string; spellLevel: number}>({ 
+    isOpen: false, 
+    spellName: '', 
+    spellLevel: 0 
+  });
   
   const character = useCharacterStore((state) => state.character);
   const { warCleric, channelDivinity } = character.abilities;
@@ -171,6 +176,7 @@ export function CombatPage() {
   const activeConcentration = character.currentState.activeConcentration;
   
   const preparedSpells = useSpellStore((state) => state.getPreparedSpells(character.level));
+  const getSpellById = useSpellStore((state) => state.getSpellById);
   // Use CLERIC_DOMAINS to get fresh spell IDs (avoids stale IDs from localStorage)
   const currentDomain = CLERIC_DOMAINS.find(d => d.id === character.domain?.id);
   const currentDomainSpellIds = currentDomain?.spellIds || [];
@@ -226,6 +232,21 @@ export function CombatPage() {
   const [selectedSpell, setSelectedSpell] = useState<Spell | null>(null);
 
   const handleCastSpell = useCallback((e: React.MouseEvent | React.TouchEvent, spellId: string) => {
+    const spell = getSpellById(spellId);
+    if (!spell) return;
+    
+    // Vérifier s'il reste des emplacements pour ce niveau de sort
+    const spellLevel = spell.level;
+    const availableSlots = spellSlots[spellLevel as keyof typeof spellSlots] || 0;
+    if (spellLevel > 0 && availableSlots <= 0) {
+      setShowNoSlotsModal({
+        isOpen: true,
+        spellName: spell.name,
+        spellLevel: spellLevel
+      });
+      return;
+    }
+    
     triggerCastAnimation(e);
     markAsUsed(spellId);
     setPressedSpellIds(prev => new Set(prev).add(spellId));
@@ -236,7 +257,7 @@ export function CombatPage() {
         return next;
       });
     }, 1000);
-  }, [triggerCastAnimation, markAsUsed]);
+  }, [triggerCastAnimation, markAsUsed, getSpellById, spellSlots]);
   const [showMaxHpEdit, setShowMaxHpEdit] = useState(false);
   const [maxHpInput, setMaxHpInput] = useState(maxHp.toString());
   
@@ -1103,6 +1124,70 @@ export function CombatPage() {
                 className="flex-1 btn-primary"
               >
                 Repos long
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Modal d'avertissement : plus d'emplacements de sorts */}
+      {showNoSlotsModal.isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div 
+            className="absolute inset-0 bg-ink/60 backdrop-blur-sm" 
+            onClick={() => setShowNoSlotsModal({ isOpen: false, spellName: '', spellLevel: 0 })} 
+          />
+          
+          <div className="relative bg-parchment-light w-full max-w-md rounded-xl shadow-2xl border border-parchment-dark overflow-hidden">
+            {/* Header */}
+            <div className="flex items-center justify-between p-4 border-b border-parchment-dark bg-blood-red/10">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-blood-red/20 flex items-center justify-center">
+                  <AlertCircle className="w-5 h-5 text-blood-red" />
+                </div>
+                <h2 className="font-display text-lg text-ink">
+                  Plus d'emplacements de sorts
+                </h2>
+              </div>
+              <button 
+                onClick={() => setShowNoSlotsModal({ isOpen: false, spellName: '', spellLevel: 0 })} 
+                className="p-2 hover:bg-parchment-dark rounded-lg transition-colors"
+              >
+                <X className="w-5 h-5 text-ink" />
+              </button>
+            </div>
+            
+            {/* Body */}
+            <div className="p-6 space-y-4">
+              <p className="text-ink-light">
+                Vous ne pouvez pas lancer <strong>{showNoSlotsModal.spellName}</strong>.
+              </p>
+              <div className="bg-blood-red/5 border border-blood-red/20 rounded-lg p-4">
+                <p className="text-sm text-ink-muted">
+                  Il ne vous reste plus d'emplacements de sort de niveau {showNoSlotsModal.spellLevel}.
+                </p>
+              </div>
+              <p className="text-sm text-ink-muted">
+                Pour restaurer vos emplacements de sorts, effectuez un <strong>repos long</strong>.
+              </p>
+            </div>
+            
+            {/* Footer */}
+            <div className="flex gap-3 p-4 border-t border-parchment-dark bg-parchment-dark/10">
+              <button 
+                onClick={() => setShowNoSlotsModal({ isOpen: false, spellName: '', spellLevel: 0 })} 
+                className="flex-1 btn-secondary"
+              >
+                Fermer
+              </button>
+              <button 
+                onClick={() => {
+                  setShowNoSlotsModal({ isOpen: false, spellName: '', spellLevel: 0 });
+                  setShowLongRestConfirm(true);
+                }} 
+                className="flex-1 btn-primary"
+              >
+                Effectuer un repos long
               </button>
             </div>
           </div>
