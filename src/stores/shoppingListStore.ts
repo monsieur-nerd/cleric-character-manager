@@ -465,6 +465,17 @@ export const useShoppingListStore = create<ShoppingListStore>()(
         return getMissingComponents(spellIds, currentInventoryIds);
       },
       
+      // Vérifie si un composant est satisfait par une alternative présente dans l'inventaire
+      isComponentSatisfiedByAlternative: (component: SpellComponentMapping, inventoryItemIds: string[]): boolean => {
+        if (!component.alternatives || component.alternatives.length === 0) {
+          return inventoryItemIds.includes(component.itemId);
+        }
+        
+        // Vérifie si le composant principal ou une alternative est présent
+        const allOptionIds = [component.itemId, ...component.alternatives.map(alt => alt.itemId)];
+        return allOptionIds.some(id => inventoryItemIds.includes(id));
+      },
+      
       // Gestion du level up
       onCharacterLevelUp: (classType, newLevel, knownSpellIds) => {
         const classComponents = allSpellComponentMappings.filter(

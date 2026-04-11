@@ -401,11 +401,12 @@ export function PreparationPage() {
                         {/* Bouton Appliquer */}
                         <button
                           onClick={() => handleApplyPreset(preset)}
-                          className="w-full font-bold py-3 px-4 rounded-lg flex items-center justify-center gap-2"
-                          style={{ 
-                            backgroundColor: '#2D5016', 
-                            color: 'white',
-                          }}
+                          className="w-full bg-jungle-green hover:bg-jungle-green-light active:bg-jungle-green-dark 
+                            text-white font-bold py-3 px-4 rounded-lg 
+                            transform transition-all duration-100
+                            hover:shadow-lg hover:scale-[1.02]
+                            active:scale-[0.98] active:shadow-inner
+                            flex items-center justify-center gap-2"
                         >
                           <Check className="w-4 h-4" />
                           {isActive ? '✓ Appliqué !' : `Appliquer ce préréglage (${selectionCount} sorts)`}

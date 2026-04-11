@@ -13,11 +13,12 @@ import {
   FlameKindling,
   Info,
   Clock,
-  Sparkle
+  Sparkle,
+  GitBranch
 } from 'lucide-react';
 import { useShoppingListStore, useInventoryStore, useSpellStore, useChultStore, useCharacterStore, isResurrectionComponent } from '@/stores';
 import { formatPrice } from '@/utils/formatters';
-import type { ShoppingListItem, ShoppingPriority } from '@/types';
+import type { ShoppingListItem, ShoppingPriority, ComponentAlternative } from '@/types';
 import { priorityLabels, priorityColors, componentTypeLabels } from '@/stores/shoppingListStore';
 import { allSpellComponentMappings, getMaxSpellLevelForCharacter } from '@/data/spellComponentMappings';
 
@@ -319,6 +320,38 @@ export function ShoppingList() {
   const getCurrentStock = (itemId: string): number => {
     const inventoryItem = inventoryItems.find(i => i.id === itemId);
     return inventoryItem?.quantity || 0;
+  };
+
+  // Récupère les alternatives pour un item donné
+  const getComponentAlternatives = (itemId: string, spellId?: string): ComponentAlternative[] | undefined => {
+    const mapping = allSpellComponentMappings.find(m => 
+      m.itemId === itemId && (spellId ? m.spellId === spellId : true)
+    );
+    return mapping?.alternatives;
+  };
+
+  // Vérifie si un composant est satisfait par une alternative présente dans l'inventaire
+  const isSatisfiedByAlternative = (item: ShoppingListItem): boolean => {
+    const alternatives = getComponentAlternatives(item.itemId);
+    if (!alternatives || alternatives.length === 0) return false;
+    
+    // Vérifie si une alternative est présente dans l'inventaire
+    return alternatives.some(alt => getCurrentStock(alt.itemId) > 0);
+  };
+
+  // Vérifie si ce composant est l'option possédée parmi des alternatives
+  const isOwnedAlternative = (item: ShoppingListItem): boolean => {
+    const stock = getCurrentStock(item.itemId);
+    if (stock === 0) return false;
+    
+    // Vérifie si ce composant fait partie d'un groupe d'alternatives
+    const relatedSpell = item.relatedSpells?.[0];
+    if (!relatedSpell) return false;
+    
+    const mapping = allSpellComponentMappings.find(m => 
+      m.spellId === relatedSpell.spellId && m.itemId === item.itemId
+    );
+    return mapping?.alternatives !== undefined && mapping.alternatives.length > 0;
   };
 
   const getItemDescription = (item: ShoppingListItem): string => {
