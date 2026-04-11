@@ -6,7 +6,8 @@
  * par une version avec des valeurs par défaut neutres.
  */
 
-import type { Character, EquipmentItem, SpellPreset } from '@/types';
+import type { Character, EquipmentItem, SpellPreset, Background } from '@/types';
+import { BACKGROUNDS } from '@/types';
 
 // ============================================
 // IDENTITÉ
@@ -65,6 +66,11 @@ export const CHARACTER_FEATS: string[] = [
   // Exemples : 'war-caster', 'shield-master', 'sentinel'
   // À remplir selon les talents choisis
 ];
+
+// ============================================
+// BACKGROUND
+// ============================================
+export const CHARACTER_BACKGROUND = BACKGROUNDS.find(b => b.id === 'acolyte') || BACKGROUNDS[0];
 
 // ============================================
 // TRAITS DE BACKGROUND (ACOLYTE DE TORM)
@@ -589,6 +595,7 @@ export function createInitialCharacter(): Partial<Character> {
     // Compétences et talents
     masteredSkills: MASTERED_SKILLS,
     feats: CHARACTER_FEATS,
+    background: CHARACTER_BACKGROUND,
     
     // Métadonnées
     description: CHARACTER_IDENTITY.description,

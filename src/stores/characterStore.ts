@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware';
 import type { Character } from '@/types';
 import type { CustomSkill } from '@/types/skills';
 import type { CustomFeat } from '@/types/feats';
-import { MAX_SPELL_SLOTS, DEITIES, CLERIC_DOMAINS } from '@/types';
+import { MAX_SPELL_SLOTS, DEITIES, CLERIC_DOMAINS, BACKGROUNDS } from '@/types';
 import { STORAGE_KEYS } from './storageKeys';
 import { useSpellStore } from './spellStore';
 import { 
@@ -25,6 +25,7 @@ interface CharacterState {
   syncDeity: () => void; // Synchronise la divinité avec les données à jour
   setRace: (race: string) => void;
   setAlignment: (alignment: string) => void;
+  setBackground: (backgroundId: string) => void;
   
   // Actions - Niveau et Caractéristiques
   setLevel: (level: number) => void;
@@ -132,6 +133,7 @@ const createDefaultCharacter = (): Character => {
   const carryingCapacity = calculateCarryingCapacity(str);
   const defaultDeity = DEITIES.find(d => d.id === CHARACTER_IDENTITY.deity) || DEITIES[0];
   const defaultDomain = CLERIC_DOMAINS.find(d => d.id === CHARACTER_IDENTITY.domain) || CLERIC_DOMAINS[0];
+  const defaultBackground = BACKGROUNDS.find(b => b.id === 'acolyte') || BACKGROUNDS[0];
   const wisdomModifier = calculateModifier(wis);
   
   return {
@@ -141,6 +143,7 @@ const createDefaultCharacter = (): Character => {
     avatar: CHARACTER_IDENTITY.avatar,
     deity: defaultDeity,
     domain: defaultDomain,
+    background: defaultBackground,
     level,
     wisdom: wis,
     wisdomModifier,
@@ -290,6 +293,18 @@ export const useCharacterStore = create<CharacterState>()(
       setAlignment: (alignment) => {
         set((state) => ({
           character: { ...state.character, alignment },
+        }));
+      },
+      
+      setBackground: (backgroundId) => {
+        const background = BACKGROUNDS.find(b => b.id === backgroundId);
+        if (!background) return;
+        
+        set((state) => ({
+          character: {
+            ...state.character,
+            background,
+          },
         }));
       },
       
@@ -807,13 +822,19 @@ export const useCharacterStore = create<CharacterState>()(
     }),
     {
       name: STORAGE_KEYS.CHARACTER,
-      version: 2, // Incrémenté pour mettre à jour les compétences maîtrisées
+      version: 3, // Incrémenté pour ajouter le background
       migrate: (persistedState: unknown, version) => {
+        const state = persistedState as { character?: { masteredSkills?: string[]; background?: typeof BACKGROUNDS[0] } };
         if (version < 2) {
           // Met à jour les compétences maîtrisées avec les nouvelles valeurs
-          const state = persistedState as { character?: { masteredSkills?: string[] } };
           if (state.character) {
             state.character.masteredSkills = MASTERED_SKILLS;
+          }
+        }
+        if (version < 3) {
+          // Ajoute le background par défaut (Acolyte)
+          if (state.character) {
+            state.character.background = BACKGROUNDS.find(b => b.id === 'acolyte') || BACKGROUNDS[0];
           }
         }
         return persistedState as CharacterState;

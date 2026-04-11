@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
-import { Zap, Swords, Info, ChevronDown, ChevronUp, Heart, Shield, Plus, Minus, RotateCcw, Sparkles, Target, Flame, CloudRain, Clock, Focus, AlertCircle } from 'lucide-react';
+import { Zap, Swords, Info, ChevronDown, ChevronUp, Heart, Shield, Plus, Minus, RotateCcw, Sparkles, Target, Flame, CloudRain, Clock, Focus, AlertCircle, X } from 'lucide-react';
 import { formatCastingTimeShort } from '@/utils/formatters';
 import { useInventoryStore } from '@/stores';
 import { useSpellStore, useCharacterStore } from '@/stores';
@@ -161,6 +161,7 @@ export function CombatPage() {
   const [showConcentrationExplanation, setShowConcentrationExplanation] = useState(false);
   const [showConcentrationHelp, setShowConcentrationHelp] = useState(false);
   const [showCombatManeuvers, setShowCombatManeuvers] = useState(false);
+  const [showLongRestConfirm, setShowLongRestConfirm] = useState(false);
   
   const character = useCharacterStore((state) => state.character);
   const { warCleric, channelDivinity } = character.abilities;
@@ -865,11 +866,7 @@ export function CombatPage() {
               Sorts
             </h3>
             <button
-              onClick={() => {
-                if (confirm('Effectuer un repos long ?\n\nTous les emplacements de sorts seront restaurés.')) {
-                  resetSpellSlotsOnly(character.level);
-                }
-              }}
+              onClick={() => setShowLongRestConfirm(true)}
               className="btn-primary btn-sm flex items-center gap-1.5 text-xs"
               title="Restaurer tous les emplacements de sorts"
             >
@@ -1050,6 +1047,67 @@ export function CombatPage() {
         isOpen={showConcentrationHelp}
         onClose={() => setShowConcentrationHelp(false)}
       />
+      
+      {/* Modal de confirmation du repos long */}
+      {showLongRestConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div 
+            className="absolute inset-0 bg-ink/60 backdrop-blur-sm" 
+            onClick={() => setShowLongRestConfirm(false)} 
+          />
+          
+          <div className="relative bg-parchment-light w-full max-w-md rounded-xl shadow-2xl border border-parchment-dark overflow-hidden">
+            {/* Header */}
+            <div className="flex items-center justify-between p-4 border-b border-parchment-dark bg-forest/10">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-forest/20 flex items-center justify-center">
+                  <RotateCcw className="w-5 h-5 text-forest" />
+                </div>
+                <h2 className="font-display text-lg text-ink">
+                  Confirmer le repos long
+                </h2>
+              </div>
+              <button 
+                onClick={() => setShowLongRestConfirm(false)} 
+                className="p-2 hover:bg-parchment-dark rounded-lg transition-colors"
+              >
+                <X className="w-5 h-5 text-ink" />
+              </button>
+            </div>
+            
+            {/* Body */}
+            <div className="p-6 space-y-4">
+              <p className="text-ink-light">
+                Effectuer un <strong>repos long</strong> ? Cette action va :
+              </p>
+              <ul className="text-sm text-ink-muted list-disc list-inside space-y-1">
+                <li>Conserver tous vos sorts préparés actuels</li>
+                <li>Restaurer tous les emplacements de sorts</li>
+                <li>Réinitialiser vos points de vie et capacités</li>
+              </ul>
+            </div>
+            
+            {/* Footer */}
+            <div className="flex gap-3 p-4 border-t border-parchment-dark bg-parchment-dark/10">
+              <button 
+                onClick={() => setShowLongRestConfirm(false)} 
+                className="flex-1 btn-secondary"
+              >
+                Annuler
+              </button>
+              <button 
+                onClick={() => {
+                  resetSpellSlotsOnly(character.level);
+                  setShowLongRestConfirm(false);
+                }} 
+                className="flex-1 btn-primary"
+              >
+                Repos long
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

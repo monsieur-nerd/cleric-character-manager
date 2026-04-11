@@ -1215,6 +1215,11 @@ const [showSavingThrowHelp, setShowSavingThrowHelp] = useState(false);
             <span>•</span>
             <span>{character.alignment || 'Neutre Bon'}</span>
           </div>
+          {/* Ligne Background */}
+          <div className="flex items-center justify-center gap-2 text-ink-light font-ui text-sm">
+            <span className="text-base">📜</span>
+            <span>{character.background?.name || 'Sans background'}</span>
+          </div>
           {/* Ligne Clerc de Torm */}
           <div className="flex items-center justify-center gap-2 text-amber-900 font-medium text-sm">
             {deitySymbol.startsWith('images/') || deitySymbol.startsWith('/') ? (

@@ -5,8 +5,8 @@ import { useItemEffects } from '@/hooks';
 import { DomainRadarChart, DomainRadarCompare } from '@/components/character/DomainRadarChart';
 
 import { formatModifier } from '@/utils/formatters';
-import type { Deity, ClericDomain, DomainSpellProfile } from '@/types';
-import { DEITIES, CLERIC_DOMAINS } from '@/types';
+import type { Deity, ClericDomain, DomainSpellProfile, Background } from '@/types';
+import { DEITIES, CLERIC_DOMAINS, BACKGROUNDS } from '@/types';
 import { getSkillById, SKILLS, ABILITY_SCORES, type AbilityScore, type Skill } from '@/types/skills';
 import { getFeatById } from '@/types/feats';
 
@@ -120,6 +120,96 @@ function DeitySelector({ currentDeity, onSelect }: { currentDeity: Deity | undef
               </div>
             </button>
           ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Composant pour sélectionner un background
+function BackgroundSelector({ currentBackground, onSelect }: { currentBackground: Background | undefined; onSelect: (backgroundId: string) => void }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [hoveredBackground, setHoveredBackground] = useState<Background | null>(null);
+  
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full flex items-center justify-between p-3 bg-parchment-dark rounded-lg border border-parchment-dark hover:border-divine-gold transition-colors"
+      >
+        <div className="flex items-center gap-3">
+          <span className="text-2xl">📜</span>
+          <div className="text-left">
+            <p className="font-display text-ink">{currentBackground?.name || 'Choisir...'}</p>
+            <p className="text-xs text-ink-muted">
+              {currentBackground?.skillProficiencies.length || 0} compétences
+            </p>
+          </div>
+        </div>
+        {isOpen ? <ChevronUp className="w-5 h-5 text-ink-muted" /> : <ChevronDown className="w-5 h-5 text-ink-muted" />}
+      </button>
+      
+      {isOpen && (
+        <div className="absolute z-20 top-full left-0 right-0 mt-1 bg-parchment-light rounded-lg shadow-xl border border-parchment-dark overflow-hidden">
+          <div className="max-h-64 overflow-y-auto">
+            {BACKGROUNDS.map((background) => (
+              <button
+                key={background.id}
+                onClick={() => {
+                  onSelect(background.id);
+                  setIsOpen(false);
+                }}
+                onMouseEnter={() => setHoveredBackground(background)}
+                onMouseLeave={() => setHoveredBackground(null)}
+                className={`w-full flex items-start gap-3 p-3 hover:bg-parchment-dark transition-colors text-left ${
+                  background.id === currentBackground?.id ? 'bg-divine-gold/10 border-l-4 border-divine-gold' : ''
+                }`}
+              >
+                <span className="text-2xl">📜</span>
+                <div>
+                  <p className="font-display text-ink">{background.name}</p>
+                  <p className="text-xs text-ink-muted line-clamp-2">{background.description}</p>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Description affichée quand on survole ou un background est sélectionné */}
+      {(hoveredBackground || currentBackground) && (
+        <div className="absolute z-30 left-full top-0 ml-2 bg-parchment-light rounded-xl shadow-2xl border border-parchment-dark p-4 w-[300px]">
+          <h4 className="font-display text-sm text-ink mb-2">
+            {(hoveredBackground || currentBackground)?.name}
+          </h4>
+          <p className="text-xs text-ink-light mb-3">
+            {(hoveredBackground || currentBackground)?.description}
+          </p>
+          
+          <div className="space-y-2">
+            <div>
+              <p className="text-xs font-bold text-ink">Compétences maîtrisées :</p>
+              <p className="text-xs text-ink-muted">
+                {(hoveredBackground || currentBackground)?.skillProficiencies.join(', ')}
+              </p>
+            </div>
+            
+            {(hoveredBackground || currentBackground)?.languages && (
+              <div>
+                <p className="text-xs font-bold text-ink">Langues :</p>
+                <p className="text-xs text-ink-muted">
+                  +{(hoveredBackground || currentBackground)?.languages} langue(s)
+                </p>
+              </div>
+            )}
+            
+            <div>
+              <p className="text-xs font-bold text-ink">Capacité : {(hoveredBackground || currentBackground)?.feature.name}</p>
+              <p className="text-xs text-ink-muted">
+                {(hoveredBackground || currentBackground)?.feature.description}
+              </p>
+            </div>
+          </div>
         </div>
       )}
     </div>
@@ -306,6 +396,7 @@ function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: {
   const setHeight = useCharacterStore((state) => state.setHeight);
   const setWeight = useCharacterStore((state) => state.setWeight);
   const setLanguages = useCharacterStore((state) => state.setLanguages);
+  const setBackground = useCharacterStore((state) => state.setBackground);
   
   const [activeTab, setActiveTab] = useState(initialTab);
   const [localName, setLocalName] = useState(character.name);
@@ -524,6 +615,14 @@ function CharacterEditorModal({ isOpen, onClose, initialTab = 'identity' }: {
                 <DomainSelector 
                   currentDomain={character.domain} 
                   onSelect={(domainId) => setDomain(domainId)}
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-ink mb-2">Background</label>
+                <BackgroundSelector 
+                  currentBackground={character.background} 
+                  onSelect={(backgroundId) => setBackground(backgroundId)}
                 />
               </div>
               

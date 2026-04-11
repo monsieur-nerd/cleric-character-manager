@@ -325,6 +325,202 @@ export interface DomainAbility {
 }
 
 // ============================================
+// BACKGROUNDS
+// ============================================
+
+export interface Background {
+  id: string;
+  name: string;
+  nameEn: string;
+  description: string;
+  skillProficiencies: string[]; // IDs des compétences maîtrisées
+  toolProficiencies?: string[];
+  languages?: number; // Nombre de langues supplémentaires
+  equipment: string[];
+  feature: {
+    name: string;
+    description: string;
+  };
+}
+
+// Liste des backgrounds officiels D&D 5e
+export const BACKGROUNDS: Background[] = [
+  {
+    id: 'acolyte',
+    name: 'Acolyte',
+    nameEn: 'Acolyte',
+    description: 'Vous avez passé votre vie au service d\'un temple, apprenant les rites sacrés et fournissant assistance aux prêtres.',
+    skillProficiencies: ['insight', 'religion'],
+    languages: 2,
+    equipment: ['Vêtements de cérémonie', 'Symbole sacré', 'Encens (5 sticks)', 'Paquetage de prêtre'],
+    feature: {
+      name: 'Refuge des fidèles',
+      description: 'Vous et vos compagnons pouvez obtenir soins et abri gratuits dans les temples de votre foi.'
+    }
+  },
+  {
+    id: 'charlatan',
+    name: 'Charlatan',
+    nameEn: 'Charlatan',
+    description: 'Vous avez toujours su comment obtenir ce que vous voulez en trompant les autres avec des mensonges convaincants.',
+    skillProficiencies: ['deception', 'sleight-of-hand'],
+    toolProficiencies: ['Kit de déguisement', 'Kit de faux'],
+    equipment: ['Tenue de qualité', 'Kit de déguisement', 'Outils de tromperie'],
+    feature: {
+      name: 'Fausse identité',
+      description: 'Vous avez créé une fausse identité avec papiers, relations et vêtements associés.'
+    }
+  },
+  {
+    id: 'criminal',
+    name: 'Criminel',
+    nameEn: 'Criminal',
+    description: 'Vous avez une histoire avec le crime, que ce soit comme voleur, cambrioleur ou autre hors-la-loi.',
+    skillProficiencies: ['deception', 'stealth'],
+    toolProficiencies: ['Un jeu de votre choix', 'Outils de voleur'],
+    equipment: [' Pied-de-biche', 'Tenue sombre', 'Sac à dos avec échelle de corde'],
+    feature: {
+      name: 'Contact criminel',
+      description: 'Vous avez un contact fiable dans les réseaux criminels qui peut vous fournir des informations.'
+    }
+  },
+  {
+    id: 'entertainer',
+    name: 'Saltimbanque',
+    nameEn: 'Entertainer',
+    description: 'Vous avez brillé devant une audience, divertissant par la musique, la danse, le chant ou l\'humour.',
+    skillProficiencies: ['acrobatics', 'performance'],
+    toolProficiencies: ['Kit de déguisement', 'Un instrument de musique'],
+    equipment: ['Instrument de musique', 'Cadeau d\'un admirateur', 'Costume'],
+    feature: {
+      name: 'Accès à toutes les scènes',
+      description: 'Vous pouvez toujours trouver un endroit pour vous produire et recevoir nourriture et logement modestes.'
+    }
+  },
+  {
+    id: 'folk-hero',
+    name: 'Héros du peuple',
+    nameEn: 'Folk Hero',
+    description: 'Vous venez d\'une humble origine mais un événement vous a propulsé comme héros du peuple.',
+    skillProficiencies: ['animal-handling', 'survival'],
+    toolProficiencies: ['Outils d\'artisan (un type)'],
+    equipment: ['Outils d\'artisan', 'Pelle', 'Pot en fer', 'Vêtements communs'],
+    feature: {
+      name: 'Hospitalité rustique',
+      description: 'Vous pouvez trouver un abri caché chez les paysans et les gens du commun qui vous considèrent comme l\'un des leurs.'
+    }
+  },
+  {
+    id: 'guild-artisan',
+    name: 'Artisan de guilde',
+    nameEn: 'Guild Artisan',
+    description: 'Vous êtes membre d\'une guilde d\'artisans, maîtrisant un métier spécifique et bénéficiant de la protection de la guilde.',
+    skillProficiencies: ['insight', 'persuasion'],
+    toolProficiencies: ['Outils d\'artisan (un type)'],
+    languages: 1,
+    equipment: ['Outils d\'artisan', 'Lettre de présentation', 'Tenue de voyage'],
+    feature: {
+      name: 'Membre de guilde',
+      description: 'Votre guilde peut vous fournir logement et assistance, ainsi que des contacts professionnels.'
+    }
+  },
+  {
+    id: 'hermit',
+    name: 'Ermite',
+    nameEn: 'Hermit',
+    description: 'Vous avez vécu en isolement, que ce soit pour une quête spirituelle ou pour échapper au monde.',
+    skillProficiencies: ['medicine', 'religion'],
+    toolProficiencies: ['Kit d\'herboriste'],
+    languages: 1,
+    equipment: ['Couverture d\'hiver', 'Paquetage d\'exploration', 'Journal de retraite'],
+    feature: {
+      name: 'Découverte',
+      description: 'Vous avez fait une découverte unique pendant votre isolement qui peut changer le monde.'
+    }
+  },
+  {
+    id: 'noble',
+    name: 'Noble',
+    nameEn: 'Noble',
+    description: 'Vous avez grandi dans la richesse et le privilège, entouré de luxe et de pouvoir.',
+    skillProficiencies: ['history', 'persuasion'],
+    toolProficiencies: ['Jeu d\'échecs draconiques'],
+    languages: 1,
+    equipment: ['Vêtements de qualité', 'Sceau', 'Parchemin de généalogie'],
+    feature: {
+      name: 'Privilège de naissance',
+      description: 'Vous êtes accueilli dans la haute société et les gens supposent que vous avez le droit d\'être où vous êtes.'
+    }
+  },
+  {
+    id: 'outlander',
+    name: 'Exilé',
+    nameEn: 'Outlander',
+    description: 'Vous avez grandi dans la nature sauvage, loin des villes et de la civilisation.',
+    skillProficiencies: ['athletics', 'survival'],
+    toolProficiencies: ['Un instrument de musique'],
+    languages: 1,
+    equipment: ['Bâton', 'Piège à mâchoires', 'Trophée d\'un animal tué'],
+    feature: {
+      name: 'Voyageur',
+      description: 'Vous pouvez vous souvenir de cartes et de terrains, trouver nourriture et eau pour 5 personnes.'
+    }
+  },
+  {
+    id: 'sage',
+    name: 'Sage',
+    nameEn: 'Sage',
+    description: 'Vous avez passé des années à étudier, accumulant des connaissances dans les bibliothèques et scriptoriums.',
+    skillProficiencies: ['arcana', 'history'],
+    languages: 2,
+    equipment: ['Encre noire', 'Plume', 'Lettre d\'un collègue mort', 'Vêtements communs'],
+    feature: {
+      name: 'Chercheur',
+      description: 'Vous savez où trouver l\'information écrite la plus obscure, même si cela prend du temps.'
+    }
+  },
+  {
+    id: 'sailor',
+    name: 'Marin',
+    nameEn: 'Sailor',
+    description: 'Vous avez navigué sur les mers, enduré tempêtes et mutineries, et parcouru les ports du monde.',
+    skillProficiencies: ['athletics', 'perception'],
+    toolProficiencies: ['Outils de navigateur', 'Véhicules (aquatiques)'],
+    equipment: ['Gourde', 'Corde en soie (15m)', 'Boussole'],
+    feature: {
+      name: 'Aller en mer',
+      description: 'Vous pouvez obtenir un passage gratuit sur un navire pour vous et vos compagnons.'
+    }
+  },
+  {
+    id: 'soldier',
+    name: 'Soldat',
+    nameEn: 'Soldier',
+    description: 'Vous avez servi dans une armée, appris les bases du combat et vécu la vie militaire.',
+    skillProficiencies: ['athletics', 'intimidation'],
+    toolProficiencies: ['Jeu d\'échecs draconiques', 'Véhicules (terrestres)'],
+    equipment: ['Insigne de grade', 'Trophée de guerre', 'Vêtements communs'],
+    feature: {
+      name: 'Grade militaire',
+      description: 'Vos anciens camarades de combat vous reconnaissent et vous pouvez accéder à leurs installations.'
+    }
+  },
+  {
+    id: 'urchin',
+    name: 'Gamin des rues',
+    nameEn: 'Urchin',
+    description: 'Vous avez grandi seul dans les rues, apprenant à survivre par vos propres moyens.',
+    skillProficiencies: ['sleight-of-hand', 'stealth'],
+    toolProficiencies: ['Kit de déguisement', 'Outils de voleur'],
+    equipment: ['Couteau', 'Carte de la ville', 'Petit animal'],
+    feature: {
+      name: 'Secrets de la ville',
+      description: 'Vous connaissez les passages secrets de la ville et pouvez voyager deux fois plus vite en ville.'
+    }
+  }
+];
+
+// ============================================
 // PERSONNAGE
 // ============================================
 
@@ -336,6 +532,7 @@ export interface Character {
   avatar?: string | null; // URL de l'avatar/photo
   deity?: Deity; // Dieu vénéré
   domain?: ClericDomain; // Domaine du clerc
+  background?: Background; // Background du personnage
   
   // Niveau et multiclassage
   level: number;
