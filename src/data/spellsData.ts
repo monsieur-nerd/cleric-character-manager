@@ -1,4 +1,16 @@
 import type { Spell } from "@/types";
+import {
+  clericLevel0Spells,
+  clericLevel1Spells,
+  clericLevel2Spells,
+  clericLevel3Spells,
+  clericLevel4Spells,
+  clericLevel5Spells,
+  clericLevel6Spells,
+  clericLevel7Spells,
+  clericLevel8Spells,
+  clericLevel9Spells,
+} from "./spells";
 
 export const spellsData: Spell[] = [
   {
@@ -4249,7 +4261,18 @@ export const spellsData: Spell[] = [
     "recommendation": "ESSENTIEL - Domaine Lumière",
     "source": "extended",
     "summary": "3 rayons, 2d6 feu chacun"
-  }
+  },
+  // Sorts complémentaires des fichiers modulaires
+  ...clericLevel0Spells,
+  ...clericLevel1Spells,
+  ...clericLevel2Spells,
+  ...clericLevel3Spells,
+  ...clericLevel4Spells,
+  ...clericLevel5Spells,
+  ...clericLevel6Spells,
+  ...clericLevel7Spells,
+  ...clericLevel8Spells,
+  ...clericLevel9Spells,
 ];
 
 // Sorts de domaine ajoutés pour l'affichage correct

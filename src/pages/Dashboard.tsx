@@ -1187,7 +1187,7 @@ const [showSavingThrowHelp, setShowSavingThrowHelp] = useState(false);
           <div className="relative">
             <button
               onClick={() => openCharacterEditor('identity')}
-              className="w-24 h-24 rounded-full bg-parchment-dark border-4 border-divine-gold overflow-hidden flex items-center justify-center hover:border-divine-gold-light transition-colors"
+              className="w-48 h-48 rounded-full bg-parchment-dark border-4 border-divine-gold overflow-hidden flex items-center justify-center hover:border-divine-gold-light transition-colors"
             >
               {character.avatar ? (
                 <img 
@@ -1196,7 +1196,7 @@ const [showSavingThrowHelp, setShowSavingThrowHelp] = useState(false);
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <User className="w-12 h-12 text-ink-muted" />
+                <User className="w-24 h-24 text-ink-muted" />
               )}
             </button>
           </div>

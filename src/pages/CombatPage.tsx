@@ -175,6 +175,7 @@ export function CombatPage() {
   const currentDomainSpellIds = currentDomain?.spellIds || [];
   const markAsUsed = useSpellStore((state) => state.markAsUsed);
   const spellSlots = useSpellStore((state) => state.spellSlots);
+  const resetSpellSlotsOnly = useSpellStore((state) => state.resetSpellSlotsOnly);
   
   // Points de vie
   const { currentHp, maxHp, constitution, currentState } = character;
@@ -858,10 +859,24 @@ export function CombatPage() {
       ) : (
         /* Carte Sorts unifiée */
         <div className="card bg-royal-purple/5 border-royal-purple/20">
-          <h3 className="font-display text-lg text-ink mb-4 flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-royal-purple" />
-            Sorts
-          </h3>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-display text-lg text-ink flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-royal-purple" />
+              Sorts
+            </h3>
+            <button
+              onClick={() => {
+                if (confirm('Effectuer un repos long ?\n\nTous les emplacements de sorts seront restaurés.')) {
+                  resetSpellSlotsOnly(character.level);
+                }
+              }}
+              className="btn-primary btn-sm flex items-center gap-1.5 text-xs"
+              title="Restaurer tous les emplacements de sorts"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              Repos long
+            </button>
+          </div>
           
           {/* Emplacements de sorts restants */}
           <div className="mb-4">
