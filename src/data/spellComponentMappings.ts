@@ -1213,4 +1213,16 @@ export function groupComponentsByPriority(
   return grouped;
 }
 
+/**
+ * Retourne le niveau de sort maximum accessible pour un clerc selon son niveau
+ * En D&D 5e : niveau 1-2 → 1, 3-4 → 2, 5-6 → 3, 7-8 → 4, 9+ → 5
+ */
+export function getMaxSpellLevelForCharacter(characterLevel: number): number {
+  if (characterLevel >= 9) return 5;
+  if (characterLevel >= 7) return 4;
+  if (characterLevel >= 5) return 3;
+  if (characterLevel >= 3) return 2;
+  return 1;
+}
+
 export default allSpellComponentMappings;

@@ -11,13 +11,15 @@ import {
   Zap,
   BookOpen,
   FlameKindling,
-  Info
+  Info,
+  Clock,
+  Sparkle
 } from 'lucide-react';
-import { useShoppingListStore, useInventoryStore, useSpellStore, useChultStore, isResurrectionComponent } from '@/stores';
+import { useShoppingListStore, useInventoryStore, useSpellStore, useChultStore, useCharacterStore, isResurrectionComponent } from '@/stores';
 import { formatPrice } from '@/utils/formatters';
 import type { ShoppingListItem, ShoppingPriority } from '@/types';
 import { priorityLabels, priorityColors, componentTypeLabels } from '@/stores/shoppingListStore';
-import { allSpellComponentMappings } from '@/data/spellComponentMappings';
+import { allSpellComponentMappings, getMaxSpellLevelForCharacter } from '@/data/spellComponentMappings';
 
 // Prix des composants (depuis les mappings)
 const knownPrices: Record<string, number> = {};
@@ -72,6 +74,7 @@ export function ShoppingList() {
   const updateQuantity = useInventoryStore((state) => state.updateQuantity);
   const getSpellById = useSpellStore((state) => state.getSpellById);
   const isInChult = useChultStore((state) => state.isInChult);
+  const characterLevel = useCharacterStore((state) => state.character.level);
   
   const [expandedSections, setExpandedSections] = useState<SectionState>({
     critical: true,
@@ -85,9 +88,31 @@ export function ShoppingList() {
   const [classFilter, setClassFilter] = useState<ClassFilter>('all');
   const [consumableFilter, setConsumableFilter] = useState<ConsumableFilter>('all');
 
-  // Items filtrés selon les critères
-  const filteredItems = useMemo(() => {
+  // Niveau de sort maximum accessible par le personnage
+  const maxAccessibleSpellLevel = useMemo(() => {
+    return getMaxSpellLevelForCharacter(characterLevel);
+  }, [characterLevel]);
+
+  // Détermine si un composant est pour un niveau accessible maintenant
+  const isComponentAccessibleNow = (item: ShoppingListItem): boolean => {
+    // Vérifie si au moins un sort lié est accessible
+    if (!item.relatedSpells || item.relatedSpells.length === 0) return true;
+    
+    return item.relatedSpells.some(spell => {
+      const mapping = allSpellComponentMappings.find(m => 
+        m.spellId === spell.spellId && m.itemId === item.itemId
+      );
+      if (!mapping) return true; // Si pas de mapping, on l'affiche par défaut
+      return mapping.spellLevel <= maxAccessibleSpellLevel;
+    });
+  };
+
+  // Items filtrés selon les critères ET accessibles maintenant
+  const accessibleItems = useMemo(() => {
     return shoppingItems.filter(item => {
+      // Filtre par niveau de sort accessible
+      if (!isComponentAccessibleNow(item)) return false;
+      
       // Filtre par classe
       if (classFilter !== 'all' && item.classSource && item.classSource !== classFilter) {
         return false;
@@ -107,10 +132,37 @@ export function ShoppingList() {
       
       return true;
     });
-  }, [shoppingItems, classFilter, consumableFilter, isInChult]);
+  }, [shoppingItems, classFilter, consumableFilter, isInChult, maxAccessibleSpellLevel]);
 
-  // Regroupe les items par priorité
-  const itemsByPriority = useMemo(() => {
+  // Items pour niveaux futurs (non accessibles)
+  const futureItems = useMemo(() => {
+    return shoppingItems.filter(item => {
+      // Ne garde que les items NON accessibles
+      if (isComponentAccessibleNow(item)) return false;
+      
+      // Filtre par classe
+      if (classFilter !== 'all' && item.classSource && item.classSource !== classFilter) {
+        return false;
+      }
+      
+      // Filtre par type de composant
+      if (consumableFilter !== 'all') {
+        const isConsumed = item.componentType === 'consumed_per_cast' || item.componentType === 'consumed_per_use';
+        if (consumableFilter === 'consumed' && !isConsumed) return false;
+        if (consumableFilter === 'reusable' && isConsumed) return false;
+      }
+      
+      // Mode Chult : filtrer les composants de résurrection
+      if (isInChult && isResurrectionComponent(item.itemId)) {
+        return false;
+      }
+      
+      return true;
+    });
+  }, [shoppingItems, classFilter, consumableFilter, isInChult, maxAccessibleSpellLevel]);
+
+  // Regroupe les items accessibles par priorité
+  const accessibleItemsByPriority = useMemo(() => {
     const grouped: Record<ShoppingPriority, ShoppingListItem[]> = {
       critical: [],
       high: [],
@@ -119,39 +171,70 @@ export function ShoppingList() {
       none: [],
     };
     
-    filteredItems.forEach(item => {
+    accessibleItems.forEach(item => {
       grouped[item.priority].push(item);
     });
     
     return grouped;
-  }, [filteredItems]);
+  }, [accessibleItems]);
 
-  // Calcule le prix total à dépenser
+  // Regroupe les items futurs par priorité
+  const futureItemsByPriority = useMemo(() => {
+    const grouped: Record<ShoppingPriority, ShoppingListItem[]> = {
+      critical: [],
+      high: [],
+      medium: [],
+      low: [],
+      none: [],
+    };
+    
+    futureItems.forEach(item => {
+      grouped[item.priority].push(item);
+    });
+    
+    return grouped;
+  }, [futureItems]);
+
+  // Calcule le prix total à dépenser (uniquement pour les items accessibles)
   const totalCost = useMemo(() => {
-    return shoppingItems.reduce((sum, item) => {
+    return accessibleItems.reduce((sum, item) => {
       const price = knownPrices[item.itemId] || 0;
       return sum + price * item.quantityToBuy;
     }, 0);
-  }, [shoppingItems]);
+  }, [accessibleItems]);
 
-  // Nombre total d'items à acheter
+  // Nombre total d'items à acheter (uniquement pour les items accessibles)
   const totalItemsToBuy = useMemo(() => {
-    return shoppingItems.reduce((sum, item) => sum + item.quantityToBuy, 0);
-  }, [shoppingItems]);
+    return accessibleItems.reduce((sum, item) => sum + item.quantityToBuy, 0);
+  }, [accessibleItems]);
 
-  // Nombre d'items manquants (stock < quantité idéale)
+  // Nombre d'items manquants (stock < quantité idéale) - uniquement accessibles
   const totalMissing = useMemo(() => {
-    return shoppingItems.filter(item => {
+    return accessibleItems.filter(item => {
       const inventoryItem = inventoryItems.find(i => i.id === item.itemId);
       const currentStock = inventoryItem?.quantity || 0;
       return currentStock < item.quantityIdeal;
     }).length;
-  }, [shoppingItems, inventoryItems]);
+  }, [accessibleItems, inventoryItems]);
+
+  // Stats pour les items futurs
+  const futureTotalCost = useMemo(() => {
+    return futureItems.reduce((sum, item) => {
+      const price = knownPrices[item.itemId] || 0;
+      return sum + price * item.quantityToBuy;
+    }, 0);
+  }, [futureItems]);
+
+  const futureTotalItemsToBuy = useMemo(() => {
+    return futureItems.reduce((sum, item) => sum + item.quantityToBuy, 0);
+  }, [futureItems]);
 
   // Composants critiques à réapprovisionner
   const criticalItems = useMemo(() => {
-    return getCriticalComponents();
-  }, [getCriticalComponents, shoppingItems]);
+    // Ne garde que les composants critiques accessibles
+    const allCritical = getCriticalComponents();
+    return allCritical.filter(item => isComponentAccessibleNow(item));
+  }, [getCriticalComponents, shoppingItems, maxAccessibleSpellLevel]);
 
   const toggleSection = (priority: ShoppingPriority) => {
     setExpandedSections(prev => ({
@@ -301,6 +384,16 @@ export function ShoppingList() {
         </div>
       </div>
 
+      {/* Info niveau */}
+      <div className="card bg-parchment-light border-parchment-dark">
+        <div className="flex items-center gap-2">
+          <Zap className="w-4 h-4 text-divine-gold" />
+          <span className="text-sm text-ink">
+            Niveau {characterLevel} • Sorts de niveau 1-{maxAccessibleSpellLevel} accessibles
+          </span>
+        </div>
+      </div>
+
       {/* Alertes critiques */}
       {criticalItems.length > 0 && (
         <div className="card bg-blood-red/10 border-blood-red/30">
@@ -428,10 +521,10 @@ export function ShoppingList() {
         </div>
       )}
 
-      {/* Liste par priorité */}
+      {/* Liste par priorité - Composants accessibles */}
       <div className="space-y-3">
         {priorityOrder.map(priority => {
-          const sectionItems = itemsByPriority[priority];
+          const sectionItems = accessibleItemsByPriority[priority];
           const missingCount = sectionItems.filter(item => {
             const stock = getCurrentStock(item.itemId);
             return stock < item.quantityIdeal;
@@ -615,7 +708,7 @@ export function ShoppingList() {
       </div>
       
       {/* Résumé */}
-      {shoppingItems.length > 0 && (
+      {accessibleItems.length > 0 && (
         <div className="card bg-parchment-dark/30">
           <h4 className="font-display text-sm text-ink mb-2">Résumé</h4>
           <div className="grid grid-cols-2 gap-3 text-sm">
@@ -652,6 +745,249 @@ export function ShoppingList() {
                 <BookOpen className="w-3 h-3 text-arcane-purple" />
                 Mage
               </span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Section Composants pour niveaux futurs */}
+      {futureItems.length > 0 && (
+        <div className="mt-6 pt-6 border-t-2 border-dashed border-parchment-dark">
+          {/* Header de la section futur */}
+          <div className="card bg-arcane-purple/10 border-arcane-purple/30">
+            <div className="flex items-center gap-3">
+              <Clock className="w-6 h-6 text-arcane-purple" />
+              <div className="flex-1">
+                <h3 className="font-display text-ink">Composants pour niveaux futurs</h3>
+                <p className="text-xs text-ink-muted">
+                  {futureTotalItemsToBuy > 0 
+                    ? `${futureTotalItemsToBuy} unité${futureTotalItemsToBuy > 1 ? 's' : ''} à prévoir` 
+                    : 'Aucun achat prévu'} • {formatPrice(futureTotalCost)} à prévoir
+                </p>
+              </div>
+              <span className="badge bg-arcane-purple/20 text-arcane-purple border-arcane-purple">
+                Niveaux {maxAccessibleSpellLevel + 1}-9
+              </span>
+            </div>
+          </div>
+
+          {/* Liste des composants futurs par priorité */}
+          <div className="space-y-3 mt-4">
+            {priorityOrder.map(priority => {
+              const sectionItems = futureItemsByPriority[priority];
+              const missingCount = sectionItems.filter(item => {
+                const stock = getCurrentStock(item.itemId);
+                return stock < item.quantityIdeal;
+              }).length;
+              const itemsToBuyCount = sectionItems.filter(item => item.quantityToBuy > 0).length;
+              
+              if (sectionItems.length === 0) return null;
+              
+              const colors = priorityColors[priority];
+              
+              return (
+                <div key={`future-${priority}`} className="border border-parchment-dark rounded-lg overflow-hidden opacity-80">
+                  {/* Header de section */}
+                  <button
+                    onClick={() => toggleSection(priority)}
+                    className={`w-full px-3 py-2 flex items-center justify-between ${colors.bg} border-b ${colors.border}`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg">{colors.icon}</span>
+                      <span className={`font-display text-sm ${colors.text}`}>
+                        Priorité {priorityLabels[priority]}
+                      </span>
+                      {itemsToBuyCount > 0 && (
+                        <span className="text-xs bg-white/70 px-1.5 py-0.5 rounded-full font-medium">
+                          {itemsToBuyCount} à prévoir
+                        </span>
+                      )}
+                      {missingCount > 0 && itemsToBuyCount === 0 && (
+                        <span className="text-xs bg-arcane-purple/10 text-arcane-purple px-1.5 py-0.5 rounded-full">
+                          {missingCount} manquant
+                        </span>
+                      )}
+                    </div>
+                    <span className={`text-xs ${colors.text}`}>
+                      {expandedSections[priority] ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+                    </span>
+                  </button>
+                  
+                  {/* Items */}
+                  {expandedSections[priority] && (
+                    <div className="p-2 space-y-2">
+                      {sectionItems.map(item => {
+                        const stock = getCurrentStock(item.itemId);
+                        const isComplete = stock >= item.quantityIdeal;
+                        const price = getItemPrice(item.itemId);
+                        const itemCost = price * item.quantityToBuy;
+                        const description = getItemDescription(item);
+                        const isConsumed = item.componentType === 'consumed_per_cast' || item.componentType === 'consumed_per_use';
+                        
+                        // Récupère le niveau du sort pour cet item
+                        const spellLevel = item.relatedSpells?.[0] 
+                          ? allSpellComponentMappings.find(m => m.spellId === item.relatedSpells![0].spellId)?.spellLevel 
+                          : undefined;
+                        
+                        return (
+                          <div 
+                            key={item.itemId}
+                            className={`p-3 rounded-lg border ${
+                              isComplete 
+                                ? 'bg-forest/5 border-forest/20' 
+                                : 'bg-parchment-light border-parchment-dark'
+                            }`}
+                          >
+                            {/* Header de l'item */}
+                            <div className="flex items-start justify-between gap-2 mb-2">
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2 flex-wrap">
+                                  <span className={`font-display text-sm ${isComplete ? 'text-ink-muted' : 'text-ink'}`}>
+                                    {getItemDisplayName(item.itemId)}
+                                  </span>
+                                  
+                                  {/* Badge niveau du sort */}
+                                  {spellLevel !== undefined && (
+                                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-arcane-purple/10 text-arcane-purple border border-arcane-purple/20">
+                                      Sort niv. {spellLevel}
+                                    </span>
+                                  )}
+                                  
+                                  {/* Badge consommable/réutilisable */}
+                                  {item.componentType && (
+                                    <span className={`inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded ${
+                                      isConsumed
+                                        ? 'bg-blood-red/10 text-blood-red'
+                                        : 'bg-forest/10 text-forest'
+                                    }`}>
+                                      {isConsumed ? <Flame className="w-3 h-3" /> : <Recycle className="w-3 h-3" />}
+                                      {isConsumed ? 'Consommé' : 'Réutilisable'}
+                                    </span>
+                                  )}
+                                  
+                                  {/* Badge classe source */}
+                                  {item.classSource && (
+                                    <span className={`text-[10px] px-1.5 py-0.5 rounded border ${classSourceStyles[item.classSource]}`}>
+                                      {classSourceLabels[item.classSource]}
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                              
+                              {/* Sélecteur de quantité */}
+                              <select
+                                value={item.quantityToBuy}
+                                onChange={(e) => handleQuantityChange(item.itemId, parseInt(e.target.value))}
+                                className="text-sm border border-parchment-dark rounded px-2 py-1 bg-white focus:border-divine-gold focus:ring-1 focus:ring-divine-gold"
+                                disabled={isComplete && !isConsumed}
+                              >
+                                {Array.from({ length: 21 }, (_, i) => (
+                                  <option key={i} value={i}>{i}</option>
+                                ))}
+                              </select>
+                            </div>
+                            
+                            {/* Description */}
+                            {description && (
+                              <p className="text-xs text-ink-muted line-clamp-2 mb-2">
+                                {description}
+                              </p>
+                            )}
+                            
+                            {/* Sorts liés */}
+                            {item.relatedSpells && item.relatedSpells.length > 0 && (
+                              <div className="flex flex-wrap gap-1.5 mb-2">
+                                {item.relatedSpells.map(spell => {
+                                  const spellInfo = getSpellById(spell.spellId);
+                                  const spellClass = (spell as { classSource?: 'cleric' | 'wizard' }).classSource || item.classSource;
+                                  return (
+                                    <span 
+                                      key={spell.spellId}
+                                      className={`inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full border ${
+                                        spell.consumed 
+                                          ? 'bg-blood-red/10 text-blood-red border-blood-red/20'
+                                          : 'bg-forest/10 text-forest border-forest/20'
+                                      }`}
+                                      title={spell.consumed ? 'Composant consommé' : 'Composant réutilisable'}
+                                    >
+                                      {spell.consumed ? <Flame className="w-3 h-3" /> : <Recycle className="w-3 h-3" />}
+                                      {spell.spellName}
+                                      {spellClass && (
+                                        <span className="opacity-60">({classSourceLabels[spellClass]})</span>
+                                      )}
+                                    </span>
+                                  );
+                                })}
+                              </div>
+                            )}
+                            
+                            {/* Footer: Stock, Prix et Bouton Acheter */}
+                            <div className="flex items-center justify-between gap-2">
+                              <div className="flex items-center gap-3 text-xs">
+                                {/* Stock actuel */}
+                                <span className={isComplete ? 'text-forest' : 'text-blood-red'}>
+                                  Stock: {stock}/{item.quantityIdeal}
+                                </span>
+                                
+                                {/* Prix */}
+                                {price > 0 && (
+                                  <span className="text-ink-light">
+                                    {formatPrice(price)}/u
+                                  </span>
+                                )}
+                                
+                                {/* Prix total si quantité > 0 */}
+                                {item.quantityToBuy > 0 && (
+                                  <span className="text-blood-red font-medium">
+                                    = {formatPrice(itemCost)}
+                                  </span>
+                                )}
+                              </div>
+                              
+                              {/* Bouton Acheter */}
+                              <button
+                                onClick={() => handlePurchase(item)}
+                                disabled={item.quantityToBuy <= 0}
+                                className={`btn btn-sm ${
+                                  item.quantityToBuy > 0 
+                                    ? 'btn-secondary' 
+                                    : 'bg-parchment-dark text-ink-muted cursor-not-allowed'
+                                }`}
+                              >
+                                {isComplete && !isConsumed
+                                  ? 'Possédé'
+                                  : 'Prévoir'}
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Résumé section futur */}
+          <div className="card bg-arcane-purple/5 border-arcane-purple/20 mt-4">
+            <h4 className="font-display text-sm text-ink mb-2 flex items-center gap-2">
+              <Sparkle className="w-4 h-4 text-arcane-purple" />
+              Résumé composants futurs
+            </h4>
+            <div className="grid grid-cols-2 gap-3 text-sm">
+              <div>
+                <span className="text-ink-muted">Coût total à prévoir:</span>
+                <div className="font-display text-arcane-purple">
+                  {formatPrice(futureTotalCost)}
+                </div>
+              </div>
+              <div>
+                <span className="text-ink-muted">Items à prévoir:</span>
+                <div className="font-display text-arcane-purple-dark">
+                  {futureTotalItemsToBuy}
+                </div>
+              </div>
             </div>
           </div>
         </div>

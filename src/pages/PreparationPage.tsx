@@ -333,6 +333,9 @@ export function PreparationPage() {
                 {/* Détails du preset (expandable) */}
                 {isExpanded && (
                   <div className="mt-3 pt-3 border-t border-parchment-dark animate-slide-up">
+                    {/* DEBUG */}
+                    {(() => { console.log('[DEBUG] Expanded preset:', preset.id, 'isChult:', preset.id === 'kimi-optimal-chult'); return null; })()}
+                    
                     {/* Interface spéciale pour le preset custom */}
                     {preset.id === 'custom-user' ? (
                       <CustomPresetEditor 
@@ -351,7 +354,9 @@ export function PreparationPage() {
                       />
                     ) : preset.id === 'kimi-optimal-chult' ? (
                       /* Interface spéciale pour le preset Chult avec case à cocher */
-                      <div className="space-y-3">
+                      <div className="space-y-3 border-2 border-red-500">
+                        <div className="text-xs text-red-500 font-bold">DEBUG: Chult preset rendered</div>
+                        
                         {/* Case à cocher Dans le Chult */}
                         <div className="bg-jungle-green/10 border border-jungle-green/30 rounded-lg p-3">
                           <label className="flex items-center gap-3 cursor-pointer">
@@ -401,12 +406,11 @@ export function PreparationPage() {
                         {/* Bouton Appliquer */}
                         <button
                           onClick={() => handleApplyPreset(preset)}
-                          className="w-full bg-jungle-green hover:bg-jungle-green-light active:bg-jungle-green-dark 
-                            text-white font-bold py-3 px-4 rounded-lg 
-                            transform transition-all duration-100
-                            hover:shadow-lg hover:scale-[1.02]
-                            active:scale-[0.98] active:shadow-inner
-                            flex items-center justify-center gap-2"
+                          className="w-full font-bold py-3 px-4 rounded-lg flex items-center justify-center gap-2"
+                          style={{ 
+                            backgroundColor: '#2D5016', 
+                            color: 'white',
+                          }}
                         >
                           <Check className="w-4 h-4" />
                           {isActive ? '✓ Appliqué !' : `Appliquer ce préréglage (${selectionCount} sorts)`}
