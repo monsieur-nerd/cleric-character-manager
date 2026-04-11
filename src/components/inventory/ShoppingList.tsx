@@ -606,6 +606,10 @@ export function ShoppingList() {
                     const itemCost = price * item.quantityToBuy;
                     const description = getItemDescription(item);
                     const isConsumed = item.componentType === 'consumed_per_cast' || item.componentType === 'consumed_per_use';
+                    const alternatives = getComponentAlternatives(item.itemId);
+                    const hasAlternatives = alternatives && alternatives.length > 0;
+                    const satisfiedByAlt = hasAlternatives && isSatisfiedByAlternative(item);
+                    const isAltOwned = hasAlternatives && isOwnedAlternative(item);
                     
                     return (
                       <div 
@@ -613,16 +617,44 @@ export function ShoppingList() {
                         className={`p-3 rounded-lg border ${
                           isComplete 
                             ? 'bg-forest/5 border-forest/20' 
-                            : 'bg-parchment-light border-parchment-dark'
+                            : satisfiedByAlt
+                              ? 'bg-ink-light/5 border-ink-light/20 opacity-70'
+                              : 'bg-parchment-light border-parchment-dark'
                         }`}
                       >
                         {/* Header de l'item */}
                         <div className="flex items-start justify-between gap-2 mb-2">
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 flex-wrap">
-                              <span className={`font-display text-sm ${isComplete ? 'text-ink-muted' : 'text-ink'}`}>
+                              <span className={`font-display text-sm ${
+                                isComplete || satisfiedByAlt ? 'text-ink-muted line-through' : 'text-ink'
+                              }`}>
                                 {getItemDisplayName(item.itemId)}
                               </span>
+                              
+                              {/* Badge alternative */}
+                              {hasAlternatives && (
+                                <span className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded bg-arcane-purple/10 text-arcane-purple border border-arcane-purple/20" title={`Alternative disponible`}>
+                                  <GitBranch className="w-3 h-3" />
+                                  Alternative
+                                </span>
+                              )}
+                              
+                              {/* Badge satisfait par alternative */}
+                              {satisfiedByAlt && (
+                                <span className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded bg-forest/10 text-forest">
+                                  <Recycle className="w-3 h-3" />
+                                  Couvert par alternative
+                                </span>
+                              )}
+                              
+                              {/* Badge possédé (alternative) */}
+                              {isAltOwned && (
+                                <span className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded bg-divine-gold/10 text-divine-gold-dark border border-divine-gold/30">
+                                  <Sparkle className="w-3 h-3" />
+                                  Option utilisée
+                                </span>
+                              )}
                               
                               {/* Badge consommable/réutilisable */}
                               {item.componentType && (
@@ -650,13 +682,41 @@ export function ShoppingList() {
                             value={item.quantityToBuy}
                             onChange={(e) => handleQuantityChange(item.itemId, parseInt(e.target.value))}
                             className="text-sm border border-parchment-dark rounded px-2 py-1 bg-white focus:border-divine-gold focus:ring-1 focus:ring-divine-gold"
-                            disabled={isComplete && !isConsumed}
+                            disabled={(isComplete && !isConsumed) || satisfiedByAlt}
                           >
                             {Array.from({ length: 21 }, (_, i) => (
                               <option key={i} value={i}>{i}</option>
                             ))}
                           </select>
                         </div>
+                        
+                        {/* Affichage des alternatives */}
+                        {hasAlternatives && (
+                          <div className="mb-2 p-2 bg-arcane-purple/5 rounded border border-arcane-purple/10">
+                            <p className="text-xs text-ink-muted mb-1">
+                              <GitBranch className="w-3 h-3 inline mr-1" />
+                              Alternative{alternatives.length > 1 ? 's' : ''} disponible{alternatives.length > 1 ? 's' : ''} :
+                            </p>
+                            <div className="flex flex-wrap gap-1">
+                              {alternatives.map(alt => {
+                                const altStock = getCurrentStock(alt.itemId);
+                                const altOwned = altStock > 0;
+                                return (
+                                  <span 
+                                    key={alt.itemId}
+                                    className={`text-[10px] px-2 py-0.5 rounded-full border ${
+                                      altOwned
+                                        ? 'bg-forest/10 text-forest border-forest/30'
+                                        : 'bg-parchment-dark/30 text-ink-muted border-parchment-dark'
+                                    }`}
+                                  >
+                                    {alt.itemName} {altOwned ? `(${altStock})` : `(0)`}
+                                  </span>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
                         
                         {/* Description */}
                         {description && (
@@ -856,6 +916,10 @@ export function ShoppingList() {
                         const itemCost = price * item.quantityToBuy;
                         const description = getItemDescription(item);
                         const isConsumed = item.componentType === 'consumed_per_cast' || item.componentType === 'consumed_per_use';
+                        const alternatives = getComponentAlternatives(item.itemId);
+                        const hasAlternatives = alternatives && alternatives.length > 0;
+                        const satisfiedByAlt = hasAlternatives && isSatisfiedByAlternative(item);
+                        const isAltOwned = hasAlternatives && isOwnedAlternative(item);
                         
                         // Récupère le niveau du sort pour cet item
                         const spellLevel = item.relatedSpells?.[0] 
@@ -868,14 +932,18 @@ export function ShoppingList() {
                             className={`p-3 rounded-lg border ${
                               isComplete 
                                 ? 'bg-forest/5 border-forest/20' 
-                                : 'bg-parchment-light border-parchment-dark'
+                                : satisfiedByAlt
+                                  ? 'bg-ink-light/5 border-ink-light/20 opacity-70'
+                                  : 'bg-parchment-light border-parchment-dark'
                             }`}
                           >
                             {/* Header de l'item */}
                             <div className="flex items-start justify-between gap-2 mb-2">
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-2 flex-wrap">
-                                  <span className={`font-display text-sm ${isComplete ? 'text-ink-muted' : 'text-ink'}`}>
+                                  <span className={`font-display text-sm ${
+                                    isComplete || satisfiedByAlt ? 'text-ink-muted line-through' : 'text-ink'
+                                  }`}>
                                     {getItemDisplayName(item.itemId)}
                                   </span>
                                   
@@ -883,6 +951,30 @@ export function ShoppingList() {
                                   {spellLevel !== undefined && (
                                     <span className="text-[10px] px-1.5 py-0.5 rounded bg-arcane-purple/10 text-arcane-purple border border-arcane-purple/20">
                                       Sort niv. {spellLevel}
+                                    </span>
+                                  )}
+                                  
+                                  {/* Badge alternative */}
+                                  {hasAlternatives && (
+                                    <span className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded bg-arcane-purple/10 text-arcane-purple border border-arcane-purple/20" title={`Alternative disponible`}>
+                                      <GitBranch className="w-3 h-3" />
+                                      Alternative
+                                    </span>
+                                  )}
+                                  
+                                  {/* Badge satisfait par alternative */}
+                                  {satisfiedByAlt && (
+                                    <span className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded bg-forest/10 text-forest">
+                                      <Recycle className="w-3 h-3" />
+                                      Couvert par alternative
+                                    </span>
+                                  )}
+                                  
+                                  {/* Badge possédé (alternative) */}
+                                  {isAltOwned && (
+                                    <span className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded bg-divine-gold/10 text-divine-gold-dark border border-divine-gold/30">
+                                      <Sparkle className="w-3 h-3" />
+                                      Option utilisée
                                     </span>
                                   )}
                                   
@@ -912,13 +1004,41 @@ export function ShoppingList() {
                                 value={item.quantityToBuy}
                                 onChange={(e) => handleQuantityChange(item.itemId, parseInt(e.target.value))}
                                 className="text-sm border border-parchment-dark rounded px-2 py-1 bg-white focus:border-divine-gold focus:ring-1 focus:ring-divine-gold"
-                                disabled={isComplete && !isConsumed}
+                                disabled={(isComplete && !isConsumed) || satisfiedByAlt}
                               >
                                 {Array.from({ length: 21 }, (_, i) => (
                                   <option key={i} value={i}>{i}</option>
                                 ))}
                               </select>
                             </div>
+                            
+                            {/* Affichage des alternatives */}
+                            {hasAlternatives && (
+                              <div className="mb-2 p-2 bg-arcane-purple/5 rounded border border-arcane-purple/10">
+                                <p className="text-xs text-ink-muted mb-1">
+                                  <GitBranch className="w-3 h-3 inline mr-1" />
+                                  Alternative{alternatives.length > 1 ? 's' : ''} disponible{alternatives.length > 1 ? 's' : ''} :
+                                </p>
+                                <div className="flex flex-wrap gap-1">
+                                  {alternatives.map(alt => {
+                                    const altStock = getCurrentStock(alt.itemId);
+                                    const altOwned = altStock > 0;
+                                    return (
+                                      <span 
+                                        key={alt.itemId}
+                                        className={`text-[10px] px-2 py-0.5 rounded-full border ${
+                                          altOwned
+                                            ? 'bg-forest/10 text-forest border-forest/30'
+                                            : 'bg-parchment-dark/30 text-ink-muted border-parchment-dark'
+                                        }`}
+                                      >
+                                        {alt.itemName} {altOwned ? `(${altStock})` : `(0)`}
+                                      </span>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            )}
                             
                             {/* Description */}
                             {description && (

@@ -401,8 +401,8 @@ export function PreparationPage() {
                         {/* Bouton Appliquer */}
                         <button
                           onClick={() => handleApplyPreset(preset)}
-                          className="w-full bg-jungle-green hover:bg-jungle-green-light active:bg-jungle-green-dark 
-                            text-white font-bold py-3 px-4 rounded-lg 
+                          className="w-full bg-divine-gold hover:bg-divine-gold-light active:bg-divine-gold-dark 
+                            text-ink font-bold py-3 px-4 rounded-lg 
                             transform transition-all duration-100
                             hover:shadow-lg hover:scale-[1.02]
                             active:scale-[0.98] active:shadow-inner
