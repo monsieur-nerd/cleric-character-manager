@@ -692,6 +692,13 @@ export interface EnrichedShoppingListItem {
   classSource?: 'cleric' | 'wizard';
 }
 
+// Alternative de composant (pour les cas "Eau bénite OU poudre d'argent")
+export interface ComponentAlternative {
+  itemId: string;
+  itemName: string;
+  price: number;
+}
+
 // Mapping complet des composants par sort
 export interface SpellComponentMapping {
   spellId: string;
@@ -704,6 +711,10 @@ export interface SpellComponentMapping {
   consumed: boolean;
   price: number;
   priority: ShoppingPriority;
+  // Pour les composants alternatifs (ex: "Eau bénite OU poudre d'argent")
+  alternatives?: ComponentAlternative[];
+  // Identifie un groupe de composants alternatifs pour ce sort
+  alternativeGroupId?: string;
 }
 
 export const MAX_SPELL_SLOTS: Record<number, SpellSlots> = {
