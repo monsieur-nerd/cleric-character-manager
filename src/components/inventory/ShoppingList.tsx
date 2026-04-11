@@ -508,6 +508,10 @@ export function ShoppingList() {
               {totalMissing} manquant
             </span>
           )}
+        </div>
+        
+        {/* Bouton Sync - ligne séparée pour plus de visibilité */}
+        <div className="mt-3 pt-3 border-t border-divine-gold/20 flex justify-end">
           <button
             onClick={() => {
               const charState = useCharacterStore.getState();
@@ -524,10 +528,11 @@ export function ShoppingList() {
                 }
               }
             }}
-            className="text-xs px-2 py-1 rounded border bg-forest/10 text-forest border-forest/30 hover:bg-forest/20 transition-colors"
+            className="text-xs px-3 py-1.5 rounded border bg-forest/10 text-forest border-forest/30 hover:bg-forest/20 transition-colors flex items-center gap-1"
             title="Synchronise les composants avec les sorts connus (supprime les items obsolètes)"
           >
-            🔄 Sync
+            <span>🔄</span>
+            <span>Sync composants</span>
           </button>
         </div>
       </div>
