@@ -687,13 +687,14 @@ export function ShoppingList() {
                     const satisfiedByAlt = hasAlternatives && isSatisfiedByAlternative(item);
                     const isAltOwned = hasAlternatives && isOwnedAlternative(item);
                     
-                    // Récupère le niveau du sort pour cet item
-                    const relatedSpell = item.relatedSpells?.[0];
-                    const spellLevel = relatedSpell
-                      ? (relatedSpell.spellLevel !== undefined 
-                          ? relatedSpell.spellLevel 
-                          : allSpellComponentMappings.find(m => m.spellId === relatedSpell.spellId)?.spellLevel)
-                      : undefined;
+                    // Récupère tous les niveaux de sorts uniques pour cet item
+                    const spellLevels = item.relatedSpells
+                      ? [...new Set(item.relatedSpells.map(spell => {
+                          if (spell.spellLevel !== undefined) return spell.spellLevel;
+                          const mapping = allSpellComponentMappings.find(m => m.spellId === spell.spellId);
+                          return mapping?.spellLevel;
+                        }).filter((level): level is number => level !== undefined))].sort((a, b) => a - b)
+                      : [];
                     
                     return (
                       <div 
@@ -716,12 +717,15 @@ export function ShoppingList() {
                                 {getItemDisplayName(item.itemId)}
                               </span>
                               
-                              {/* Badge niveau du sort */}
-                              {spellLevel !== undefined && (
-                                <span className="text-[10px] px-1.5 py-0.5 rounded bg-arcane-purple/10 text-arcane-purple border border-arcane-purple/20">
-                                  {spellLevel === 0 ? 'Sort mineur' : `Sort niv. ${spellLevel}`}
+                              {/* Badges niveaux des sorts */}
+                              {spellLevels.map(level => (
+                                <span 
+                                  key={level}
+                                  className="text-[10px] px-1.5 py-0.5 rounded bg-arcane-purple/10 text-arcane-purple border border-arcane-purple/20"
+                                >
+                                  {level === 0 ? 'Sort mineur' : `Sort niv. ${level}`}
                                 </span>
-                              )}
+                              ))}
                               
                               {/* Badge alternative */}
                               {hasAlternatives && (
@@ -1013,14 +1017,14 @@ export function ShoppingList() {
                         const satisfiedByAlt = hasAlternatives && isSatisfiedByAlternative(item);
                         const isAltOwned = hasAlternatives && isOwnedAlternative(item);
                         
-                        // Récupère le niveau du sort pour cet item
-                        // Priorité : spellLevel dans relatedSpells, sinon recherche dans mappings
-                        const relatedSpell = item.relatedSpells?.[0];
-                        const spellLevel = relatedSpell
-                          ? (relatedSpell.spellLevel !== undefined 
-                              ? relatedSpell.spellLevel 
-                              : allSpellComponentMappings.find(m => m.spellId === relatedSpell.spellId)?.spellLevel)
-                          : undefined;
+                        // Récupère tous les niveaux de sorts uniques pour cet item
+                        const spellLevels = item.relatedSpells
+                          ? [...new Set(item.relatedSpells.map(spell => {
+                              if (spell.spellLevel !== undefined) return spell.spellLevel;
+                              const mapping = allSpellComponentMappings.find(m => m.spellId === spell.spellId);
+                              return mapping?.spellLevel;
+                            }).filter((level): level is number => level !== undefined))].sort((a, b) => a - b)
+                          : [];
                         
                         return (
                           <div 
@@ -1051,12 +1055,15 @@ export function ShoppingList() {
                                     </span>
                                   )}
                                   
-                                  {/* Badge niveau du sort */}
-                                  {spellLevel !== undefined && (
-                                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-arcane-purple/10 text-arcane-purple border border-arcane-purple/20">
-                                      Sort niv. {spellLevel}
+                                  {/* Badges niveaux des sorts */}
+                                  {spellLevels.map(level => (
+                                    <span 
+                                      key={level}
+                                      className="text-[10px] px-1.5 py-0.5 rounded bg-arcane-purple/10 text-arcane-purple border border-arcane-purple/20"
+                                    >
+                                      {level === 0 ? 'Sort mineur' : `Sort niv. ${level}`}
                                     </span>
-                                  )}
+                                  ))}
                                   
                                   {/* Badge alternative */}
                                   {hasAlternatives && (
