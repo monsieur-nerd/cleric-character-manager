@@ -154,6 +154,7 @@ export function ShoppingList() {
   };
 
   // Items filtrés selon les critères ET accessibles maintenant
+  // ET qui n'ont pas encore atteint leur stock idéal
   const accessibleItems = useMemo(() => {
     return shoppingItems.filter(item => {
       // Filtre par niveau de sort accessible
@@ -176,9 +177,14 @@ export function ShoppingList() {
         return false;
       }
       
+      // Masquer les items avec stock >= quantité idéale (stock complet)
+      const stock = getCurrentStock(item.itemId);
+      if (stock >= item.quantityIdeal) return false;
+      
       return true;
     });
-  }, [shoppingItems, classFilter, consumableFilter, isInChult, maxAccessibleSpellLevel]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [shoppingItems, classFilter, consumableFilter, isInChult, maxAccessibleSpellLevel, inventoryItems]);
 
   // Items pour niveaux futurs (non accessibles)
   const futureItems = useMemo(() => {
@@ -340,11 +346,11 @@ export function ShoppingList() {
       useInventoryStore.getState().addItem(newItem);
     }
     
-    setQuantityToBuy(item.itemId, 0);
+    // Réinitialise à 1 pour permettre d'acheter à nouveau facilement
+    setQuantityToBuy(item.itemId, 1);
     
-    if (item.componentType === 'reusable_focus' || item.componentType === 'permanent') {
-      useShoppingListStore.getState().removeFromShoppingList(item.itemId);
-    }
+    // Note : on ne supprime plus les items réutilisables ici
+    // Ils seront filtrés par la logique d'affichage si stock >= quantité idéale
   };
 
   // Handler spécifique pour les composants futurs - ne remet pas quantityToBuy à 0
@@ -890,15 +896,9 @@ export function ShoppingList() {
                           <button
                             onClick={() => handlePurchase(item)}
                             disabled={item.quantityToBuy <= 0}
-                            className={`btn btn-sm ${
-                              item.quantityToBuy > 0 
-                                ? 'btn-primary' 
-                                : 'bg-parchment-dark text-ink-muted cursor-not-allowed'
-                            }`}
+                            className="btn btn-sm btn-primary"
                           >
-                            {isComplete && !isConsumed
-                              ? 'Possédé'
-                              : 'Acheter'}
+                            Acheter
                           </button>
                         </div>
                       </div>
@@ -1228,15 +1228,9 @@ export function ShoppingList() {
                               <button
                                 onClick={() => handlePlanPurchase(item)}
                                 disabled={item.quantityToBuy <= 0}
-                                className={`btn btn-sm ${
-                                  item.quantityToBuy > 0 
-                                    ? 'btn-primary' 
-                                    : 'bg-parchment-dark text-ink-muted cursor-not-allowed'
-                                }`}
+                                className="btn btn-sm btn-primary"
                               >
-                                {isComplete && !isConsumed
-                                  ? 'Possédé'
-                                  : 'Acheter'}
+                                Acheter
                               </button>
                             </div>
                           </div>
