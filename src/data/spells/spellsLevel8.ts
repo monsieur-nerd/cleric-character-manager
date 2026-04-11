@@ -265,7 +265,7 @@ export const clericLevel8Spells: Spell[] = [
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": "des diamants cosmiques* (25000 po) - *anciennement: diamants 25000po",
+      "material": "des diamants cosmiques* (25000 po) - *anciennement: diamants d'une valeur d'au moins 25000 po",
       "materialConsumed": true
     },
     "duration": {

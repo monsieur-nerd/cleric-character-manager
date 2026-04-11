@@ -111,7 +111,7 @@ export const clericLevel3Spells: Spell[] = [
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": "de l'encens brûlant* - *anciennement: encens de communication",
+      "material": "de l'encens brûlant* - *anciennement: de l'encens brûlant",
       "materialConsumed": true
     },
     "duration": {
@@ -297,7 +297,7 @@ export const clericLevel3Spells: Spell[] = [
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": "des diamants d'âme* (300 po) - *anciennement: diamants 300po",
+      "material": "des diamants d'âme* (300 po) - *anciennement: des diamants d'une valeur d'au moins 300 po",
       "materialConsumed": true
     },
     "duration": {

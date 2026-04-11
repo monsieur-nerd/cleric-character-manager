@@ -19,7 +19,7 @@ export const clericLevel9Spells: Spell[] = [
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": "de l'eau pure* - *anciennement: eau bénite",
+      "material": "de l'eau bénite",
       "materialConsumed": false
     },
     "duration": {
@@ -49,7 +49,7 @@ export const clericLevel9Spells: Spell[] = [
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": "un jaspe* et une perle* (1000 po) - *anciennement: jaspe et perle de Portail astral",
+      "material": "un jaspe* et une perle* (1000 po) - *anciennement: un jaspe et une perle d'une valeur totale d'au moins 1000 po",
       "materialConsumed": false
     },
     "duration": {
@@ -80,7 +80,7 @@ export const clericLevel9Spells: Spell[] = [
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": "de l'encens des visions* et des herbes divinatoires* - *anciennement: encens et herbes de Prémonition",
+      "material": "de l'encens des visions* et des herbes divinatoires* - *anciennement: de l'encens et des herbes",
       "materialConsumed": false
     },
     "duration": {
@@ -111,7 +111,7 @@ export const clericLevel9Spells: Spell[] = [
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": "de l'encens de sang de dragon* et de l'or* (1000 po) - *anciennement: encens et or de Déclaration divine",
+      "material": "de l'encens de sang de dragon* et de l'or* (1000 po) - *anciennement: de l'encens et de l'or d'une valeur d'au moins 1000 po",
       "materialConsumed": true
     },
     "duration": {
@@ -235,7 +235,7 @@ export const clericLevel9Spells: Spell[] = [
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": "des diamants cosmiques* (25000 po) - *anciennement: diamants 25000po",
+      "material": "des diamants cosmiques* (25000 po) - *anciennement: des diamants d'une valeur d'au moins 25000 po",
       "materialConsumed": true
     },
     "duration": {

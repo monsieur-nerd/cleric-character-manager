@@ -81,7 +81,7 @@ export const clericLevel4Spells: Spell[] = [
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": "de l'encens* et une offrande* (25 po) - *anciennement: encens et offrande sacrificielle de Divination",
+      "material": "de l'encens* et une offrande* (25 po) - *anciennement: de l'encens et une offrande sacrificielle d'une valeur d'au moins 25 po",
       "materialConsumed": true
     },
     "duration": {
