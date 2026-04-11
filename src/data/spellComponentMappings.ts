@@ -298,13 +298,14 @@ export const clericLevel3Components: SpellComponentMapping[] = [
     price: 100,
     priority: 'medium',
   },
+  // Communication avec les morts - Utilise l'encens classique
   {
     spellId: 'speak-with-dead',
     spellName: 'Communication avec les morts',
     spellLevel: 3,
     classSource: 'cleric',
-    itemId: 'encens-brulant',
-    itemName: 'Encens brûlant',
+    itemId: 'encens',
+    itemName: 'Encens',
     quantity: 1,
     consumed: true,
     price: 10,

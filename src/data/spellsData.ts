@@ -1409,7 +1409,7 @@ export const spellsData: Spell[] = [
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": "encens brûlant",
+      "material": "de l'encens",
       "materialConsumed": false
     },
     "duration": {

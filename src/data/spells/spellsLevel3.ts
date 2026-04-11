@@ -111,7 +111,7 @@ export const clericLevel3Spells: Spell[] = [
     "components": {
       "verbal": true,
       "somatic": true,
-      "material": "de l'encens brûlant* - *anciennement: de l'encens brûlant",
+      "material": "de l'encens",
       "materialConsumed": true
     },
     "duration": {

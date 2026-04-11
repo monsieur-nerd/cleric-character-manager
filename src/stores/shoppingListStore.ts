@@ -623,7 +623,7 @@ export const useShoppingListStore = create<ShoppingListStore>()(
             'encens-eau', 'encens-poudre', 'jaspe-perle', 'encens-herbes',
             'encens-perle', 'encens-communion', 'offrande-communion',
             'eau-bénite-argent', 'eau-bénite-herbes', 'encens-poudre-os',
-            'poil-plume-bete'
+            'poil-plume-bete', 'encens-brulant'
           ];
           
           const isObsoleteId = (itemId: string): boolean => {
