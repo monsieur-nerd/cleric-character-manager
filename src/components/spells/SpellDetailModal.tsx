@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
-import { X, Clock, Target, Sparkles, BookOpen, Zap, Shield, AlertCircle, Mic, Check, GitBranch } from 'lucide-react';
+import { X, Clock, Target, Sparkles, BookOpen, Zap, Shield, AlertCircle, Mic, Check, GitBranch, Flame, Recycle, ShoppingCart } from 'lucide-react';
+import { formatPrice } from '@/utils/formatters';
 import type { Spell } from '@/types';
 import { useInventoryStore } from '@/stores';
 import { useSpellIncantation, useCanHaveIncantation } from '@/hooks/useSpellIncantation';
@@ -215,69 +216,103 @@ export function SpellDetailModal({
             </div>
           </div>
 
-          {/* Alerte composante */}
+          {/* Alerte composante - Style ShoppingList */}
           {spell.components.material && componentDetails && (
-            <div className={`p-3 rounded-lg ${
-              hasComponent ? 'bg-forest/10 border border-forest/30' : 'bg-blood-red/10 border border-blood-red/30'
-            }`}>
-              <div className="flex items-start gap-2 mb-2">
-                <AlertCircle className={`w-5 h-5 flex-shrink-0 mt-0.5 ${hasComponent ? 'text-forest' : 'text-blood-red'}`} />
-                <p className={`text-sm font-medium ${hasComponent ? 'text-forest' : 'text-blood-red'}`}>
-                  {hasComponent 
-                    ? '✓ Composantes disponibles'
-                    : '✗ Composantes manquantes'
-                  }
-                </p>
-              </div>
+            <div className="space-y-3">
+              <h3 className="font-display text-ink mb-2 flex items-center gap-2">
+                <ShoppingCart className="w-4 h-4 text-divine-gold" />
+                Composants nécessaires
+              </h3>
               
-              {/* Liste détaillée des composants */}
-              <div className="space-y-2 mt-2">
-                {componentDetails.map((group, groupIndex) => (
-                  <div 
-                    key={group.groupId || `required-${groupIndex}`}
-                    className={`p-2 rounded ${group.isAlternative ? 'bg-arcane-purple/5 border border-arcane-purple/20' : 'bg-parchment/50'}`}
-                  >
-                    {group.isAlternative && (
-                      <p className="text-xs text-arcane-purple mb-1 flex items-center gap-1">
-                        <GitBranch className="w-3 h-3" />
-                        Alternative (une seule nécessaire)
-                      </p>
-                    )}
-                    <div className="space-y-1">
-                      {group.components.map(comp => (
+              {componentDetails.map((group, groupIndex) => (
+                <div 
+                  key={group.groupId || `required-${groupIndex}`}
+                  className={`p-3 rounded-lg border ${
+                    group.isAlternative 
+                      ? 'bg-arcane-purple/5 border-arcane-purple/20' 
+                      : 'bg-parchment-light border-parchment-dark'
+                  }`}
+                >
+                  {/* Indicateur d'alternative */}
+                  {group.isAlternative && (
+                    <div className="flex items-center gap-2 mb-2 pb-2 border-b border-arcane-purple/20">
+                      <GitBranch className="w-4 h-4 text-arcane-purple" />
+                      <span className="text-xs text-arcane-purple font-medium">
+                        Alternative - Une seule option nécessaire
+                      </span>
+                    </div>
+                  )}
+                  
+                  {/* Liste des composants */}
+                  <div className="space-y-2">
+                    {group.components.map(comp => {
+                      const isComplete = comp.isAvailable;
+                      const isLow = comp.currentQty > 0 && comp.currentQty < comp.quantity;
+                      
+                      return (
                         <div 
                           key={comp.itemId}
-                          className={`flex items-center justify-between text-sm ${
-                            comp.isAvailable ? 'text-forest' : 'text-blood-red'
+                          className={`p-2 rounded ${
+                            isComplete 
+                              ? 'bg-forest/5 border border-forest/20' 
+                              : isLow
+                                ? 'bg-bronze/5 border border-bronze/20'
+                                : 'bg-blood-red/5 border border-blood-red/20'
                           }`}
                         >
-                          <div className="flex items-center gap-2">
-                            {comp.isAvailable ? (
-                              <Check className="w-4 h-4" />
-                            ) : (
-                              <AlertCircle className="w-4 h-4" />
-                            )}
-                            <span className={comp.isAvailable ? '' : 'font-medium'}>
-                              {comp.itemName}
-                            </span>
-                            {comp.consumed && (
-                              <span className="text-[10px] px-1.5 py-0.5 rounded bg-blood-red/10 text-blood-red">
-                                Consommé
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <span className={`font-display text-sm ${
+                                  isComplete ? 'text-ink' : 'text-ink'
+                                }`}>
+                                  {comp.itemName}
+                                </span>
+                                
+                                {/* Badge consommable */}
+                                {comp.consumed && (
+                                  <span className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded bg-blood-red/10 text-blood-red">
+                                    <Flame className="w-3 h-3" />
+                                    Consommé
+                                  </span>
+                                )}
+                                
+                                {/* Badge réutilisable */}
+                                {!comp.consumed && (
+                                  <span className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded bg-forest/10 text-forest">
+                                    <Recycle className="w-3 h-3" />
+                                    Réutilisable
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                            
+                            {/* Stock */}
+                            <div className="flex items-center gap-2 text-xs">
+                              <span className={isComplete ? 'text-forest' : isLow ? 'text-bronze' : 'text-blood-red'}>
+                                Stock: {comp.currentQty}/{comp.quantity}
                               </span>
-                            )}
+                              {isComplete && <Check className="w-4 h-4 text-forest" />}
+                              {!isComplete && !isLow && <AlertCircle className="w-4 h-4 text-blood-red" />}
+                              {isLow && <AlertCircle className="w-4 h-4 text-bronze" />}
+                            </div>
                           </div>
-                          <span className="text-xs">
-                            {comp.currentQty}/{comp.quantity}
-                          </span>
+                          
+                          {/* Prix si disponible */}
+                          {comp.price > 0 && (
+                            <div className="mt-1 text-xs text-ink-light">
+                              Prix: {formatPrice(comp.price)}/u
+                            </div>
+                          )}
                         </div>
-                      ))}
-                    </div>
+                      );
+                    })}
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
               
               {spell.components.materialConsumed && (
-                <p className="text-xs text-ink-muted mt-2 pt-2 border-t border-ink/10">
+                <p className="text-xs text-ink-muted">
                   Certains composants sont consommés lors du lancement du sort.
                 </p>
               )}

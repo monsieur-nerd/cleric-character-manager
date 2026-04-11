@@ -4,6 +4,7 @@ import type { Spell } from '@/types';
 import { useInventoryStore } from '@/stores';
 import { SpellDetailModal } from './SpellDetailModal';
 import { ConcentrationHelpModal } from './ConcentrationHelpModal';
+import { SpellComponentBadges } from './SpellComponentBadges';
 import { formatCastingTimeShort } from '@/utils/formatters';
 
 interface SpellCardProps {
@@ -158,22 +159,23 @@ export function SpellCard({
                 </button>
               )}
               
-              {missingComponent && (
-                <span 
-                  className="flex items-center gap-1 text-blood-red"
-                  title="Composante matérielle manquante - Vous ne pouvez pas lancer ce sort"
-                >
-                  <AlertCircle className="w-3 h-3" />
-                  Comp. manquante
-                </span>
-              )}
-              
               {summary && (
                 <span className="font-bold text-ink ml-auto">
                   {summary}
                 </span>
               )}
             </div>
+            
+            {/* Badges des composants */}
+            {spell.components.material && (
+              <div className="mt-2" onClick={(e) => e.stopPropagation()}>
+                <SpellComponentBadges 
+                  spellId={spell.id} 
+                  showStock={true}
+                  size="sm"
+                />
+              </div>
+            )}
             
             {/* Recommandation */}
             {spell.recommendation && (
