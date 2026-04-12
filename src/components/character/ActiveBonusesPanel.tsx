@@ -7,6 +7,7 @@ import { useMemo } from 'react';
 import { Shield, Sword, Heart, Sparkles, Info, Zap, Star } from 'lucide-react';
 import { useCharacterStore, useInventoryStore } from '@/stores';
 import { getActiveBonusesSummary } from '@/utils/bonusCalculator';
+import { BACKGROUND_TRAITS } from '@/data/characterConfig';
 
 interface SpecialAbility {
   source: string;
@@ -29,8 +30,10 @@ export function ActiveBonusesPanel() {
     console.log('ActiveBonusesPanel - Armes équipées:', equippedWeapons.map(w => w.name));
     console.log('ActiveBonusesPanel - Feats:', character.feats);
     
-    // Détection du combat à deux armes
-    const hasTwoWeaponFighting = character.feats?.includes('deux-armes');
+    // Détection du combat à deux armes (dans les feats ET les traits)
+    const hasTwoWeaponFightingFeat = character.feats?.includes('deux-armes');
+    const hasTwoWeaponFightingTrait = BACKGROUND_TRAITS.some(t => t.id === 'deux-armes');
+    const hasTwoWeaponFighting = hasTwoWeaponFightingFeat || hasTwoWeaponFightingTrait;
     const weaponCount = equippedWeapons.length;
     const hasTwoWeapons = weaponCount >= 2;
     
