@@ -4,17 +4,31 @@
  */
 
 import { useMemo } from 'react';
-import { Shield, Sword, Heart, Sparkles, Info } from 'lucide-react';
-import { useCharacterStore } from '@/stores';
+import { Shield, Sword, Heart, Sparkles, Info, Crosshair } from 'lucide-react';
+import { useCharacterStore, useInventoryStore } from '@/stores';
 import { getActiveBonusesSummary } from '@/utils/bonusCalculator';
 
 export function ActiveBonusesPanel() {
   const character = useCharacterStore((state) => state.character);
+  const equippedWeapons = useInventoryStore((state) => state.getEquippedWeapons());
   
-  const bonuses = useMemo(() => 
-    getActiveBonusesSummary(character),
-    [character]
-  );
+  const bonuses = useMemo(() => {
+    const baseBonuses = getActiveBonusesSummary(character);
+    
+    // Détection du combat à deux armes
+    const hasTwoWeaponFighting = character.feats?.includes('deux-armes');
+    const weaponCount = equippedWeapons.length;
+    const hasTwoWeapons = weaponCount >= 2;
+    
+    if (hasTwoWeaponFighting && hasTwoWeapons) {
+      baseBonuses.damage.push({ 
+        source: 'Combat à deux armes', 
+        value: '+MOD dégâts (2ème arme)' 
+      });
+    }
+    
+    return baseBonuses;
+  }, [character, equippedWeapons]);
 
   const hasAnyBonus = 
     bonuses.ac.length > 0 ||
