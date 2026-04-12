@@ -14,6 +14,18 @@ import {
   INITIAL_DAILY_STATE 
 } from '@/data/characterConfig';
 import { calculateMaxHpBonus } from '@/utils/bonusCalculator';
+import { 
+  calculateModifier,
+  calculateMaxHp,
+  calculateCarryingCapacity,
+  getEncumbranceLevel as calcEncumbranceLevel,
+  calculateMaxPreparedSpells,
+  calculateProficiencyBonus,
+  calculateWarClericMaxUses,
+  calculateChannelDivinityMaxUses,
+  applyDamage,
+  applyHealing,
+} from '@/utils/character/calculations';
 
 interface CharacterState {
   character: Character;
@@ -101,29 +113,7 @@ interface CharacterState {
   calculateMaxHp: (level: number, con: number) => number;
 }
 
-const calculateModifier = (score: number | undefined): number => {
-  if (score === undefined || isNaN(score)) return 0;
-  return Math.floor((score - 10) / 2);
-};
 
-const calculateMaxHp = (level: number, con: number, hasToughFeat: boolean): number => {
-  const conMod = calculateModifier(con);
-  // Niveau 1: 8 + mod Con, Niveaux suivants: moyenne (5) + mod Con
-  const level1Hp = 8 + conMod;
-  const otherLevelsHp = (level - 1) * (5 + conMod);
-  const baseHp = Math.max(1, level1Hp + otherLevelsHp);
-  // Bonus du talent Robuste : +2 PV par niveau
-  const toughBonus = hasToughFeat ? level * 2 : 0;
-  return baseHp + toughBonus;
-};
-
-// Calcul de la capacité d'emport (D&D 5e)
-// Force × 7.5 kg = charge légère (pas de pénalité)
-// Force × 15 kg = charge intermédiaire (vitesse réduite)
-// Force × 22.5 kg = charge lourde (désavantage)
-const calculateCarryingCapacity = (strength: number): number => {
-  return strength * 7.5; // Capacité sans pénalité en kg
-};
 
 const createDefaultCharacter = (): Character => {
   const level = CHARACTER_IDENTITY.level;
@@ -439,14 +429,7 @@ export const useCharacterStore = create<CharacterState>()(
       
       getEncumbranceLevel: (currentWeight: number) => {
         const { strength } = get().character;
-        const lightLimit = strength * 7.5;
-        const mediumLimit = strength * 15;
-        const heavyLimit = strength * 22.5;
-        
-        if (currentWeight <= lightLimit) return 'light';
-        if (currentWeight <= mediumLimit) return 'medium';
-        if (currentWeight <= heavyLimit) return 'heavy';
-        return 'over';
+        return calcEncumbranceLevel(currentWeight, strength);
       },
       
       takeDamage: (amount) => {

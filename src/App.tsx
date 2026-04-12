@@ -1,12 +1,15 @@
-import { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useSpellStore, useInventoryStore, useCharacterStore, syncStoresAfterRestore, logStoreSyncStatus } from '@/stores';
 import type { EquipmentItem } from '@/types';
-import { Dashboard } from '@/pages/Dashboard';
-import { SpellListPage } from '@/pages/SpellListPage';
-import { CombatPage } from '@/pages/CombatPage';
-import { InventoryPage } from '@/pages/InventoryPage';
-import { PreparationPage } from '@/pages/PreparationPage';
+
+// Lazy loading des pages pour réduire le bundle initial
+const Dashboard = lazy(() => import('@/pages/Dashboard').then(m => ({ default: m.Dashboard })));
+const SpellListPage = lazy(() => import('@/pages/SpellListPage').then(m => ({ default: m.SpellListPage })));
+const CombatPage = lazy(() => import('@/pages/CombatPage').then(m => ({ default: m.CombatPage })));
+const InventoryPage = lazy(() => import('@/pages/InventoryPage').then(m => ({ default: m.InventoryPage })));
+const PreparationPage = lazy(() => import('@/pages/PreparationPage').then(m => ({ default: m.PreparationPage })));
+
 import { Layout } from '@/components/layout/Layout';
 import { ScrollToTop } from '@/components/layout/ScrollToTop';
 import { spellsData } from '@/data/spellsData';
@@ -296,14 +299,23 @@ function App() {
       <MigrationBanner />
       <div className={needsMigration ? 'pt-20' : ''}>
         <Layout>
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/spells" element={<SpellListPage />} />
-            <Route path="/prepare" element={<PreparationPage />} />
-            <Route path="/combat" element={<CombatPage />} />
-            <Route path="/inventory" element={<InventoryPage />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
+          <Suspense fallback={
+            <div className="flex items-center justify-center min-h-[50vh]">
+              <div className="text-center">
+                <div className="text-4xl mb-4 animate-pulse">⚔️</div>
+                <p className="text-ink-muted">Chargement...</p>
+              </div>
+            </div>
+          }>
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/spells" element={<SpellListPage />} />
+              <Route path="/prepare" element={<PreparationPage />} />
+              <Route path="/combat" element={<CombatPage />} />
+              <Route path="/inventory" element={<InventoryPage />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </Suspense>
         </Layout>
       </div>
     </Router>

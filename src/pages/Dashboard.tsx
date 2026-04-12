@@ -10,6 +10,7 @@ import { BACKGROUND_TRAITS } from '@/data/characterConfig';
 import { SpellSlotBar } from '@/components/spells/SpellSlotBar';
 import { DomainRadarChart, DomainRadarCompare } from '@/components/character/DomainRadarChart';
 import { AvatarUpload, DeitySelector, DomainSelector } from '@/components/character/form';
+import { SkillsPanel } from '@/components/dashboard/SkillsPanel';
 
 import { formatModifier } from '@/utils/formatters';
 import type { SpellSlots } from '@/types';

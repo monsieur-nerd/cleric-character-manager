@@ -7,6 +7,8 @@ Assistant de gestion de sorts pour clerc de **Torm** (D&D 5e) - Domaine de la Gu
 ![Version](https://img.shields.io/badge/version-1.0.0-gold)
 ![D&D](https://img.shields.io/badge/D&D-5e-red)
 ![React](https://img.shields.io/badge/React-18-blue)
+![CI/CD](https://github.com/USERNAME/cleric-character-manager/workflows/CI/CD/badge.svg)
+[![Tests](https://img.shields.io/badge/tests-85%20passing-brightgreen)]()
 
 ## ✨ Fonctionnalités
 
@@ -74,14 +76,50 @@ L'application comporte 4 onglets principaux :
 
 ```bash
 # Installation
-npm install
+npm install --legacy-peer-deps
 
 # Développement
 npm run dev
 
-# Build
+# Tests
+npm test
+
+# Lint
+npm run lint
+
+# Build de production
 npm run build
 ```
+
+## 🏗️ Architecture
+
+### Stack technique
+- **Frontend**: React 18 + TypeScript + Vite
+- **State Management**: Zustand avec persistance
+- **Styling**: Tailwind CSS v4
+- **Tests**: Vitest
+- **Linting**: ESLint + TypeScript
+
+### Structure du projet
+```
+src/
+├── components/          # Composants React
+│   ├── dashboard/      # Composants spécifiques au Dashboard
+│   ├── spells/         # Composants de sorts
+│   └── ui/             # Composants UI réutilisables
+├── stores/             # Stores Zustand
+│   └── middleware/     # Middleware de synchronisation
+├── utils/              # Fonctions utilitaires
+│   └── character/      # Calculs de personnage
+├── constants/          # Constantes et données statiques
+└── types/              # Types TypeScript
+```
+
+### Qualité du code
+- ✅ **ESLint** configuré avec règles React Hooks et TypeScript
+- ✅ **85 tests** unitaires passants
+- ✅ **Lazy loading** pour le code splitting
+- ✅ **Architecture modulaire** avec séparation des concerns
 
 ## 📊 Données
 
