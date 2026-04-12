@@ -225,6 +225,22 @@ export const STARTING_EQUIPMENT: Partial<EquipmentItem>[] = [
     damageType: 'perforants',
     weaponProperties: ['Finesse', 'Légère', 'Lancer (6/18)'],
   },
+  {
+    id: 'epee-courte',
+    name: 'Épée courte',
+    type: 'Arme',
+    description: 'Arme légère et polyvalente, parfaite pour le combat à deux armes.',
+    quantity: 1,
+    unitPrice: 10,
+    totalPrice: 10,
+    unitWeight: 1,
+    totalWeight: 1,
+    isCarried: true,
+    isEquipped: false,
+    damage: '1d6',
+    damageType: 'tranchants',
+    weaponProperties: ['Finesse', 'Légère'],
+  },
   // Armure
   {
     id: 'cuir-cloute',

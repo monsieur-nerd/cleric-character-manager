@@ -44,6 +44,51 @@ function getAbilityModifier(score: number): number {
 // ============================================
 
 /**
+ * Vérifie si le personnage a le domaine de la vie (Disciple de la vie)
+ */
+export function isDiscipleOfLifeDomain(domainId: string | undefined): boolean {
+  return domainId === 'life';
+}
+
+/**
+ * Interface pour le résultat simplifié de calcul de soin
+ */
+export interface SimpleHealingBonusResult {
+  totalBonus: number;
+  breakdown: string[];
+}
+
+/**
+ * Calcule le bonus aux soins de manière simplifiée (pour affichage dans les modals)
+ * @param spellLevel Niveau du sort
+ * @param characterLevel Niveau du personnage (pas utilisé pour Disciple de la vie)
+ * @param isDiscipleOfLifeDomain Si le personnage a le domaine de la vie
+ * @param isBlessedHealer Si le personnage a la capacité Bénie par la vie (niveau 6)
+ */
+export function calculateHealingBonusSimple(
+  spellLevel: number,
+  characterLevel: number,
+  isDiscipleOfLifeDomain: boolean,
+  isBlessedHealer: boolean
+): SimpleHealingBonusResult {
+  const result: SimpleHealingBonusResult = { totalBonus: 0, breakdown: [] };
+  
+  if (isDiscipleOfLifeDomain && spellLevel > 0) {
+    const bonus = 2 + spellLevel;
+    result.totalBonus += bonus;
+    result.breakdown.push(`Disciple de la vie: +${bonus}`);
+  }
+  
+  if (isBlessedHealer) {
+    const bonus = 3 + spellLevel;
+    result.totalBonus += bonus;
+    result.breakdown.push(`Bénie par la vie: +${bonus}`);
+  }
+  
+  return result;
+}
+
+/**
  * Calcule le bonus aux soins d'un sort
  * Prend en compte :
  * - Modificateur de Sagesse (base)

@@ -1,11 +1,12 @@
 import { useState, useMemo } from 'react';
-import { X, Clock, Target, Sparkles, BookOpen, Zap, Shield, AlertCircle, Mic, Check, GitBranch, Flame, Recycle, ShoppingCart } from 'lucide-react';
+import { X, Clock, Target, Sparkles, BookOpen, Zap, Shield, AlertCircle, Mic, Check, GitBranch, Flame, Recycle, ShoppingCart, Heart } from 'lucide-react';
 import { formatPrice } from '@/utils/formatters';
 import type { Spell } from '@/types';
-import { useInventoryStore } from '@/stores';
+import { useInventoryStore, useCharacterStore } from '@/stores';
 import { useSpellIncantation, useCanHaveIncantation } from '@/hooks/useSpellIncantation';
 import { ConcentrationHelpModal } from './ConcentrationHelpModal';
 import { getComponentsForSpell } from '@/data/spellComponentMappings';
+import { calculateHealingBonusSimple, isDiscipleOfLifeDomain } from '@/utils/bonusCalculator';
 
 interface SpellDetailModalProps {
   spell: Spell;
@@ -30,12 +31,24 @@ export function SpellDetailModal({
   const inventoryItems = useInventoryStore((state) => state.items);
   const incantation = useSpellIncantation(spell);
   const canHaveIncantation = useCanHaveIncantation(spell);
+  const character = useCharacterStore((state) => state.character);
   
   // Les tours de magie et sorts de domaine sont toujours préparés
   const isCantrip = spell.level === 0;
   const isDomain = isDomainSpell ?? spell.isDomainSpell;
   const isAlwaysPrepared = isDomain || isCantrip;
   const isPreparedEffective = isPrepared || isAlwaysPrepared;
+  
+  // Calcul du bonus de soin "Disciple de la vie" pour les sorts de soin
+  const healingBonus = useMemo(() => {
+    const isHealingSpell = spell.type?.includes('Soin') ?? false;
+    if (!isHealingSpell || isCantrip) return null;
+    
+    const hasDiscipleOfLife = isDiscipleOfLifeDomain(character.domain?.id);
+    if (!hasDiscipleOfLife) return null;
+    
+    return calculateHealingBonusSimple(spell.level, character.level, true, false);
+  }, [spell, character.domain?.id, character.level, isCantrip]);
 
   // Récupère les détails des composants pour ce sort
   const componentDetails = useMemo(() => {
@@ -363,6 +376,27 @@ export function SpellDetailModal({
               </h3>
               <div className="bg-divine-gold/5 p-4 rounded-lg border border-divine-gold/20">
                 <p className="text-sm text-ink-light">{spell.higherLevels}</p>
+              </div>
+            </div>
+          )}
+
+          {/* Bonus Disciple de la vie */}
+          {healingBonus && healingBonus.totalBonus > 0 && (
+            <div>
+              <h3 className="font-display text-ink mb-2 flex items-center gap-2">
+                <Heart className="w-4 h-4 text-forest" />
+                Bonus de soin
+              </h3>
+              <div className="bg-forest/10 p-4 rounded-lg border border-forest/30">
+                <p className="text-sm text-forest font-medium mb-1">
+                  +{healingBonus.totalBonus} PV soignés
+                </p>
+                {healingBonus.breakdown.map((line, idx) => (
+                  <p key={idx} className="text-xs text-forest/80">{line}</p>
+                ))}
+                <p className="text-xs text-ink-muted mt-2 italic">
+                  Appliqué automatiquement lorsque vous lancez ce sort de soin.
+                </p>
               </div>
             </div>
           )}
