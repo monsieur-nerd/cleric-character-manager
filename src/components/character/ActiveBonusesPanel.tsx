@@ -15,16 +15,27 @@ interface SpecialAbility {
 
 export function ActiveBonusesPanel() {
   const character = useCharacterStore((state) => state.character);
-  const equippedWeapons = useInventoryStore((state) => state.getEquippedWeapons());
+  const items = useInventoryStore((state) => state.items);
   
   const { bonuses, specialAbilities } = useMemo(() => {
     const baseBonuses = getActiveBonusesSummary(character);
     const abilities: SpecialAbility[] = [];
     
+    // Récupération des armes équipées (filtrage local pour éviter les problèmes de référence)
+    const equippedWeapons = items.filter(item => item.isEquipped && item.type === 'Arme');
+    
+    // Debug
+    console.log('ActiveBonusesPanel - Items:', items.length);
+    console.log('ActiveBonusesPanel - Armes équipées:', equippedWeapons.map(w => w.name));
+    console.log('ActiveBonusesPanel - Feats:', character.feats);
+    
     // Détection du combat à deux armes
     const hasTwoWeaponFighting = character.feats?.includes('deux-armes');
     const weaponCount = equippedWeapons.length;
     const hasTwoWeapons = weaponCount >= 2;
+    
+    console.log('ActiveBonusesPanel - hasTwoWeaponFighting:', hasTwoWeaponFighting);
+    console.log('ActiveBonusesPanel - hasTwoWeapons:', hasTwoWeapons);
     
     if (hasTwoWeaponFighting && hasTwoWeapons) {
       baseBonuses.damage.push({ 
@@ -41,8 +52,11 @@ export function ActiveBonusesPanel() {
       });
     }
     
-    return { bonuses: baseBonuses, specialAbilities: abilities };
-  }, [character, equippedWeapons]);
+    return { 
+      bonuses: baseBonuses, 
+      specialAbilities: abilities
+    };
+  }, [character, items]);
 
   const hasAnyBonus = 
     bonuses.ac.length > 0 ||
