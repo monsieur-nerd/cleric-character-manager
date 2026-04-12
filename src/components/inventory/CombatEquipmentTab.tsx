@@ -16,6 +16,7 @@ export function CombatEquipmentTab() {
   const updateQuantity = useInventoryStore((state) => state.updateQuantity);
   const equipItem = useInventoryStore((state) => state.equipItem);
   const unequipItem = useInventoryStore((state) => state.unequipItem);
+  const toggleTwoHanded = useInventoryStore((state) => state.toggleTwoHanded);
   const useCharge = useInventoryStore((state) => state.useCharge);
   const rechargeItem = useInventoryStore((state) => state.rechargeItem);
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
@@ -75,6 +76,15 @@ export function CombatEquipmentTab() {
       }
     }
     
+    setTimeout(() => setLastActionMessage(null), 3000);
+  };
+  
+  // Gestion du combat a deux mains
+  const handleTwoHandedToggle = (item: CombatItem) => {
+    const result = toggleTwoHanded(item.id);
+    if (result.success) {
+      setLastActionMessage(result.message || 'Mode change');
+    }
     setTimeout(() => setLastActionMessage(null), 3000);
   };
 
@@ -196,8 +206,11 @@ export function CombatEquipmentTab() {
                       <div className="space-y-1 mt-2 text-xs">
                         <div className="text-blood-red">
                           <span className="font-bold">Dégâts ({weapon.damageType}) :</span>
-                          <span> {weapon.damage} + {attack.damageMod} </span>
+                          <span> {weapon.equippedTwoHanded && weapon.versatileDamage ? weapon.versatileDamage : weapon.damage} + {attack.damageMod} </span>
                           <span className="text-ink-muted">({attack.ability} {attack.damageMod >= 0 ? '+' : ''}{attack.damageMod})</span>
+                          {weapon.equippedTwoHanded && weapon.versatileDamage && (
+                            <span className="text-divine-gold ml-1">(2 mains)</span>
+                          )}
                         </div>
                         <div className="text-forest">
                           <span className="font-bold">Pour toucher :</span>
@@ -205,6 +218,33 @@ export function CombatEquipmentTab() {
                           <span className="text-ink-muted">({attack.ability} {attack.damageMod >= 0 ? '+' : ''}{attack.damageMod} + Maîtrise +{profBonus})</span>
                         </div>
                       </div>
+                      
+                      {/* Case a cocher pour arme a deux mains (Polyvalent) */}
+                      {weapon.isEquipped && weapon.weaponProperties?.includes('Polyvalent') && weapon.versatileDamage && (
+                        <div className="mt-2">
+                          <button
+                            onClick={() => handleTwoHandedToggle(weapon)}
+                            className={`flex items-center gap-2 px-2 py-1 rounded border text-xs transition-all ${
+                              weapon.equippedTwoHanded
+                                ? 'bg-divine-gold/20 border-divine-gold text-ink'
+                                : 'bg-parchment-dark/30 border-ink-light/30 text-ink-light hover:bg-parchment-dark/50'
+                            }`}
+                            title={weapon.equippedTwoHanded ? 'Cliquer pour passer à une main' : 'Cliquer pour passer à deux mains'}
+                          >
+                            {weapon.equippedTwoHanded ? (
+                              <>
+                                <CheckSquare className="w-3 h-3 text-divine-gold" />
+                                <span>À deux mains ({weapon.versatileDamage})</span>
+                              </>
+                            ) : (
+                              <>
+                                <span className="w-3 h-3 border border-ink-light/50 rounded-sm" />
+                                <span>À deux mains ({weapon.versatileDamage})</span>
+                              </>
+                            )}
+                          </button>
+                        </div>
+                      )}
                       
                       {/* Type d action */}
                       <div className="mt-1">
@@ -337,8 +377,13 @@ export function CombatEquipmentTab() {
                         <div className="bg-parchment/50 p-2 rounded">
                           <p className="font-medium text-ink mb-1">Degats</p>
                           <p className="text-ink-light">
-                            {weapon.damage} {attack.damageMod >= 0 ? '+' : ''}{attack.damageMod} ({attack.ability}) {weapon.damageType}
+                            {weapon.equippedTwoHanded && weapon.versatileDamage ? weapon.versatileDamage : weapon.damage} {attack.damageMod >= 0 ? '+' : ''}{attack.damageMod} ({attack.ability}) {weapon.damageType}
                           </p>
+                          {weapon.weaponProperties?.includes('Polyvalent') && weapon.versatileDamage && (
+                            <p className="text-xs text-ink-muted mt-1">
+                              Polyvalent : {weapon.damage} (1 main) / {weapon.versatileDamage} (2 mains)
+                            </p>
+                          )}
                           {character.level >= 8 && character.domain?.id === 'war' && (
                             <p className="text-divine-gold text-xs mt-1">
                               + Frappe divine : +1d8 radiants (niveau 8)

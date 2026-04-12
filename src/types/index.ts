@@ -185,11 +185,15 @@ export interface EquipmentItem {
   // Pour le combat
   damage?: string;           // Ex: "1d8", "2d6"
   damageType?: string;       // Ex: "tranchants", "contondants", "perforants"
-  weaponProperties?: string[]; // Ex: ["Finesse", "Légère", "À deux mains"]
+  weaponProperties?: string[]; // Ex: ["Finesse", "Légère", "Polyvalent"]
   armorClass?: number;       // CA de base pour armures/boucliers
   armorType?: 'légère' | 'intermédiaire' | 'lourde' | 'bouclier';
   stealthDisadvantage?: boolean; // Désavantage en Discrétion
   strengthRequired?: number; // Force minimum requise
+  
+  // Gestion du combat à deux mains (pour armes polyvalentes)
+  versatileDamage?: string;  // Dégâts à deux mains (ex: "1d10" pour marteau de guerre)
+  equippedTwoHanded?: boolean; // true si équipée à deux mains
   
   // Slots d'équipement (pour gestion des conflits)
   slot?: EquipmentSlot;      // Slot où l'item peut être équipé

@@ -19,6 +19,7 @@ interface InventoryState {
   toggleCarried: (itemId: string) => void;
   equipItem: (itemId: string) => { success: boolean; message?: string; unequippedItems?: string[] };
   unequipItem: (itemId: string) => void;
+  toggleTwoHanded: (itemId: string) => { success: boolean; message?: string };
   
   // Système "Au camp"
   toggleAtCamp: (itemId: string) => void;
@@ -236,12 +237,47 @@ export const useInventoryStore = create<InventoryState>()(
               return { 
                 ...item, 
                 isEquipped: false,
+                equippedTwoHanded: false,
                 slot: defaultSlot || item.slot
               };
             }
             return item;
           }),
         }));
+      },
+      
+      // Bascule entre combat à une main et à deux mains (pour armes polyvalentes)
+      toggleTwoHanded: (itemId) => {
+        const item = get().getItemById(itemId);
+        if (!item) return { success: false, message: 'Arme non trouvée' };
+        if (item.type !== 'Arme') return { success: false, message: 'Pas une arme' };
+        if (!item.weaponProperties?.includes('Polyvalent')) {
+          return { success: false, message: 'Cette arme n\'est pas polyvalente' };
+        }
+        if (!item.versatileDamage) {
+          return { success: false, message: 'Dégâts polyvalents non définis' };
+        }
+        
+        const newTwoHanded = !item.equippedTwoHanded;
+        
+        set((state) => ({
+          items: state.items.map(i => {
+            if (i.id === itemId) {
+              return { ...i, equippedTwoHanded: newTwoHanded };
+            }
+            // Si on passe à deux mains, déséquipe l'arme en off_hand
+            if (newTwoHanded && i.isEquipped && i.type === 'Arme') {
+              const itemSlot = i.slot || getDefaultSlotForItem(i);
+              if (itemSlot === 'off_hand') {
+                return { ...i, isEquipped: false };
+              }
+            }
+            return i;
+          }),
+        }));
+        
+        const mode = newTwoHanded ? 'à deux mains' : 'à une main';
+        return { success: true, message: `${item.name} équipée ${mode} (${newTwoHanded ? item.versatileDamage : item.damage})` };
       },
       
       // Harmonisation (US-041 à US-043)
