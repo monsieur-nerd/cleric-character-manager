@@ -1,0 +1,125 @@
+/**
+ * Panneau d'affichage des bonus actifs du personnage
+ * Permet au joueur de vérifier que tous ses bonus sont pris en compte
+ */
+
+import { useMemo } from 'react';
+import { Shield, Sword, Heart, Sparkles, Info } from 'lucide-react';
+import { useCharacterStore } from '@/stores';
+import { getActiveBonusesSummary } from '@/utils/bonusCalculator';
+
+export function ActiveBonusesPanel() {
+  const character = useCharacterStore((state) => state.character);
+  
+  const bonuses = useMemo(() => 
+    getActiveBonusesSummary(character),
+    [character]
+  );
+
+  const hasAnyBonus = 
+    bonuses.ac.length > 0 ||
+    bonuses.damage.length > 0 ||
+    bonuses.healing.length > 0 ||
+    bonuses.hp.length > 0;
+
+  if (!hasAnyBonus) {
+    return (
+      <div className="card bg-parchment-light border-parchment-dark">
+        <div className="flex items-center gap-2 text-ink-muted">
+          <Info className="w-4 h-4" />
+          <span className="text-sm">Aucun bonus actif</span>
+        </div>
+        <p className="text-xs text-ink-muted mt-1">
+          Les bonus des talents et capacités apparaîtront ici.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="card bg-divine-gold/10 border-divine-gold/30">
+      <h3 className="font-display text-ink mb-3 flex items-center gap-2">
+        <Sparkles className="w-4 h-4 text-divine-gold" />
+        Bonus actifs
+      </h3>
+      
+      <div className="space-y-3">
+        {/* Bonus de CA */}
+        {bonuses.ac.length > 0 && (
+          <div className="bg-steel-blue/10 rounded p-2">
+            <div className="flex items-center gap-2 text-steel-blue font-medium text-sm mb-1">
+              <Shield className="w-3 h-3" />
+              Classe d'armure
+            </div>
+            <ul className="text-xs space-y-1">
+              {bonuses.ac.map((bonus, idx) => (
+                <li key={idx} className="text-ink-light flex justify-between">
+                  <span>{bonus.source}</span>
+                  <span className="text-forest font-medium">+{bonus.value}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* Bonus de dégâts */}
+        {bonuses.damage.length > 0 && (
+          <div className="bg-blood-red/10 rounded p-2">
+            <div className="flex items-center gap-2 text-blood-red font-medium text-sm mb-1">
+              <Sword className="w-3 h-3" />
+              Dégâts
+            </div>
+            <ul className="text-xs space-y-1">
+              {bonuses.damage.map((bonus, idx) => (
+                <li key={idx} className="text-ink-light flex justify-between">
+                  <span>{bonus.source}</span>
+                  <span className="text-forest font-medium">{bonus.value}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* Bonus de soins */}
+        {bonuses.healing.length > 0 && (
+          <div className="bg-forest/10 rounded p-2">
+            <div className="flex items-center gap-2 text-forest font-medium text-sm mb-1">
+              <Heart className="w-3 h-3" />
+              Soins
+            </div>
+            <ul className="text-xs space-y-1">
+              {bonuses.healing.map((bonus, idx) => (
+                <li key={idx} className="text-ink-light flex justify-between">
+                  <span>{bonus.source}</span>
+                  <span className="text-forest font-medium">{bonus.value}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* Bonus de PV */}
+        {bonuses.hp.length > 0 && (
+          <div className="bg-royal-purple/10 rounded p-2">
+            <div className="flex items-center gap-2 text-royal-purple font-medium text-sm mb-1">
+              <Heart className="w-3 h-3" />
+              Points de vie max
+            </div>
+            <ul className="text-xs space-y-1">
+              {bonuses.hp.map((bonus, idx) => (
+                <li key={idx} className="text-ink-light flex justify-between">
+                  <span>{bonus.source}</span>
+                  <span className="text-forest font-medium">+{bonus.value}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+
+      <p className="text-xs text-ink-muted mt-3">
+        💡 Ces bonus sont automatiquement appliqués dans les calculs.
+      </p>
+    </div>
+  );
+}

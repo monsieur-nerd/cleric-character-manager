@@ -16,6 +16,7 @@ import type { SpellSlots } from '@/types';
 import { MAX_SPELL_SLOTS, DEITIES } from '@/types';
 import { getSkillById, SKILLS, ABILITY_SCORES, type AbilityScore, type Skill } from '@/types/skills';
 import { getFeatById } from '@/types/feats';
+import { ActiveBonusesPanel } from '@/components/character/ActiveBonusesPanel';
 
 // Composant pour afficher le détail d'une compétence
 function SkillDetail({ skill, isMastered, bonus, abilityMod, profBonus, onToggle, onClose }: {
@@ -1620,6 +1621,9 @@ const [showSavingThrowHelp, setShowSavingThrowHelp] = useState(false);
               <p className="text-sm text-ink-muted italic">Aucun talent sélectionné</p>
             )}
           </CollapsibleSection>
+          
+          {/* Bonus actifs */}
+          <ActiveBonusesPanel />
         </div>
       </section>
       
