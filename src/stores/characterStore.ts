@@ -13,6 +13,7 @@ import {
   CHARACTER_FEATS,
   INITIAL_DAILY_STATE 
 } from '@/data/characterConfig';
+import { calculateMaxHpBonus } from '@/utils/bonusCalculator';
 
 interface CharacterState {
   character: Character;
@@ -105,12 +106,15 @@ const calculateModifier = (score: number | undefined): number => {
   return Math.floor((score - 10) / 2);
 };
 
-const calculateMaxHp = (level: number, con: number): number => {
+const calculateMaxHp = (level: number, con: number, hasToughFeat: boolean): number => {
   const conMod = calculateModifier(con);
   // Niveau 1: 8 + mod Con, Niveaux suivants: moyenne (5) + mod Con
   const level1Hp = 8 + conMod;
   const otherLevelsHp = (level - 1) * (5 + conMod);
-  return Math.max(1, level1Hp + otherLevelsHp);
+  const baseHp = Math.max(1, level1Hp + otherLevelsHp);
+  // Bonus du talent Robuste : +2 PV par niveau
+  const toughBonus = hasToughFeat ? level * 2 : 0;
+  return baseHp + toughBonus;
 };
 
 // Calcul de la capacité d'emport (D&D 5e)
@@ -129,7 +133,8 @@ const createDefaultCharacter = (): Character => {
   const int = CHARACTER_ABILITIES.intelligence;
   const cha = CHARACTER_ABILITIES.charisma;
   const wis = CHARACTER_ABILITIES.wisdom;
-  const maxHp = calculateMaxHp(level, con);
+  const hasToughFeat = CHARACTER_FEATS.includes('tough');
+  const maxHp = calculateMaxHp(level, con, hasToughFeat);
   const carryingCapacity = calculateCarryingCapacity(str);
   const defaultDeity = DEITIES.find(d => d.id === CHARACTER_IDENTITY.deity) || DEITIES[0];
   const defaultDomain = CLERIC_DOMAINS.find(d => d.id === CHARACTER_IDENTITY.domain) || CLERIC_DOMAINS[0];
@@ -309,7 +314,7 @@ export const useCharacterStore = create<CharacterState>()(
       },
       
       setLevel: (level) => {
-        const { wisdomModifier } = get().character;
+        const { wisdomModifier, constitution, feats } = get().character;
         
         // Synchronise le niveau avec le spellStore
         useSpellStore.getState().setCharacterLevel(level);
@@ -317,10 +322,16 @@ export const useCharacterStore = create<CharacterState>()(
         // Calcule le max de Conduit divin selon le niveau
         const channelDivinityMax = level >= 18 ? 3 : level >= 6 ? 2 : 1;
         
+        // Recalcule les PV max avec le bonus de Robuste si applicable
+        const hasToughFeat = feats?.includes('tough') ?? false;
+        const newMaxHp = calculateMaxHp(level, constitution, hasToughFeat);
+        
         set((state) => ({
           character: {
             ...state.character,
             level,
+            maxHp: newMaxHp,
+            currentHp: Math.min(state.character.currentHp, newMaxHp),
             maxPreparedSpells: wisdomModifier + level,
             abilities: {
               ...state.character.abilities,
@@ -368,8 +379,9 @@ export const useCharacterStore = create<CharacterState>()(
       },
       
       setConstitution: (con) => {
-        const { level } = get().character;
-        const newMaxHp = calculateMaxHp(level, con);
+        const { level, feats } = get().character;
+        const hasToughFeat = feats?.includes('tough') ?? false;
+        const newMaxHp = calculateMaxHp(level, con, hasToughFeat);
         
         set((state) => ({
           character: {
@@ -497,7 +509,7 @@ export const useCharacterStore = create<CharacterState>()(
         }));
       },
       
-      calculateMaxHp,
+      calculateMaxHp: (level: number, con: number) => calculateMaxHp(level, con, get().character.feats?.includes('tough') ?? false),
       
       useWarCleric: () => {
         const { abilities } = get().character;
@@ -677,22 +689,45 @@ export const useCharacterStore = create<CharacterState>()(
         set((state) => {
           const currentFeats = state.character.feats || [];
           if (currentFeats.includes(featId)) return state;
+          
+          const newFeats = [...currentFeats, featId];
+          
+          // Si on ajoute le talent Robuste, recalcule les PV max
+          let newMaxHp = state.character.maxHp;
+          if (featId === 'tough') {
+            newMaxHp = calculateMaxHp(state.character.level, state.character.constitution, true);
+          }
+          
           return {
             character: {
               ...state.character,
-              feats: [...currentFeats, featId],
+              feats: newFeats,
+              maxHp: newMaxHp,
+              currentHp: Math.min(state.character.currentHp, newMaxHp),
             },
           };
         });
       },
       
       removeFeat: (featId) => {
-        set((state) => ({
-          character: {
-            ...state.character,
-            feats: (state.character.feats || []).filter(id => id !== featId),
-          },
-        }));
+        set((state) => {
+          const newFeats = (state.character.feats || []).filter(id => id !== featId);
+          
+          // Si on enlève le talent Robuste, recalcule les PV max
+          let newMaxHp = state.character.maxHp;
+          if (featId === 'tough') {
+            newMaxHp = calculateMaxHp(state.character.level, state.character.constitution, false);
+          }
+          
+          return {
+            character: {
+              ...state.character,
+              feats: newFeats,
+              maxHp: newMaxHp,
+              currentHp: Math.min(state.character.currentHp, newMaxHp),
+            },
+          };
+        });
       },
       
       // Compétences personnalisées

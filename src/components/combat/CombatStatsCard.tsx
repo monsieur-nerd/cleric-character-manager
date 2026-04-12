@@ -1,8 +1,9 @@
-import { Shield, Sword, Info, ChevronDown, ChevronUp } from 'lucide-react';
+import { Shield, Sword, Info, ChevronDown, ChevronUp, Zap } from 'lucide-react';
 import { useState } from 'react';
 import { useInventoryStore } from '@/stores';
 import { useCharacterStore } from '@/stores';
 import { getFeatById } from '@/types/feats';
+import { calculateWeaponDamageBonus } from '@/utils/bonusCalculator';
 
 export function CombatStatsCard() {
   const [showDetails, setShowDetails] = useState(false);
@@ -204,20 +205,35 @@ export function CombatStatsCard() {
           <div className="space-y-2">
             {equippedWeapons.map(weapon => {
               const attack = getAttackBonus(weapon);
+              const damageBonus = calculateWeaponDamageBonus(character);
+              const totalDamageMod = attack.damageMod + damageBonus.bonus;
               return (
                 <div key={weapon.id} className="bg-parchment/50 rounded p-2">
                   <div className="font-medium text-sm text-ink mb-1">{weapon.name}</div>
                   <div className="text-xs space-y-1">
                     <div className="text-blood-red">
                       <span className="font-bold">Dégâts ({weapon.damageType}) :</span>
-                      <span> {weapon.damage} + {attack.damageMod} </span>
-                      <span className="text-ink-muted">({attack.ability} {attack.damageMod >= 0 ? '+' : ''}{attack.damageMod})</span>
+                      <span> {weapon.damage} + {totalDamageMod} </span>
+                      {damageBonus.extraDice && (
+                        <span className="text-divine-gold font-bold"> + {damageBonus.extraDice} </span>
+                      )}
+                      <span className="text-ink-muted">
+                        ({attack.ability} {attack.damageMod >= 0 ? '+' : ''}{attack.damageMod}
+                        {damageBonus.bonus > 0 && ` + ${damageBonus.sources.join(', ')}`}
+                        {damageBonus.extraDice && ` + ${damageBonus.extraDice}`})
+                      </span>
                     </div>
                     <div className="text-forest">
                       <span className="font-bold">Pour toucher :</span>
                       <span> 1D20+{attack.toHit} </span>
                       <span className="text-ink-muted">({attack.ability} {attack.damageMod >= 0 ? '+' : ''}{attack.damageMod} + Maîtrise +{profBonus})</span>
                     </div>
+                    {damageBonus.extraDice && (
+                      <div className="text-divine-gold flex items-center gap-1">
+                        <Zap className="w-3 h-3" />
+                        <span className="font-medium">{damageBonus.sources.join(', ')} : {damageBonus.extraDice} dégâts</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               )
