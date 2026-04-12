@@ -4,16 +4,22 @@
  */
 
 import { useMemo } from 'react';
-import { Shield, Sword, Heart, Sparkles, Info, Crosshair } from 'lucide-react';
+import { Shield, Sword, Heart, Sparkles, Info, Zap, Star } from 'lucide-react';
 import { useCharacterStore, useInventoryStore } from '@/stores';
 import { getActiveBonusesSummary } from '@/utils/bonusCalculator';
+
+interface SpecialAbility {
+  source: string;
+  description: string;
+}
 
 export function ActiveBonusesPanel() {
   const character = useCharacterStore((state) => state.character);
   const equippedWeapons = useInventoryStore((state) => state.getEquippedWeapons());
   
-  const bonuses = useMemo(() => {
+  const { bonuses, specialAbilities } = useMemo(() => {
     const baseBonuses = getActiveBonusesSummary(character);
+    const abilities: SpecialAbility[] = [];
     
     // Détection du combat à deux armes
     const hasTwoWeaponFighting = character.feats?.includes('deux-armes');
@@ -27,14 +33,23 @@ export function ActiveBonusesPanel() {
       });
     }
     
-    return baseBonuses;
+    // Lanceur de Guerre (War Caster)
+    if (character.feats?.includes('war-caster')) {
+      abilities.push({
+        source: 'Lanceur de Guerre',
+        description: 'Avantage JS CON (concentration), somatiques avec arme, AO avec sort'
+      });
+    }
+    
+    return { bonuses: baseBonuses, specialAbilities: abilities };
   }, [character, equippedWeapons]);
 
   const hasAnyBonus = 
     bonuses.ac.length > 0 ||
     bonuses.damage.length > 0 ||
     bonuses.healing.length > 0 ||
-    bonuses.hp.length > 0;
+    bonuses.hp.length > 0 ||
+    specialAbilities.length > 0;
 
   if (!hasAnyBonus) {
     return (
@@ -124,6 +139,24 @@ export function ActiveBonusesPanel() {
                 <li key={idx} className="text-ink-light flex justify-between">
                   <span>{bonus.source}</span>
                   <span className="text-forest font-medium">+{bonus.value}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* Capacités spéciales */}
+        {specialAbilities.length > 0 && (
+          <div className="bg-amber-500/10 rounded p-2">
+            <div className="flex items-center gap-2 text-amber-600 font-medium text-sm mb-1">
+              <Star className="w-3 h-3" />
+              Capacités spéciales
+            </div>
+            <ul className="text-xs space-y-1">
+              {specialAbilities.map((ability, idx) => (
+                <li key={idx} className="text-ink-light">
+                  <span className="font-medium">{ability.source}:</span>{' '}
+                  <span className="text-ink-muted">{ability.description}</span>
                 </li>
               ))}
             </ul>
