@@ -39,7 +39,7 @@ export const CHARACTER_IDENTITY = {
 // CARACTÉRISTIQUES
 // ============================================
 export const CHARACTER_ABILITIES = {
-  strength: 14,      // Force
+  strength: 16,      // Force
   dexterity: 10,     // Dextérité
   constitution: 10,  // Constitution
   intelligence: 8,   // Intelligence
