@@ -158,20 +158,56 @@ export const useInventoryStore = create<InventoryState>()(
           return { success: false, message: 'Item non disponible' };
         }
         
-        const slot = itemToEquip.slot || getDefaultSlotForItem(itemToEquip);
+        let slot = itemToEquip.slot || getDefaultSlotForItem(itemToEquip);
         const unequippedItems: string[] = [];
+        
+        // Gestion spéciale pour les armes : permet le dual-wielding
+        if (slot === 'main_hand' && itemToEquip.type === 'Arme') {
+          const equippedMainHand = state.items.find(i => 
+            i.isEquipped && (i.slot || getDefaultSlotForItem(i)) === 'main_hand'
+          );
+          const equippedOffHand = state.items.find(i => 
+            i.isEquipped && (i.slot || getDefaultSlotForItem(i)) === 'off_hand'
+          );
+          
+          // Si main_hand occupée et off_hand libre (pas de bouclier), on met l'arme en off_hand
+          if (equippedMainHand && !equippedOffHand) {
+            slot = 'off_hand';
+          }
+        }
+        
+        // Gestion pour les boucliers : si une arme est en off_hand, la retirer
+        if (slot === 'off_hand' && itemToEquip.type === 'Bouclier') {
+          const equippedOffHandWeapon = state.items.find(i => 
+            i.isEquipped && 
+            i.type === 'Arme' && 
+            (i.slot || getDefaultSlotForItem(i)) === 'off_hand'
+          );
+          
+          if (equippedOffHandWeapon) {
+            unequippedItems.push(equippedOffHandWeapon.name);
+          }
+        }
         
         set((state) => {
           const newItems = state.items.map((item) => {
             if (item.id === itemId) {
-              return { ...item, isEquipped: true };
+              // Assigne le slot déterminé (main_hand ou off_hand)
+              return { ...item, isEquipped: true, slot };
             }
             
             if (item.isEquipped && slot) {
               const itemSlot = item.slot || getDefaultSlotForItem(item);
               
+              // Déséquipe l'item du même slot (sauf pour les anneaux qui ont 2 slots)
               if (itemSlot === slot && slot !== 'ring') {
                 unequippedItems.push(item.name);
+                return { ...item, isEquipped: false };
+              }
+              
+              // Si on équipe un bouclier, déséquipe l'arme en off_hand
+              if (slot === 'off_hand' && itemToEquip.type === 'Bouclier' && 
+                  item.type === 'Arme' && itemSlot === 'off_hand') {
                 return { ...item, isEquipped: false };
               }
             }
@@ -182,18 +218,29 @@ export const useInventoryStore = create<InventoryState>()(
           return { items: newItems };
         });
         
+        const slotLabel = slot === 'off_hand' ? ' (main gauche)' : '';
         const message = unequippedItems.length > 0
-          ? `${itemToEquip.name} équipé(e), ${unequippedItems.join(', ')} retiré(s)`
-          : `${itemToEquip.name} équipé(e)`;
+          ? `${itemToEquip.name}${slotLabel} équipé(e), ${unequippedItems.join(', ')} retiré(s)`
+          : `${itemToEquip.name}${slotLabel} équipé(e)`;
         
         return { success: true, message, unequippedItems };
       },
       
       unequipItem: (itemId) => {
         set((state) => ({
-          items: state.items.map(item => 
-            item.id === itemId ? { ...item, isEquipped: false } : item
-          ),
+          items: state.items.map(item => {
+            if (item.id === itemId) {
+              // Réinitialise le slot à sa valeur par défaut si c'était une arme
+              // pour éviter que l'arme reste marquée comme off_hand
+              const defaultSlot = getDefaultSlotForItem(item);
+              return { 
+                ...item, 
+                isEquipped: false,
+                slot: defaultSlot || item.slot
+              };
+            }
+            return item;
+          }),
         }));
       },
       
