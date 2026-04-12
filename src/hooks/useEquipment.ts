@@ -11,6 +11,7 @@ export interface ACCalculation {
   base: number;
   dexBonus: number;
   shieldBonus: number;
+  fightingStyleBonus: number;
   hasArmor: boolean;
   hasShield: boolean;
   equippedArmor: EquipmentItem | undefined;
@@ -62,6 +63,7 @@ export function useEquipment() {
     let maxDexBonus = Infinity;
     let hasArmor = false;
     let hasShield = false;
+    let fightingStyleBonus = 0;
     
     if (equippedArmor?.armorClass) {
       baseAC = equippedArmor.armorClass;
@@ -71,6 +73,11 @@ export function useEquipment() {
         maxDexBonus = 0;
       } else if (equippedArmor.armorType === 'intermédiaire') {
         maxDexBonus = 2;
+      }
+      
+      // Style de Combat : Défense (+1 CA si armure portée)
+      if (character.feats?.includes('style-combat')) {
+        fightingStyleBonus = 1;
       }
     }
     
@@ -89,19 +96,23 @@ export function useEquipment() {
     if (shieldBonus > 0) {
       parts.push(`+${shieldBonus} bouclier`);
     }
+    if (fightingStyleBonus > 0) {
+      parts.push(`+${fightingStyleBonus} style combat`);
+    }
     
     return {
-      total: baseAC + effectiveDexBonus + shieldBonus,
+      total: baseAC + effectiveDexBonus + shieldBonus + fightingStyleBonus,
       base: baseAC,
       dexBonus: effectiveDexBonus,
       shieldBonus,
+      fightingStyleBonus,
       hasArmor,
       hasShield,
       equippedArmor,
       equippedShield,
       formula: parts.join(', '),
     };
-  }, [equippedArmor, equippedShield, dexMod]);
+  }, [equippedArmor, equippedShield, dexMod, character.feats]);
   
   const armorStrengthIssue = useMemo(() => {
     if (!equippedArmor?.strengthRequired) return null;

@@ -249,6 +249,28 @@ export const FEATS: Feat[] = [
     isPassive: true,
     benefit: ['+1 Intelligence (max 20)', 'Toujours connaître le nord', 'Toujours connaître l\'heure', 'Mémoire parfaite du dernier mois'],
   },
+  {
+    id: 'style-combat',
+    name: 'Style de Combat : Défense',
+    nameEn: 'Fighting Style: Defense',
+    description: 'Vous avez adopté un style de combat défensif.',
+    effect: '+1 à la CA en portant une armure.',
+    isCombatFeat: true,
+    isPassive: true,
+    benefit: ['+1 à la CA en portant une armure'],
+    isCustom: true,
+  },
+  {
+    id: 'deux-armes',
+    name: 'Style de Combat : Combat à deux armes',
+    nameEn: 'Fighting Style: Two-Weapon Fighting',
+    description: 'Vous maîtrisez le combat avec deux armes.',
+    effect: 'Ajoutez votre modificateur de caractéristique aux dégâts de la deuxième attaque.',
+    isCombatFeat: true,
+    isPassive: true,
+    benefit: ['Modificateur de caractéristique aux dégâts de l\'arme secondaire'],
+    isCustom: true,
+  },
 ];
 
 export const getFeatById = (id: string): Feat | undefined => FEATS.find(feat => feat.id === id);

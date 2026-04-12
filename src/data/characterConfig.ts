@@ -63,8 +63,7 @@ export const MASTERED_SKILLS = [
 // TALENTS (FEATS) - IDs
 // ============================================
 export const CHARACTER_FEATS: string[] = [
-  // Exemples : 'war-caster', 'shield-master', 'sentinel'
-  // À remplir selon les talents choisis
+  'deux-armes',  // Style de Combat : Combat à deux armes
 ];
 
 // ============================================
@@ -102,6 +101,13 @@ export const BACKGROUND_TRAITS = [
     name: 'Style de Combat : Défense',
     description: 'Vous avez adopté un style de combat défensif qui vous confère un bonus de +1 à la CA tant que vous portez une armure.',
     effect: '+1 à la CA en portant une armure (pas un bouclier requis).',
+    type: 'class' as const,
+  },
+  {
+    id: 'deux-armes',
+    name: 'Style de Combat : Combat à deux armes',
+    description: 'Lorsque vous combattez avec deux armes, vous ajoutez votre modificateur de caractéristique aux dégâts de la deuxième attaque.',
+    effect: 'Modificateur de caractéristique aux dégâts de l\'arme secondaire.',
     type: 'class' as const,
   },
 ];

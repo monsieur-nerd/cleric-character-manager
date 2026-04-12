@@ -78,6 +78,10 @@ export function CombatStatsCard() {
     return 'text-ink';
   };
   
+  // Vérifie si le personnage a le talent Combat à deux armes
+  const hasTwoWeaponFighting = character.feats?.includes('deux-armes');
+  const hasMultipleWeapons = equippedWeapons.length >= 2;
+  
   return (
     <div className="card bg-steel-blue/10 border-steel-blue/30">
       {/* Header */}
@@ -218,6 +222,31 @@ export function CombatStatsCard() {
                 </div>
               )
             })}
+          </div>
+        </div>
+      )}
+      
+      {/* Combat à deux armes */}
+      {hasMultipleWeapons && (
+        <div className="bg-divine-gold/10 rounded-lg p-3 border border-divine-gold/30">
+          <h4 className="font-medium text-sm text-ink mb-2 flex items-center gap-2">
+            <Sword className="w-4 h-4 text-divine-gold" />
+            Combat à deux armes
+          </h4>
+          <div className="text-xs space-y-1">
+            <p className="text-ink-light">
+              <strong>Action :</strong> Attaque avec arme principale<br/>
+              <strong>Action bonus :</strong> Attaque avec arme secondaire
+            </p>
+            {hasTwoWeaponFighting ? (
+              <p className="text-forest font-medium">
+                ✓ Style de Combat : Ajoutez votre modificateur (FOR/DEX) aux dégâts de l'arme secondaire !
+              </p>
+            ) : (
+              <p className="text-blood-red">
+                ✗ Sans le style de Combat à deux armes, l'arme secondaire n'ajoute pas votre modificateur aux dégâts.
+              </p>
+            )}
           </div>
         </div>
       )}
